@@ -100,4 +100,4 @@ class BenchParser():
 
 if __name__ == "__main__":
     parser = BenchParser()
-    bugs = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "/home/varas/tmp", testsuite_name="juliet", cwe_list=["CWE476"])
+    bugs = parser.copyAndParse("/home/ubuntu/testsuite/Juliet_for_C_CPP/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
