@@ -1,0 +1,40 @@
+__uint16_identity#funcstartline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:32:1
+__uint16_identity#funcendline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:36:1
+__uint32_identity#funcstartline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:38:1
+__uint32_identity#funcendline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:42:1
+__uint64_identity#funcstartline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:44:1
+__uint64_identity#funcendline:/usr/include/x86_64-linux-gnu/bits/uintn-identity.h:48:1
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:55:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:56:47
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:60:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:61:54
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:69:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:71:33
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:73:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:75:34
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:77:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:79:34
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:83:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:84:67
+abs#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:100:3
+abs#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/std_abs.h:103:34
+div#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/cstdlib:176:3
+div#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/cstdlib:177:52
+div#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/cstdlib:212:3
+div#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/cstdlib:214:73
+exception::exception#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/exception.h:63:5
+exception::exception#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/bits/exception.h:63:41
+bad_exception::bad_exception#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/exception:49:5
+bad_exception::bad_exception#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/exception:49:45
+bad_alloc::bad_alloc#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:57:5
+bad_alloc::bad_alloc#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:57:27
+operator new#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:168:1
+operator new#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:169:15
+operator new[]#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:170:1
+operator new[]#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:171:15
+operator delete#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:174:1
+operator delete#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:174:69
+operator delete[]#funcstartline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:175:1
+operator delete[]#funcendline:/usr/lib/gcc/x86_64-linux-gnu/7.5.0/../../../../include/c++/7.5.0/new:175:69
+action::CWE476_NULL_Pointer_Dereference__struct_82_goodB2G#funcstartline:/home/varas/tmp/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__struct_82/CWE476_NULL_Pointer_Dereference__struct_82_goodB2G.cpp:25:1
+action::CWE476_NULL_Pointer_Dereference__struct_82_goodB2G#funcendline:/home/varas/tmp/CWE476_NULL_Pointer_Dereference/CWE476_NULL_Pointer_Dereference__struct_82/CWE476_NULL_Pointer_Dereference__struct_82_goodB2G.cpp:36:1
