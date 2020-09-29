@@ -3,6 +3,7 @@ import os, sys, argparse, json
 import juliet_parser as Juliet_parser
 from xml.etree import ElementTree as ET
 from bug import *
+from glo import *
 
 
 # 把原测试集加工成适合自动测评的样子
@@ -39,7 +40,7 @@ class BenchParser():
                     for child in elem:
                         if child.tag == 'flaw':
                             bug = Bug()
-                            bug._id = signature
+                            bug.testcase_id = signature
                             bug.counterexample = 0
                             bug.bug_type = child.get('name').split(':')[0]
                             bug.sink.file = fpath
@@ -60,38 +61,36 @@ class BenchParser():
                 if f.startswith('manifest') and f.endswith('.xml'):
                     f = os.path.join(indir, f)
                     bugs = self.__parseJulietManifest(f, cwe_list_filter=cwe_list)
-            Juliet_parser.create_single_testcase(indir, outdir, cwe_list=cwe_list, preprocessed_bugs=bugs)
-            return outdir
+            testcases = Juliet_parser.create_single_testcase(indir, outdir, cwe_list=cwe_list, preprocessed_bugs=bugs)
+            return testcases
 
     def copyAndParse(self, indir, outdir, testsuite_name='', cwe_list=[]):
         bugs = []
-        outdir = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
-        for one_cwe in os.listdir(outdir):
-            one_cwe = os.path.join(outdir, one_cwe)
-            for one in os.listdir(one_cwe):
-                testcase_path = os.path.abspath(os.path.join(one_cwe, one))
-                bug = self.parse_one(testcase_path, testsuite_name)
-                bugs.append(bug)
+        testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
+        for testcase in testcases:
+            testcase_dir = testcase.testcase_dir
+            bug = self.parse_one(testcase_dir, testsuite_name)
+            bugs.append(bug)
         return bugs
 
-    def parse_one(self, testcase_path, testsuite_name):
-        testcase_path = os.path.abspath(testcase_path)
+    def parse_one(self, testcase_dir, testsuite_name):
+        testcase_dir = os.path.abspath(testcase_dir)
         if testsuite_name == 'juliet':
-            if os.path.exists(os.path.join(testcase_path, "metadata")):
-                with open(os.path.join(testcase_path, "metadata")) as fp:
+            if os.path.exists(os.path.join(testcase_dir, Global.METADATA)):
+                with open(os.path.join(testcase_dir, Global.METADATA)) as fp:
                     content = fp.read()
                     return Bug.loads(content)
             else:
-                print(testcase_path)
-                infos = Juliet_parser.parse_juliet_vul_info(testcase_path)
+                print(testcase_dir)
+                infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
                 for info in infos:
                     sig = info['signature'] #bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
                     line = info['line']
                     filename = info['filename']
                     if sig.startswith("bad"):
                         bug = Bug()
-                        bug._id = os.path.split(testcase_path.strip('/'))
-                        bug.testcase_dir = testcase_path
+                        bug.testcase_id = os.path.split(testcase_dir.strip('/'))
+                        bug.testcase_dir = testcase_dir
                         bug.counterexample = 0
                         bug.sink.file = filename
                         bug.sink.line = int(line)
@@ -100,4 +99,4 @@ class BenchParser():
 
 if __name__ == "__main__":
     parser = BenchParser()
-    bugs = parser.copyAndParse("/home/ubuntu/testsuite/Juliet_for_C_CPP/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
+    bugs = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])

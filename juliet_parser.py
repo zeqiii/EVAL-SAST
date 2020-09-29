@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 import os, sys, zipfile, shutil
 from glo import *
+from bug import *
 
 
 tool = os.path.join(Config.LIBS, "tooling_sample")
@@ -63,6 +64,8 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     testcases_cwe_list.append(os.path.join(testcases_dir, one))
                     break
 
+    testcases = []
+
     # get files for one test case
     for one in testcases_cwe_list:
         # fetch source files in one cwe dir
@@ -98,14 +101,21 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
         #对于每一个cwe类型的testcases，在outdir下创建一个目录，目录名取"__"的前半部分，即CWE名
         #然后把testcase存在这个目录下
         # move to outdir
+        testcases = []
         for sig in sig_file_map.keys():
+            testcase = Testcase()
             the_bug = None
             for bug in preprocessed_bugs:
-                if sig == bug._id:
+                if sig == bug.testcase_id:
                     the_bug = bug
+                    break
             # save path
             outpath = os.path.join(outdir, sig.split("__")[0])
             outpath = os.path.join(outpath, sig)
+            testcase.testcase_dir = os.path.abspath(outpath)
+            testcase.testcase_id = sig
+            testcase.testsuite_name = "juliet"
+            testcase.compile_command = "clang -DINCLUDEMAIN -lpthread *.c"
             if not os.path.exists(outpath):
                 os.makedirs(outpath)
             # cp file to outdir
@@ -113,10 +123,14 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             for f in support_files:
                 shutil.copy(f, outpath)
             for f in files:
+                if f.endswith(".cpp"):
+                    testcase.compile_command = "clang++ -DINCLUDEMAIN -lpthread *.cpp *.c"
                 shutil.copy(f, outpath)
             if the_bug:
-                with open(os.path.join(outpath, "metadata"), "w") as fp:
+                with open(os.path.join(outpath, "testcase_metadata"), "w") as fp:
                     fp.write(the_bug.dumps())
+            testcases.append(testcase)
+    return testcases
 
 
 def parse_juliet_func_info(lines, filters=[]):

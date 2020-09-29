@@ -2,6 +2,8 @@ import os
 
 class Global:
 
+    METADATA = "testcase_metadata"
+
     CONFIG_TOOLS_HOME = os.path.dirname(os.path.abspath(__file__))
 
     JULIET_TESTCASESUPPORT = ['io.c', 'main.cpp', 'main_linux.cpp', 'std_testcase.h', 'std_testcase_io.h', 'std_thread.h', 'std_thread.c', 'testcase.h']

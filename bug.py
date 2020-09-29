@@ -23,7 +23,7 @@ class Location():
 
 class Bug():
     def __init__(self):
-        self._id = ""
+        self.testcase_id = ""
         self.testcase_dir = ""
         self.counterexample = 0
         self.bug_type = ""       # deprecated, string format of bug info
@@ -38,7 +38,7 @@ class Bug():
     def loads(sstr):
         obj = json.loads(sstr)
         bug = Bug()
-        bug._id = obj["_id"]
+        bug.testcase_id = obj["testcase_id"]
         bug.testcase_dir = obj["testcase_dir"]
         bug.counterexample = obj["counterexample"]
         bug.bug_type = obj["bug_type"]
@@ -52,7 +52,7 @@ class Bug():
 
     def dumps(self):
         bug = {}
-        bug["_id"] = self._id
+        bug["testcase_id"] = self.testcase_id
         bug["testcase_dir"] = self.testcase_dir
         bug["counterexample"] = self.counterexample
         bug["bug_type"] = self.bug_type
@@ -64,3 +64,27 @@ class Bug():
         bug["execution_path"] = self.execution_path
         return json.dumps(bug)
 
+class Testcase():
+    def __init__(self):
+        self.testcase_id = ""
+        self.testcase_dir = ""
+        self.testsuite_name = ""
+        self.compile_command = ""
+    
+    def dumps(self):
+        testcase = {}
+        testcase["testcase_id"] = self.testcase_id
+        testcase["testcase_dir"] = self.testcase_dir
+        testcase["testsuite_name"] = self.testsuite_name
+        testcase["compile_command"] = self.compile_command
+        return json.dumps(testcase)
+
+    @staticmethod
+    def loads(sstr):
+        obj = json.loads(sstr)
+        testcase = Testcase()
+        testcase.testcase_id = obj["testcase_id"]
+        testcase.testcase_dir = obj["testcase_dir"]
+        testcase.testsuite_name = obj["testsuite_name"]
+        testcase.compile_command = obj["compile_command"]
+        return testcase

@@ -47,10 +47,21 @@ class Runner:
         else:
             return "FN", None
 
-    def start_one(self, testcase_path, testsuite_name, output_path, output_file):
-        cmd = self._genCMD(testcase_path, testsuite_name, output_path, output_file)
+    def start_one(self, testcase, one_output_path):
+        cmd = self._genCMD(testcase, one_output_path)
         os.system(cmd)
-        self._parseOutput(testcase_path, testsuite_name, output_path, output_file)
+        bugs = self._parseOutput(testcase, one_output_path)
+        return bugs
+
+    def start(self, testcases, output_path):
+        for testcase in testcases:
+            testcase_path = testcase.testcase_path
+            testsuite_name = testcase.testsuite_name
+            testcase_id = testcase.testcase_id
+            one_output_path = os.path.join(output_path, testcase_id)
+            output_file = testcase_id
+            bugs = self.start_one(testcase, one_output_path)
+            
 
     # clean result
     def __clean(self):
@@ -66,7 +77,7 @@ class Runner:
 
     # generate cmd based on testcase_path and output_path, in order to call tools
     # please rewrite this method
-    def _genCMD(self, testcase_path, language, output_path, output_file):
+    def _genCMD(self, testcase, output_path, output_file="result.out"):
         return ""
 
     # select vuls from DB
@@ -76,7 +87,7 @@ class Runner:
 
     # parse output data, return a list of Bug objects
     # please rewrite this method
-    def _parseOutput(self, testcase_path, testsuite_name, output_path, output_file):
+    def _parseOutput(self, testcase, output_path, output_file="result.out"):
         return None
 
     # update DB
