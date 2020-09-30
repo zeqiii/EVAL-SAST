@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 import os, threading, json, shutil, time, traceback
 from glo import Config
 from bug import *
@@ -49,13 +50,16 @@ class Runner:
 
     def start_one(self, testcase, one_output_path):
         cmd = self._genCMD(testcase, one_output_path)
+        print("+++++++++++++++++++++++++")
+        print(cmd)
+        print("+++++++++++++++++++++++++")
         os.system(cmd)
         bugs = self._parseOutput(testcase, one_output_path)
         return bugs
 
     def start(self, testcases, output_path):
         for testcase in testcases:
-            testcase_path = testcase.testcase_path
+            testcase_path = testcase.testcase_dir
             testsuite_name = testcase.testsuite_name
             testcase_id = testcase.testcase_id
             one_output_path = os.path.join(output_path, testcase_id)

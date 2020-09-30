@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 import os, sys
 from impl import *
 from glo import *
@@ -43,8 +44,10 @@ class Runner_codechecker(Runner):
                 findex = bug_result["location"]["file"]
                 bug.sink.file = bug_result["files"][findex]
                 bugs.append(bug)
-        os.system("rm -rf %s" %(output_path))
-        os.system("mv %s %s" %(json_output_path, output_path))
+        #os.system("rm -rf %s" %(output_path))
+        #os.system("mv %s %s" %(json_output_path, output_path))
+        os.system("mv %s %s" %(report_json, output_path))
+        os.system("rm -rf %s" %(json_output_path))
         return bugs
 
 if __name__ == "__main__":

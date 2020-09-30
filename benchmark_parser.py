@@ -69,19 +69,23 @@ class BenchParser():
         testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
         for testcase in testcases:
             testcase_dir = testcase.testcase_dir
-            bug = self.parse_one(testcase_dir, testsuite_name)
-            bugs.append(bug)
-        return bugs
+            testcase_id = testcase.testcase_id
+            bug = self.parse_one(testcase_id, testcase_dir, testsuite_name)
+            bugs.extend(bug)
+        return testcases, bugs
 
-    def parse_one(self, testcase_dir, testsuite_name):
+    def parse_one(self, testcase_id, testcase_dir, testsuite_name):
         testcase_dir = os.path.abspath(testcase_dir)
         if testsuite_name == 'juliet':
             if os.path.exists(os.path.join(testcase_dir, Global.METADATA)):
                 with open(os.path.join(testcase_dir, Global.METADATA)) as fp:
                     content = fp.read()
-                    return Bug.loads(content)
+                    bug = Bug.loads(content)
+                    bug.testcase_id = testcase_id
+                    return [bug]
             else:
                 print(testcase_dir)
+                bugs = []
                 infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
                 for info in infos:
                     sig = info['signature'] #bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
@@ -89,12 +93,13 @@ class BenchParser():
                     filename = info['filename']
                     if sig.startswith("bad"):
                         bug = Bug()
-                        bug.testcase_id = os.path.split(testcase_dir.strip('/'))
+                        bug.testcase_id = testcase_id
                         bug.testcase_dir = testcase_dir
                         bug.counterexample = 0
                         bug.sink.file = filename
                         bug.sink.line = int(line)
-                        return bug
+                        bugs.append(bug)
+                return bugs
 
 
 if __name__ == "__main__":

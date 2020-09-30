@@ -115,7 +115,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             testcase.testcase_dir = os.path.abspath(outpath)
             testcase.testcase_id = sig
             testcase.testsuite_name = "juliet"
-            testcase.compile_command = "clang -DINCLUDEMAIN -lpthread *.c"
+            testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
             if not os.path.exists(outpath):
                 os.makedirs(outpath)
             # cp file to outdir
@@ -124,7 +124,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                 shutil.copy(f, outpath)
             for f in files:
                 if f.endswith(".cpp"):
-                    testcase.compile_command = "clang++ -DINCLUDEMAIN -lpthread *.cpp *.c"
+                    testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 shutil.copy(f, outpath)
             if the_bug:
                 with open(os.path.join(outpath, "testcase_metadata"), "w") as fp:
