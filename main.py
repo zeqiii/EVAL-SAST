@@ -69,3 +69,4 @@ if __name__ == "__main__":
         if tool == "codechecker":
             runner = Runner_codechecker()
             runner.start(testcases, out_dir)
+            runner.compare(out_dir, ground_truths)

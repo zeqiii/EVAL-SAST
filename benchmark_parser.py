@@ -76,19 +76,20 @@ class BenchParser():
 
     def parse_one(self, testcase_id, testcase_dir, testsuite_name):
         testcase_dir = os.path.abspath(testcase_dir)
+        bugs = []
+        bad_bug = None       # only one bad
+        counterexamples = [] # may be several good
         if testsuite_name == 'juliet':
             if os.path.exists(os.path.join(testcase_dir, Global.METADATA)):
                 with open(os.path.join(testcase_dir, Global.METADATA)) as fp:
                     content = fp.read()
-                    bug = Bug.loads(content)
-                    bug.testcase_id = testcase_id
-                    return [bug]
-            else:
-                print(testcase_dir)
-                bugs = []
-                infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
-                for info in infos:
-                    sig = info['signature'] #bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
+                    bad_bug = Bug.loads(content)
+                    bad_bug.testcase_id = testcase_id
+            infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
+            for info in infos:
+                sig = info['signature'] #bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
+                if sig.startswith("bad"):
+                    1
                     line = info['line']
                     filename = info['filename']
                     if sig.startswith("bad"):
@@ -99,7 +100,7 @@ class BenchParser():
                         bug.sink.file = filename
                         bug.sink.line = int(line)
                         bugs.append(bug)
-                return bugs
+        bugs.append(bad_bug)
 
 
 if __name__ == "__main__":

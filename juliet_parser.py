@@ -180,6 +180,10 @@ def parse_juliet_vul_info(testcase_dir):
             lines = fp.readlines()
             fp.close()
             func_info = info[f]
+            has_sink = False
+            for func_name in func_info.keys():
+                if func_name.find("Sink") > 0:
+                    has_sink = True
             for func_name in func_info.keys():
                 line_info = func_info[func_name]
                 start_line = line_info["funcstartline"]

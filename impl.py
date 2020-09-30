@@ -65,6 +65,9 @@ class Runner:
             one_output_path = os.path.join(output_path, testcase_id)
             output_file = testcase_id
             bugs = self.start_one(testcase, one_output_path)
+
+    def compare(self, result_outputs, real_bugs):
+        
             
 
     # clean result

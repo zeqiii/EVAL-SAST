@@ -12,6 +12,10 @@ class Location():
         loc["line"] = self.line
         loc["col"] = self.col
         return json.dumps(loc)
+    def isEmpty(self):
+        if not self.file or self.line < 0:
+            return True
+        return False
     @staticmethod
     def loads(locstr):
         loc = json.loads(locstr)
@@ -32,7 +36,9 @@ class Bug():
         self.cwe_type = []       # example: [193, 122]
         self.source = Location()
         self.sink = Location()
+        self.other_suspicious = []
         self.execution_path = [] # array of Location
+        self.detection_results = {} # example: {"tool_name":"TP"}
 
     @staticmethod
     def loads(sstr):
@@ -47,7 +53,13 @@ class Bug():
         bug.cwe_type = obj["cwe_type"]
         bug.source = Location.loads(obj["source"]) # 暂时忽略一个漏洞多个source的情况
         bug.sink = Location.loads(obj["sink"])
-        bug.execution_path = obj["execution_path"]
+        other_suspicious = obj["other_suspicious"]
+        for one in other_suspicious:
+            bug.other_suspicious.append(Location.loads(one))
+        execution_path = obj["execution_path"]
+        for one in execution_path:
+            bug.execution_path.append(Location.loads(one))
+        bug.detection_results = json.loads(obj["detection_results"])
         return bug
 
     def dumps(self):
@@ -62,6 +74,7 @@ class Bug():
         bug["source"] = self.source.toString()
         bug["sink"] = self.sink.toString()
         bug["execution_path"] = self.execution_path
+        bug["detection_results"] = json.dumps(self.detection_results)
         return json.dumps(bug)
 
 class Testcase():
