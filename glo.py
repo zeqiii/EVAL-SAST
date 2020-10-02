@@ -2,7 +2,8 @@ import os
 
 class Global:
 
-    METADATA = "testcase_metadata"
+    BUG_METADATA = "bug_metadata"
+    TESTCASE_METADATA = "testcase_metadata"
 
     CONFIG_TOOLS_HOME = os.path.dirname(os.path.abspath(__file__))
 

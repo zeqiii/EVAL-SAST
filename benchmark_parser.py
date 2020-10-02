@@ -74,33 +74,76 @@ class BenchParser():
             bugs.extend(bug)
         return testcases, bugs
 
+    def parse(self, testcase_paths, testsuite_name='juliet'):
+        testcases, bugs = [], []
+        for one in testcase_paths:
+            testcase = None
+            if os.path.exists(os.path.join(one, Global.TESTCASE_METADATA)):
+                with open(os.path.join(one, Global.TESTCASE_METADATA)) as fp:
+                    content = fp.read()
+                    testcase = Testcase.loads(content)
+            else:
+                testcase = Testcase()
+                testcase.testcase_id = one.strip('/').split('/')[-1]
+                testcase.testcase_dir = one
+                testcase.testsuite_name = testsuite_name
+                has_cpp, has_c = False, False
+                for parent, dirnames, filenames in os.walk(one):
+                    for f in filenames:
+                        if f.endswith('cpp'):
+                            has_cpp = True
+                        if f.endswith('c'):
+                            has_c = True
+                if has_cpp:
+                    testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp -lpthread"
+                    if has_c:
+                        testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
+                elif has_c:
+                    testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
+            testcases.append(testcase)
+            bugs.extend(self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name))
+        return testcases, bugs
+
     def parse_one(self, testcase_id, testcase_dir, testsuite_name):
         testcase_dir = os.path.abspath(testcase_dir)
         bugs = []
         bad_bug = None       # only one bad
-        counterexamples = [] # may be several good
+        counterexamples = {} # may be several good, {"goodG2B":bug1, "goodB2G":bug2, ...}
         if testsuite_name == 'juliet':
-            if os.path.exists(os.path.join(testcase_dir, Global.METADATA)):
-                with open(os.path.join(testcase_dir, Global.METADATA)) as fp:
+            if os.path.exists(os.path.join(testcase_dir, Global.BUG_METADATA)):
+                with open(os.path.join(testcase_dir, Global.BUG_METADATA)) as fp:
                     content = fp.read()
                     bad_bug = Bug.loads(content)
                     bad_bug.testcase_id = testcase_id
             infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
             for info in infos:
-                sig = info['signature'] #bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
+                sig = info['signature'] # bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
+                filename = info['filename']
+                line = info['line']
                 if sig.startswith("bad"):
-                    1
-                    line = info['line']
-                    filename = info['filename']
-                    if sig.startswith("bad"):
-                        bug = Bug()
-                        bug.testcase_id = testcase_id
-                        bug.testcase_dir = testcase_dir
-                        bug.counterexample = 0
-                        bug.sink.file = filename
-                        bug.sink.line = int(line)
-                        bugs.append(bug)
+                    if int(line) == bad_bug.sink.line and filename == bad_bug.sink.file:
+                        continue   # 忽略解析出的与manifest.xml中相同的漏洞位置
+                    other = Location()
+                    other.file = filename
+                    other.line = int(line)
+                    bad_bug.other_suspicious.append(other)
+                elif sig.startswith("good"):
+                    if sig not in counterexamples.keys():
+                        counterexamples[sig] = Bug()
+                        counterexamples[sig].testcase_id = testcase_id
+                        counterexamples[sig].testcase_dir = testcase_dir
+                        counterexamples[sig].counterexample = 1
+                        counterexamples[sig].sink.file = filename
+                        counterexamples[sig].sink.line = int(line)
+                    else:
+                        other = Location()
+                        other.file = filename
+                        other.line = int(line)
+                        counterexamples[sig].other_suspicious.append(other)
+        for key in counterexamples.keys():
+            bugs.append(counterexamples[key])
         bugs.append(bad_bug)
+        return bugs
 
 
 if __name__ == "__main__":

@@ -53,13 +53,13 @@ class Bug():
         bug.cwe_type = obj["cwe_type"]
         bug.source = Location.loads(obj["source"]) # 暂时忽略一个漏洞多个source的情况
         bug.sink = Location.loads(obj["sink"])
-        other_suspicious = obj["other_suspicious"]
+        other_suspicious = obj["other_suspicious"] # 其它可能会被报出的漏洞点
         for one in other_suspicious:
             bug.other_suspicious.append(Location.loads(one))
         execution_path = obj["execution_path"]
         for one in execution_path:
             bug.execution_path.append(Location.loads(one))
-        bug.detection_results = json.loads(obj["detection_results"])
+        bug.detection_results = obj["detection_results"]
         return bug
 
     def dumps(self):
@@ -73,8 +73,15 @@ class Bug():
         bug["cwe_type"] = self.cwe_type
         bug["source"] = self.source.toString()
         bug["sink"] = self.sink.toString()
-        bug["execution_path"] = self.execution_path
-        bug["detection_results"] = json.dumps(self.detection_results)
+        other_suspicious = []
+        for one in self.other_suspicious:
+            other_suspicious.append(one.toString())
+        bug["other_suspicious"] = json.dumps(other_suspicious)
+        execution_path = []
+        for one in self.execution_path:
+            execution_path.append(one.toString())
+        bug["execution_path"] = json.dumps(execution_path)
+        bug["detection_results"] = self.detection_results
         return json.dumps(bug)
 
 class Testcase():

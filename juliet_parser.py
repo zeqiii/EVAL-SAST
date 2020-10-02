@@ -127,8 +127,10 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 shutil.copy(f, outpath)
             if the_bug:
-                with open(os.path.join(outpath, "testcase_metadata"), "w") as fp:
+                with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
                     fp.write(the_bug.dumps())
+            with open(os.path.join(outpath, Global.TESTCASE_METADATA), "w") as fp:
+                fp.write(testcase.dumps())
             testcases.append(testcase)
     return testcases
 
