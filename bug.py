@@ -53,10 +53,10 @@ class Bug():
         bug.cwe_type = obj["cwe_type"]
         bug.source = Location.loads(obj["source"]) # 暂时忽略一个漏洞多个source的情况
         bug.sink = Location.loads(obj["sink"])
-        other_suspicious = obj["other_suspicious"] # 其它可能会被报出的漏洞点
+        other_suspicious = json.loads(obj["other_suspicious"]) # 其它可能会被报出的漏洞点
         for one in other_suspicious:
             bug.other_suspicious.append(Location.loads(one))
-        execution_path = obj["execution_path"]
+        execution_path = json.loads(obj["execution_path"])
         for one in execution_path:
             bug.execution_path.append(Location.loads(one))
         bug.detection_results = obj["detection_results"]

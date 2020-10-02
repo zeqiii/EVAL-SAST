@@ -67,6 +67,7 @@ class Runner:
             bugs = self.start_one(testcase, one_output_path)
 
     def compare(self, result_outputs, real_bugs):
+        pass
         
             
 
