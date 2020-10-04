@@ -6,7 +6,7 @@ from run_codechecker import Runner_codechecker
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", metavar="ACTTION[parse|parseone|copy|copyandparse|readjson|sca]", type=str, nargs=1, help='choose action')
+    parser.add_argument("action", metavar="ACTTION[parse|parseone|copy|copyandparse|readjson|sca|compare]", type=str, nargs=1, help='choose action')
     parser.add_argument('--input', '-i', nargs='+', help='Input path, copy source path')
     parser.add_argument('--output', '-o', help='Output path, copy destination path')
     parser.add_argument('--benchmark', '-b', help='Name of input benchmark, which could be: "juliet"')
@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 testcases, bugs = bp.parse(paths, testsuite_name=testsuite_name)
         else:
             testcases, bugs = bp.parse(in_dirs, testsuite_name=testsuite_name)
-    if args.action[0] == "readjson" or args.action[0] == "sca":
+    if args.action[0] == "readjson" or args.action[0] == "sca" or args.action[0] == "compare":
         # --input testcases.json bugs.json
         for in_dir in in_dirs:
             with open(in_dir) as fp:
@@ -72,11 +72,17 @@ if __name__ == "__main__":
                         testcases.append(testcase)
     
     targets, ground_truths = testcases, bugs
+    detection_results = []
+    runner = None
     if args.action[0] == "sca":
         tool = args.tool
         if tool == "codechecker":
             runner = Runner_codechecker()
-            runner.start(testcases, out_dir)
-            runner.compare(out_dir, ground_truths)
+            detection_results = runner.start(testcases, out_dir)
+    if args.action[0] == "compare":
+        if tool == "codechecker":
+            runner = Runner_codechecker()
+        detection_results = runner.loadResults()
+        
     print(len(targets))
     print(len(ground_truths))

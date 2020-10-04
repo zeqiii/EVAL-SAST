@@ -58,6 +58,7 @@ class Runner:
         return bugs
 
     def start(self, testcases, output_path):
+        detection_results = []
         for testcase in testcases:
             testcase_path = testcase.testcase_dir
             testsuite_name = testcase.testsuite_name
@@ -65,6 +66,19 @@ class Runner:
             one_output_path = os.path.join(output_path, testcase_id)
             output_file = testcase_id
             bugs = self.start_one(testcase, one_output_path)
+            detection_results.append((testcase, bugs))
+        detection_records = {}
+        for testcase, bugs in detection_results:
+            bugs_str = []
+            for bug in bugs:
+                bugs_str.append(bug.dumps())
+            detection_records[testcase.testcase_id] = bugs_str
+        with open(self.name+"_detection_results.json", "w") as fp:
+            fp.write(json.dumps(detection_records))
+        return detection_results
+
+    def loadResults(self, detection_results):
+        pass #TBD
 
     def compare(self, result_outputs, real_bugs):
         pass
