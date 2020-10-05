@@ -68,9 +68,7 @@ class BenchParser():
         bugs = []
         testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
         for testcase in testcases:
-            testcase_dir = testcase.testcase_dir
-            testcase_id = testcase.testcase_id
-            bug = self.parse_one(testcase_id, testcase_dir, testsuite_name)
+            bug = self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name)
             bugs.extend(bug)
         return testcases, bugs
 
@@ -115,6 +113,7 @@ class BenchParser():
                     content = fp.read()
                     bad_bug = Bug.loads(content)
                     bad_bug.testcase_id = testcase_id
+                    bad_bug.testcase_dir = testcase_dir
             infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
             for info in infos:
                 sig = info['signature'] # bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...

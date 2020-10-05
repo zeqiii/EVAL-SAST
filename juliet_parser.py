@@ -101,7 +101,6 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
         #对于每一个cwe类型的testcases，在outdir下创建一个目录，目录名取"__"的前半部分，即CWE名
         #然后把testcase存在这个目录下
         # move to outdir
-        testcases = []
         for sig in sig_file_map.keys():
             testcase = Testcase()
             the_bug = None
@@ -127,6 +126,8 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 shutil.copy(f, outpath)
             if the_bug:
+                the_bug.testcase_dir = outpath
+                the_bug.sink.file = os.path.abspath(os.path.join(outpath, the_bug.sink.file))
                 with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
                     fp.write(the_bug.dumps())
             with open(os.path.join(outpath, Global.TESTCASE_METADATA), "w") as fp:

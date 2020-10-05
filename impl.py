@@ -77,14 +77,6 @@ class Runner:
             fp.write(json.dumps(detection_records))
         return detection_results
 
-    def loadResults(self, detection_results):
-        pass #TBD
-
-    def compare(self, result_outputs, real_bugs):
-        pass
-        
-            
-
     # clean result
     def __clean(self):
         print("cleaning...")

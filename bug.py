@@ -84,6 +84,19 @@ class Bug():
         bug["detection_results"] = self.detection_results
         return json.dumps(bug)
 
+    def compare(self, bug, tool):
+        if self.testcase_id != bug.testcase_id:
+            return False
+        print(self.sink.file + " " + bug.sink.file)
+        if self.sink.file == bug.sink.file:
+            if self.sink.line == bug.sink.line:
+                if not self.counterexample:
+                    self.detection_results[tool] = "TP"
+                else:
+                    self.detection_results[tool] = "FP"
+                return True
+        return False
+
 class Testcase():
     def __init__(self):
         self.testcase_id = ""
