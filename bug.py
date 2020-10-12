@@ -87,7 +87,6 @@ class Bug():
     def compare(self, bug, tool):
         if self.testcase_id != bug.testcase_id:
             return False
-        print(self.sink.file + " " + bug.sink.file)
         if self.sink.file == bug.sink.file:
             if self.sink.line == bug.sink.line:
                 if not self.counterexample:

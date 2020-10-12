@@ -1,5 +1,5 @@
 # -*- coding=utf-8 -*-
-import argparse, json
+import argparse, json, os
 from benchmark_parser import BenchParser
 from bug import *
 from run_codechecker import Runner_codechecker
@@ -65,15 +65,18 @@ if __name__ == "__main__":
             with open(in_dir) as fp:
                 jsonstr = fp.read()
                 obj = json.loads(jsonstr)
-                if in_dir.endswith("bugs.json"):
+                if in_dir.endswith(".json") and (in_dir.startswith("bugs") or os.path.splitext(in_dir)[0].endswith("bugs")):
+                    print("bugs.json")
                     for one in obj:
                         one_bug = Bug.loads(one)
                         bugs.append(one_bug)
-                elif in_dir.endswith("testcases.json"):
+                elif in_dir.endswith(".json") and (in_dir.startswith("testcases") or os.path.splitext(in_dir)[0].endswith("testcases")):
+                    print("testcases.json")
                     for one in obj.keys():
                         testcase = Testcase.loads(obj[one])
                         testcases.append(testcase)
-                elif in_dir.endswith("detection_results.json"):
+                elif in_dir.endswith(".json") and (in_dir.startswith("detection_results") or os.path.splitext(in_dir)[0].endswith("detection_results")):
+                    print("detection_results.json")
                     for one in obj.keys():
                         for bug_str in obj[one]:
                             detection_results.append(Bug.loads(bug_str))
@@ -90,9 +93,20 @@ if __name__ == "__main__":
                 if rt:
                     print(ground_truth.detection_results)
                     break
-                else:
-                    print("continue...")
 
-    print(len(targets))
+
+    tp, fp, fn, tn = 0, 0, 0, 0
     print(len(ground_truths))
+    for one in ground_truths:
+        if args.tool in one.detection_results.keys():
+            if one.detection_results[args.tool] == "TP":
+                tp = tp + 1
+            if one.detection_results[args.tool] == "FP":
+                fp = fp + 1
+        else:
+            if one.counterexample == 0:
+                fn = fn + 1
+            else:
+                tn = tn + 1
+    print("%d, %d, %d, %d" %(tp, fp, tn, fn))
     print(len(detection_results))
