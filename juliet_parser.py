@@ -60,7 +60,8 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                 testcases_cwe_list.append(os.path.join(testcases_dir, one))
         else:
             for cwe in cwe_list:
-                if one.find(cwe) >= 0:
+                base = os.path.basename(one.strip("/"))
+                if base.split("_")[0] == cwe:
                     testcases_cwe_list.append(os.path.join(testcases_dir, one))
                     break
 
