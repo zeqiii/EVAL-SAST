@@ -4,6 +4,15 @@ from benchmark_parser import BenchParser
 from bug import *
 from run_codechecker import Runner_codechecker
 
+
+def display(bugs):
+    for bug in bugs:
+        print("=====================")
+        print("testcase_id: " + bug.testcase_id)
+        print("testcase_dir: " + bug.testcase_dir)
+        print("description: " + bug.description)
+        print("sink: " + bug.sink.toString())
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("action", metavar="ACTTION[parse|parseone|copy|copyandparse|readjson|sca|compare]", type=str, nargs=1, help='choose action')
@@ -65,7 +74,8 @@ if __name__ == "__main__":
             with open(in_dir) as fp:
                 jsonstr = fp.read()
                 obj = json.loads(jsonstr)
-                if in_dir.endswith(".json") and (in_dir.startswith("bugs") or os.path.splitext(in_dir)[0].endswith("bugs")):
+                if in_dir.endswith(".json") and ((in_dir.startswith("bugs") or os.path.splitext(in_dir)[0].endswith("bugs")) or \
+                   (in_dir.startswith("compare_results") or os.path.splitext(in_dir)[0].endswith("compare_results"))):
                     print("bugs.json")
                     for one in obj:
                         one_bug = Bug.loads(one)
@@ -91,18 +101,25 @@ if __name__ == "__main__":
             for detection_result in detection_results:
                 rt = ground_truth.compare(detection_result, args.tool)
                 if rt:
-                    print(ground_truth.detection_results)
+                    print(ground_truth.dumps())
                     break
-
+        compare_info = []
+        for truth in ground_truths:
+            compare_info.append(truth.dumps())
+        with open("compare_results.json", "w") as fp:
+            fp.write(json.dumps(compare_info))
 
     tp, fp, fn, tn = 0, 0, 0, 0
+    tps, fps = [], []
     print(len(ground_truths))
     for one in ground_truths:
         if args.tool in one.detection_results.keys():
             if one.detection_results[args.tool] == "TP":
                 tp = tp + 1
+                tps.append(one)
             if one.detection_results[args.tool] == "FP":
                 fp = fp + 1
+                fps.append(one)
         else:
             if one.counterexample == 0:
                 fn = fn + 1
@@ -110,3 +127,5 @@ if __name__ == "__main__":
                 tn = tn + 1
     print("%d, %d, %d, %d" %(tp, fp, tn, fn))
     print(len(detection_results))
+    display(tps)
+    #display(fps)

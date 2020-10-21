@@ -3,6 +3,25 @@ import os, sys
 from impl import *
 from glo import *
 from bug import *
+
+def outputReader(output_file):
+    results = None
+    with open(output_file) as fp:
+        results = json.loads(fp.read())
+    if not results:
+        return None
+    for result in results:
+        print("=======================================================================")
+        print("check_name: %s" %(result["check_name"]))
+        print("type: %s" %(result["type"]))
+        print("description: %s" %(result["description"]))
+        file_index = result["location"]["file"]
+        line_num = result["location"]["line"]
+        col_num = result["location"]["col"]
+        print("location: %s:line%d:col%d" %(result["files"][file_index], line_num, col_num))
+        print("=======================================================================")
+
+
 class Runner_codechecker(Runner):
     def __init__(self):
         Runner.__init__(self)
@@ -29,17 +48,19 @@ class Runner_codechecker(Runner):
         with open(report_json) as fp:
             bug_results = json.loads(fp.read())
             for bug_result in bug_results:
-                print("============================")
-                print(bug_result["check_name"])
-                print(bug_result["description"])
-                print(bug_result["category"])
-                print(bug_result["type"])
-                print(bug_result["location"])
-                print(bug_result["files"])
-                print(bug_result["path"])
+                #print("============================")
+                #print(bug_result["check_name"])
+                #print(bug_result["description"])
+                #print(bug_result["category"])
+                #print(bug_result["type"])
+                #print(bug_result["location"])
+                #print(bug_result["files"])
+                #print(bug_result["path"])
                 bug = Bug()
                 bug.testcase_id = testcase.testcase_id
                 bug.testcase_dir = testcase.testcase_dir
+                bug.description = bug_result["check_name"] + " " +  bug_result["description"]
+                bug.bug_type = bug_result["type"]
                 bug.sink.line = bug_result["location"]["line"]
                 findex = bug_result["location"]["file"]
                 bug.sink.file = bug_result["files"][findex]
@@ -51,9 +72,5 @@ class Runner_codechecker(Runner):
         return bugs
 
 if __name__ == "__main__":
-    csa = Runner_codechecker()
-    testcase_path = sys.argv[1]
-    testsuite_name = sys.argv[2]
-    output_path = sys.argv[3]
-    output_file = sys.argv[4]
-    csa.start_one(testcase_path, testsuite_name, output_path, output_file)
+    json_file = sys.argv[1]
+    outputReader(json_file)

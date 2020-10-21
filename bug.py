@@ -84,6 +84,7 @@ class Bug():
         bug["detection_results"] = self.detection_results
         return json.dumps(bug)
 
+    # 对比本身与参数bug是否代表了同一个漏洞
     def compare(self, bug, tool):
         if self.testcase_id != bug.testcase_id:
             return False
