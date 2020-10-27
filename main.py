@@ -40,7 +40,7 @@ if __name__ == "__main__":
         testcases = bp.copy(in_dirs[0], out_dir, testsuite_name=testsuite_name, cwe_list=cwelist)
         info = {}
         for testcase in testcases:
-            info[testcase] = tescase.dumps()
+            info[testcase] = testcase.dumps()
         info_str = json.dumps(info)
         with open("testcases.json", "w") as fp:
             fp.write(info_str)
@@ -68,6 +68,17 @@ if __name__ == "__main__":
                 testcases, bugs = bp.parse(paths, testsuite_name=testsuite_name)
         else:
             testcases, bugs = bp.parse(in_dirs, testsuite_name=testsuite_name)
+        info = {}
+        bug_info = []
+        for testcase in testcases:
+            info[testcase.testcase_id] = testcase.dumps()
+        info_str = json.dumps(info)
+        with open("testcases.json", "w") as fp:
+            fp.write(info_str)
+        for bug in bugs:
+            bug_info.append(bug.dumps())
+        with open("bugs.json", "w") as fp:
+            fp.write(json.dumps(bug_info))
     if args.action[0] == "readjson" or args.action[0] == "sca" or args.action[0] == "compare":
         # --input testcases.json bugs.json
         for in_dir in in_dirs:
@@ -127,5 +138,5 @@ if __name__ == "__main__":
                 tn = tn + 1
     print("%d, %d, %d, %d" %(tp, fp, tn, fn))
     print(len(detection_results))
-    display(tps)
+    #display(tps)
     #display(fps)

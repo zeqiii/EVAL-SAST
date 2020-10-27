@@ -176,6 +176,18 @@ def parse_juliet_vul_info(testcase_dir):
             func_infos.append(func_info)
 
     vuls = []
+
+    # 反例标记 ##counterexample##
+    for f in os.listdir(testcase_dir):
+        if f.startswith("CWE") and (f.endswith(".cpp") or f.endswith(".c")):
+            with open(os.path.join(testcase_dir, f)) as fp:
+                lines = fp.readlines()
+                line_num = 0
+                for line in lines:
+                    line_num = line_num + 1
+                    if line.find("##counterexample##"):
+                        vuls.append({"filename":os.path.abspath(os.path.join(testcase_dir, f)), "funcname":"None", "line":str(line_num), "isvul":0, "signature":"good"})
+
     # parse func info
     for info in func_infos:
         files = info.keys()

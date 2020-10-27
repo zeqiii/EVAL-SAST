@@ -75,11 +75,13 @@ class BenchParser():
     def parse(self, testcase_paths, testsuite_name='juliet'):
         testcases, bugs = [], []
         for one in testcase_paths:
+            one = one.strip()
             testcase = None
             if os.path.exists(os.path.join(one, Global.TESTCASE_METADATA)):
                 with open(os.path.join(one, Global.TESTCASE_METADATA)) as fp:
                     content = fp.read()
                     testcase = Testcase.loads(content)
+                    testcase.testcase_dir = os.path.abspath(one)
             else:
                 testcase = Testcase()
                 testcase.testcase_id = one.strip('/').split('/')[-1]
@@ -98,6 +100,9 @@ class BenchParser():
                         testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 elif has_c:
                     testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
+            # 写入 testcase_metadata
+            with open(os.path.join(one, Global.TESTCASE_METADATA), "w") as fp:
+                fp.write(testcase.dumps())
             testcases.append(testcase)
             bugs.extend(self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name))
         return testcases, bugs
@@ -114,6 +119,9 @@ class BenchParser():
                     bad_bug = Bug.loads(content)
                     bad_bug.testcase_id = testcase_id
                     bad_bug.testcase_dir = testcase_dir
+                    bad_bug.sink.file = os.path.join(testcase_dir, os.path.basename(bad_bug.sink.file))
+                with open(os.path.join(testcase_dir, Global.BUG_METADATA), "w") as fp:
+                    fp.write(bad_bug.dumps())
             infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
             for info in infos:
                 sig = info['signature'] # bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
