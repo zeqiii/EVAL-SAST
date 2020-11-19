@@ -107,6 +107,9 @@ if __name__ == "__main__":
         if args.tool == "codechecker":
             runner = Runner_codechecker()
             detection_results = runner.start(testcases, out_dir)
+        if args.tool == "scan-build":
+            runner = Runner_scanbuild()
+            detection_results = runner.start(testcases, out_dir)
     if args.action[0] == "compare":
         for ground_truth in ground_truths:
             for detection_result in detection_results:
