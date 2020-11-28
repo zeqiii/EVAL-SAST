@@ -41,7 +41,7 @@ class Bug():
         self.bug_type = ""       # deprecated, string format of bug info
         self.severity = ""       # severity: info, low, medium, high, critical
         self.description = ""
-        self.cwe_type = []       # example: [193, 122]
+        self.cwe_type = []       # example: [CWE-193, CWE-122]
         self.source = Location()
         self.sink = Location()
         self.other_suspicious = []
@@ -188,6 +188,6 @@ class Testcase():
             # bug的子标签<poc>
             # TBD
             testcase_node.appendChild(bug_node)
-            
+
         # 把构造好的testcase dom对象放到domobj上
         self.domobj = testcase_node

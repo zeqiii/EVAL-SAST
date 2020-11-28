@@ -99,7 +99,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                 sig_file_map[signature] = []
             sig_file_map[signature].append(fpath)
 
-        #对于每一个cwe类型的testcases，在outdir下创建一个目录，目录名取"__"的前半部分，即CWE名
+        #对于每一个cwe类型的testcases，在outdir下创建一个目录，目录名取" __"的前半部分，即CWE名
         #然后把testcase存在这个目录下
         # move to outdir
         for sig in sig_file_map.keys():
@@ -110,15 +110,22 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     the_bug = bug
                     break
             # save path
-            outpath = os.path.join(outdir, sig.split("__")[0])
-            outpath = os.path.join(outpath, sig)
-            testcase.testcase_dir = os.path.abspath(outpath)
+            relative_path = os.path.join(sig.split("__")[0], sig)
+            outpath = os.path.join(outdir, relative_path)
+            testcase.testcase_dir = relative_path
+            testcase.testcase_dir_abs = os.path.abspath(outpath)
             testcase.testcase_id = sig
             testcase.testsuite_name = "juliet"
             testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
+            if the_bug:
+                the_bug.testcase_dir = testcase.testcase_dir
+                the_bug.sink.file = os.path.abspath("", the_bug.sink.file)
+                with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
+                    fp.write(the_bug.dumps())
+            testcase.bugs.append(the_bug)
+            # cp file to outdir
             if not os.path.exists(outpath):
                 os.makedirs(outpath)
-            # cp file to outdir
             files = sig_file_map[sig]
             for f in support_files:
                 shutil.copy(f, outpath)
@@ -126,13 +133,10 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                 if f.endswith(".cpp"):
                     testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 shutil.copy(f, outpath)
-            if the_bug:
-                the_bug.testcase_dir = outpath
-                the_bug.sink.file = os.path.abspath(os.path.join(outpath, the_bug.sink.file))
-                with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
-                    fp.write(the_bug.dumps())
+            """
             with open(os.path.join(outpath, Global.TESTCASE_METADATA), "w") as fp:
                 fp.write(testcase.dumps())
+            """
             testcases.append(testcase)
     return testcases
 
@@ -260,6 +264,5 @@ def parse_juliet_vul_info(testcase_dir):
 
 
 if __name__ == "__main__":
-
     vuls = parse_juliet_vul_info("/home/ubuntu/Workspace/NeuEval/benchmark/testsuite2/CWE369_Divide_by_Zero/CWE369_Divide_by_Zero__int_zero_modulo_44")
     print(vuls)

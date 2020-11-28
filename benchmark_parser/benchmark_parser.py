@@ -21,6 +21,16 @@ class BenchParser():
         signature = filename.split("_"+num)[0] + "_" + num
         return signature
 
+    # 从Juliet的测试样本id里提取cwe编号和漏洞类型描述
+    def __extractVulInfoFromTestcaseID(self, testcase_id):
+        tmp = testcase_id.split("__")[0]
+        cwe_type = tmp.split("_")[0]
+        bug_type = ""
+        for one in tmp.split("_")[1:]:
+            bug_type = bug_type + one + " "
+        bug_type = bug_type[:-1]
+        return cwe_type, bug_type
+
     def __parseJulietManifest(self, f, cwe_list_filter=[]):
         bugs = []
         for event, elem in ET.iterparse(f, events=('end', 'end-ns')):
@@ -46,6 +56,11 @@ class BenchParser():
                             bug.bug_type = child.get('name').split(':')[0]
                             bug.sink.file = fpath
                             bug.sink.line = int(child.get('line'))
+                            feature = Feature()
+                            feature.name = "juliet_flow_variant_" + signature.split('_')[-1]
+                            feature.description = "TBD"
+                            feature.capability = "TBD"
+                            bug.features.append(feature)
                             bugs.append(bug)
         return bugs
 
@@ -71,10 +86,11 @@ class BenchParser():
         bugs = []
         testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
         for testcase in testcases:
-            bug = self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name)
-            bugs.extend(bug)
-        return testcases, bugs
+            bug = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
+            testcase.bugs = bug
+        return testcases
 
+    """
     def parse(self, testcase_paths, testsuite_name='juliet'):
         testcases, bugs = [], []
         for one in testcase_paths:
@@ -109,9 +125,36 @@ class BenchParser():
             testcases.append(testcase)
             bugs.extend(self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name))
         return testcases, bugs
+    """
 
+    def parse_one(self, testcase_id, testcase_dir_abs, testsuite_name):
+        bugs = []
+        if testsuite_name == 'juliet':
+            for parent, dirnames, fnames in os.walk(testcase_dir_abs):
+                for fname in fnames:
+                    if fname.endswith("c") or fname.endswith("cpp") or fname.endswith("java"):
+                        with open(os.path.join(parent,fname)) as fp:
+                            lines = fp.readlines()
+                            line_num = 1
+                            for line in lines:
+                                if line.find("##counterexample##") >= 0 or line.find("##bug##") >= 0:
+                                    bug = Bug()
+                                    bug.testcase_id = testcase_id
+                                    cwe_type, bug.bug_type = self.__extractVulInfoFromTestcaseID(testcase_id)
+                                    bug.cwe_type.append(cwe_type)
+                                    bug.description = bug.bug_type
+                                    bug.sink.file = os.path.join(parent,fname).split(testcase_dir_abs)[-1].strip("/") # 取相对路径
+                                    bug.sink.line = line_num
+                                    if line.find("##counterexample##") >= 0:
+                                        bug.counterexample = 1
+                                    else:
+                                        bug.counterexample = 0
+                                    bugs.append(bug)
+                                line_num = line_num + 1
+        return bugs
+
+"""
     def parse_one(self, testcase_id, testcase_dir, testsuite_name):
-        testcase_dir = os.path.abspath(testcase_dir)
         bugs = []
         bad_bug = None       # only one bad
         counterexamples = {} # may be several good, {"goodG2B":bug1, "goodB2G":bug2, ...}
@@ -154,7 +197,7 @@ class BenchParser():
             bugs.append(counterexamples[key])
         bugs.append(bad_bug)
         return bugs
-
+"""
 
 if __name__ == "__main__":
     parser = BenchParser()
