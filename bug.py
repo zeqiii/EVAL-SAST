@@ -5,7 +5,9 @@ import xml.dom.minidom as minidom
 
 class Feature():
     def __init__(self):
-        self.name = ""
+        self.name = ""  # 语法特征名称
+        self.description = "" # 描述
+        self.capability = "" # 处理该语法特征所需能力
 
 class Location():
     def __init__(self):
@@ -43,8 +45,8 @@ class Bug():
         self.source = Location()
         self.sink = Location()
         self.other_suspicious = []
-        self.execution_path = [] # array of Location
-        self.features = []
+        self.execution_path = [] # 执行路径，Location列表，掐去source和sink
+        self.features = [] # Feature列表
         self.poc = ""
         self.detection_results = {} # example: {"tool_name":"TP"}
 
@@ -113,6 +115,7 @@ class Testcase():
         self.testsuite_name = ""
         self.compile_command = ""
         self.bugs = []              # 包含的漏洞
+        self.domobj = None          # minidom对象
     
     def dumps(self):
         testcase = {}
@@ -176,14 +179,15 @@ class Testcase():
             # bug的子标签<features>
             feat_node = dom.createElement('features')
             for feature in bug.features:
-                feature_node = dom.createElement(feature)
-                feature_desc = dom.createTextNode("TBD")
+                feature_node = dom.createElement(feature.name)
+                feature_desc = dom.createTextNode(feature.description)
                 feature_node.appendChild(feature_desc)
+                feature_node.setAttribute(feature.capability)
                 feat_node.appendChild(feature)
             bug_node.appendChild(feat_node)
             # bug的子标签<poc>
-            
-            
-
+            # TBD
             testcase_node.appendChild(bug_node)
-        
+            
+        # 把构造好的testcase dom对象放到domobj上
+        self.domobj = testcase_node
