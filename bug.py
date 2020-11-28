@@ -1,5 +1,11 @@
 # -*- coding=utf-8 -*-
 import json
+import xml.etree.ElementTree as ET
+import xml.dom.minidom as minidom
+
+class Feature():
+    def __init__(self):
+        self.name = ""
 
 class Location():
     def __init__(self):
@@ -38,6 +44,8 @@ class Bug():
         self.sink = Location()
         self.other_suspicious = []
         self.execution_path = [] # array of Location
+        self.features = []
+        self.poc = ""
         self.detection_results = {} # example: {"tool_name":"TP"}
 
     @staticmethod
@@ -100,9 +108,11 @@ class Bug():
 class Testcase():
     def __init__(self):
         self.testcase_id = ""
-        self.testcase_dir = ""
+        self.testcase_dir = ""      # 相对于测试集所在文件夹的相对路径
+        self.testcase_dir_abs = ""  # 绝对路径
         self.testsuite_name = ""
         self.compile_command = ""
+        self.bugs = []              # 包含的漏洞
     
     def dumps(self):
         testcase = {}
@@ -121,3 +131,59 @@ class Testcase():
         testcase.testsuite_name = obj["testsuite_name"]
         testcase.compile_command = obj["compile_command"]
         return testcase
+
+    def toXml(self):
+        # 创建节点
+        dom = minidom.Document()
+        testcase_node = dom.createElement("testcase")
+        testcase_node.setAttribute('id', self.testcase_id) # 测试样本名称属性
+        testcase_node.setAttribute('path', self.testcase_dir) # 测试样本相对路径
+        testcase_node.setAttribute('compile_command', self.compile_command) # 测试样本的编译命令
+        # 开始添加bug
+        for bug in self.bugs:
+            bug_node = dom.createElement("bug")
+            bug_node.setAttribute('iscounterexample', bug.counterexample) # 是否为反例
+            bug_node.setAttribute('type', bug.bug_type) # 漏洞类型
+            if len(bug.cwe_type) > 0:                   # 漏洞CWE分类
+                cwe_type_str = ""
+                for cwe in bug.cwe_type:
+                    cwe_type_str = cwe_type_str + "CWE-%d|"%(cwe)
+                cwe_type_str = cwe_type_str[:-1]
+                bug_node.setAttribute('cwe', cwe_type_str)
+            # bug的子标签<description>
+            desc_node = dom.createElement('description')
+            desc_text_node = dom.createTextNode(bug.description)
+            desc_node.appendChild(desc_text_node)
+            bug_node.appendChild(desc_node)
+            # bug的子标签<trace>
+            trace_node = dom.createElement('trace')
+            source_node = dom.createElement('source')
+            source_node.setAttribute('file', bug.source.file)
+            source_node.setAttribute('line', bug.source.line)
+            source_node.setAttribute('col', bug.source.col)
+            trace_node.appendChild(source_node)
+            for location in bug.execution_path:
+                location_node = dom.createElement('location')
+                location_node.setAttribute('file',location.file)
+                location_node.setAttribute('line', location.line)
+                location_node.setAttribute('col', location.col)
+                trace_node.appendChild(location_node)
+            trace_node.appendChild(sink_node)
+            sink_node = dom.createElement('sink')
+            sink_node.setAttribute('file', bug.sink.file)
+            sink_node.setAttribute('line', bug.sink.line)
+            sink_node.setAttribute('col', bug.sink.col)
+            # bug的子标签<features>
+            feat_node = dom.createElement('features')
+            for feature in bug.features:
+                feature_node = dom.createElement(feature)
+                feature_desc = dom.createTextNode("TBD")
+                feature_node.appendChild(feature_desc)
+                feat_node.appendChild(feature)
+            bug_node.appendChild(feat_node)
+            # bug的子标签<poc>
+            
+            
+
+            testcase_node.appendChild(bug_node)
+        

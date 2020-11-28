@@ -49,6 +49,8 @@ class BenchParser():
                             bugs.append(bug)
         return bugs
 
+    # 从原测试集文件夹indir中，将一个个测试用例拷贝出来，放置在outdir里，testsuite_name目前支持'juliet', 'sard88', 'sard100', 'sard101'
+    # 对于'juliet'测试集，cwe_list是白名单，仅拷贝其包含的CWE编号
     def copy(self, indir, outdir, testsuite_name='', cwe_list=[]):
         if not indir or not outdir:
             print("Error, neither indir nor outdir can be None")
