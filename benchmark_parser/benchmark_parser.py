@@ -201,4 +201,4 @@ class BenchParser():
 
 if __name__ == "__main__":
     parser = BenchParser()
-    testcases, bugs = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
+    testcases = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])

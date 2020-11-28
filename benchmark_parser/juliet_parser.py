@@ -1,5 +1,6 @@
 # -*- coding=utf-8 -*-
 import os, sys, zipfile, shutil
+sys.path.append("..")
 from glo import *
 from bug import *
 
@@ -119,9 +120,11 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
             if the_bug:
                 the_bug.testcase_dir = testcase.testcase_dir
-                the_bug.sink.file = os.path.abspath("", the_bug.sink.file)
+                the_bug.sink.file = os.path.join("", the_bug.sink.file)
+                """
                 with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
                     fp.write(the_bug.dumps())
+                """
             testcase.bugs.append(the_bug)
             # cp file to outdir
             if not os.path.exists(outpath):
