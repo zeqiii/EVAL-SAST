@@ -241,4 +241,5 @@ def parse_manifest(manifest):
                     bug.features.append(feature)
             testcase.bugs.append(bug)
         testcases.append(testcase)
+    xml_in.close()
     return testcases

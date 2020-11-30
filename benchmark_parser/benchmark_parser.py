@@ -13,12 +13,31 @@ class BenchParser():
     def __init__(self):
         self.testsuite_name = ""
 
+    def __is_number(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            pass
+        try:
+            import unicodedata
+            unicodedata.numeric(s)
+            return True
+        except (TypeError, ValueError):
+            pass 
+        return False
+
     # 从Juliet的文件名中提取测试样本名，如CWE114_Process_Control__w32_char_connect_socket_07.c 提取 CWE114_Process_Control__w32_char_connect_socket_07
     def __getTestcaseNameFromFilename(self, filename):
         part_2 = filename.split("_")[-1]
         if part_2.startswith("good") or part_2.startswith("bad"):
             part_2 = filename.split("_")[-2]
-        num = part_2[0:2]
+        num = ""
+        for index in range(0, len(part_2)):
+            if self.__is_number(part_2[index]):
+                num = num + part_2[index]
+            else:
+                break
         signature = filename.split("_"+num)[0] + "_" + num
         return signature
 
@@ -90,42 +109,11 @@ class BenchParser():
             testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
         return testcases
 
-    """
-    def parse(self, testcase_paths, testsuite_name='juliet'):
-        testcases, bugs = [], []
-        for one in testcase_paths:
-            one = one.strip()
-            testcase = None
-            if os.path.exists(os.path.join(one, Global.TESTCASE_METADATA)):
-                with open(os.path.join(one, Global.TESTCASE_METADATA)) as fp:
-                    content = fp.read()
-                    testcase = Testcase.loads(content)
-                    testcase.testcase_dir = os.path.abspath(one)
-            else:
-                testcase = Testcase()
-                testcase.testcase_id = one.strip('/').split('/')[-1]
-                testcase.testcase_dir = one
-                testcase.testsuite_name = testsuite_name
-                has_cpp, has_c = False, False
-                for parent, dirnames, filenames in os.walk(one):
-                    for f in filenames:
-                        if f.endswith('cpp'):
-                            has_cpp = True
-                        if f.endswith('c'):
-                            has_c = True
-                if has_cpp:
-                    testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp -lpthread"
-                    if has_c:
-                        testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
-                elif has_c:
-                    testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
-            # 写入 testcase_metadata
-            with open(os.path.join(one, Global.TESTCASE_METADATA), "w") as fp:
-                fp.write(testcase.dumps())
-            testcases.append(testcase)
-            bugs.extend(self.parse_one(testcase.testcase_id, testcase.testcase_dir, testsuite_name))
-        return testcases, bugs
-    """
+    def parse(self, testsuite_dir, testsuite_name):
+        manifest = os.path.join(testsuite_dir, "manifest.xml")
+        testcases = parse_manifest(manifest)
+        ###here
+
 
     def parse_one(self, testcase_id, testcase_dir_abs, testsuite_name):
         bugs = []
@@ -172,51 +160,8 @@ class BenchParser():
                                 line_num = line_num + 1
         return bugs
 
-"""
-    def parse_one(self, testcase_id, testcase_dir, testsuite_name):
-        bugs = []
-        bad_bug = None       # only one bad
-        counterexamples = {} # may be several good, {"goodG2B":bug1, "goodB2G":bug2, ...}
-        if testsuite_name == 'juliet':
-            if os.path.exists(os.path.join(testcase_dir, Global.BUG_METADATA)):
-                with open(os.path.join(testcase_dir, Global.BUG_METADATA)) as fp:
-                    content = fp.read()
-                    bad_bug = Bug.loads(content)
-                    bad_bug.testcase_id = testcase_id
-                    bad_bug.testcase_dir = testcase_dir
-                    bad_bug.sink.file = os.path.join(testcase_dir, os.path.basename(bad_bug.sink.file))
-                with open(os.path.join(testcase_dir, Global.BUG_METADATA), "w") as fp:
-                    fp.write(bad_bug.dumps())
-            infos = Juliet_parser.parse_juliet_vul_info(testcase_dir)
-            for info in infos:
-                sig = info['signature'] # bad, goodG2B, goodB2G, goodG2B1, goodG2B2, ...
-                filename = info['filename']
-                line = info['line']
-                if sig.startswith("bad"):
-                    if int(line) == bad_bug.sink.line and filename == bad_bug.sink.file:
-                        continue   # 忽略解析出的与manifest.xml中相同的漏洞位置
-                    other = Location()
-                    other.file = filename
-                    other.line = int(line)
-                    bad_bug.other_suspicious.append(other)
-                elif sig.startswith("good"):
-                    if sig not in counterexamples.keys():
-                        counterexamples[sig] = Bug()
-                        counterexamples[sig].testcase_id = testcase_id
-                        counterexamples[sig].testcase_dir = testcase_dir
-                        counterexamples[sig].counterexample = 1
-                        counterexamples[sig].sink.file = filename
-                        counterexamples[sig].sink.line = int(line)
-                    else:
-                        other = Location()
-                        other.file = filename
-                        other.line = int(line)
-                        counterexamples[sig].other_suspicious.append(other)
-        for key in counterexamples.keys():
-            bugs.append(counterexamples[key])
-        bugs.append(bad_bug)
-        return bugs
-"""
+
+
 
 if __name__ == "__main__":
     parser = BenchParser()
