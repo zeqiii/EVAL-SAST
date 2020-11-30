@@ -198,7 +198,47 @@ def parse_manifest(manifest):
     xml_in = open(manifest)
     tree = ET.parse(xml_in)
     root = tree.getroot()
-    for testcase in root.findall('testcase'):
-        compile_command = testcase.attrib['compile_command']
-        testcase_id = testcase.attrib['id']
-        testcase_path = testcase.attrib['path']
+    testsuite_name = root.attrib['name']
+    testcases = []
+    for testcase_node in root.findall('testcase'):
+        testcase = Testcase()
+        testcase.testcase_id = testcase_node.attrib['id']
+        testcase.testcase_dir = testcase_node.attrib['path']      # 相对于测试集所在文件夹的相对路径
+        testcase.testsuite_name = testsuite_name
+        testcase.compile_command = testcase_node.attrib['compile_command']
+        testcase.bugs = []              # 包含的漏洞
+        testcase.domobj = None 
+        for bug_node in testcase.findall('bug'):
+            bug = Bug()
+            cwe_type = bug_node.attrib['cwe']
+            bug.cwe_type = cwe_type.split('|')
+            bug.bug_type = bug_node.attrib['type']
+            bug.counterexample = int(bug_node.attrib['iscounterexample'])
+            for child in bug_node:
+                if child.tag == "description":
+                    bug.description = child.text
+                elif child.tag == "trace":
+                    for child2 in child:
+                        if child2.tag == "source":
+                            bug.source.file = child2.attrib['file']
+                            bug.source.line = int(child2.attrib['line'])
+                            bug.source.col = int(child2.attrib['col'])
+                        elif child2.tag == "sink":
+                            bug.sink.file = child2.attrib['file']
+                            bug.sink.line = int(child2.attrib['line'])
+                            bug.sink.col = int(child2.attrib['col'])
+                        elif child2.tag == "location":
+                            location = Location()
+                            location.file = child2.attrib['file']
+                            location.line = int(child2.attrib['line'])
+                            location.col = int(child2.attrib['col'])
+                            bug.execution_path.append(location)
+                elif child.tag == "features":
+                    feature = Feature()
+                    feature.name = child.tag
+                    feature.description = child.text
+                    feature.capability = child.attrib['capability']
+                    bug.features.append(feature)
+            testcase.bugs.append(bug)
+        testcases.append(testcase)
+    return testcases
