@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 import os, sys, argparse, json
 import juliet_parser as Juliet_parser
+import xml.dom.minidom as minidom
 from xml.etree import ElementTree as ET
 sys.path.append("..")
 from bug import *
@@ -86,8 +87,7 @@ class BenchParser():
         bugs = []
         testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
         for testcase in testcases:
-            bug = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
-            testcase.bugs = bug
+            testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
         return testcases
 
     """
@@ -134,10 +134,14 @@ class BenchParser():
                 for fname in fnames:
                     if fname.endswith("c") or fname.endswith("cpp") or fname.endswith("java"):
                         with open(os.path.join(parent,fname)) as fp:
+                            func_info = None
                             lines = fp.readlines()
                             line_num = 1
                             for line in lines:
                                 if line.find("##counterexample##") >= 0 or line.find("##bug##") >= 0:
+                                    if not func_info:
+                                        func_info = Juliet_parser.gen_func_info(os.path.join(parent,fname))
+                                        func_info = Juliet_parser.parse_func_info(func_info)
                                     bug = Bug()
                                     bug.testcase_id = testcase_id
                                     cwe_type, bug.bug_type = self.__extractVulInfoFromTestcaseID(testcase_id)
@@ -149,6 +153,21 @@ class BenchParser():
                                         bug.counterexample = 1
                                     else:
                                         bug.counterexample = 0
+                                    # 解析bug feature
+                                    feature = Feature()
+                                    feature.name = "juliet_flow_variant__" + testcase_id.split('_')[-1]
+                                    for key1 in func_info.keys():
+                                        if key1.find(fname) < 0:
+                                            continue
+                                        for key2 in func_info[key1].keys(): # key2是函数名
+                                            startline = func_info[key1][key2]['funcstartline']
+                                            endline = func_info[key1][key2]['funcendline']
+                                            if bug.sink.line >= int(startline) and bug.sink.line <= int(endline):
+                                                part = key2.split('_')[-1]
+                                                if not part.startswith('good') and not part.startswith('bad'):
+                                                    part = key2.split('_')[-2]
+                                                feature.name = feature.name + "_" + part
+                                    bug.features.append(feature)
                                     bugs.append(bug)
                                 line_num = line_num + 1
         return bugs
@@ -202,3 +221,13 @@ class BenchParser():
 if __name__ == "__main__":
     parser = BenchParser()
     testcases = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
+    for testcase in testcases:
+        testcase.toXml()
+    dom = minidom.Document()
+    testsuite_node = dom.createElement("testsuite")
+    testsuite_node.setAttribute('name', 'juliet')
+    for testcase in testcases:
+        testsuite_node.appendChild(testcase.domobj)
+    dom.appendChild(testsuite_node)
+    with open("manifest.xml", "w") as fp:
+        dom.writexml(fp, indent="", addindent="    ", newl="\n", encoding="UTF-8") 

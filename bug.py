@@ -145,12 +145,12 @@ class Testcase():
         # 开始添加bug
         for bug in self.bugs:
             bug_node = dom.createElement("bug")
-            bug_node.setAttribute('iscounterexample', bug.counterexample) # 是否为反例
+            bug_node.setAttribute('iscounterexample', str(bug.counterexample)) # 是否为反例
             bug_node.setAttribute('type', bug.bug_type) # 漏洞类型
             if len(bug.cwe_type) > 0:                   # 漏洞CWE分类
                 cwe_type_str = ""
                 for cwe in bug.cwe_type:
-                    cwe_type_str = cwe_type_str + "CWE-%d|"%(cwe)
+                    cwe_type_str = cwe_type_str + "%s|"%(cwe)
                 cwe_type_str = cwe_type_str[:-1]
                 bug_node.setAttribute('cwe', cwe_type_str)
             # bug的子标签<description>
@@ -162,32 +162,43 @@ class Testcase():
             trace_node = dom.createElement('trace')
             source_node = dom.createElement('source')
             source_node.setAttribute('file', bug.source.file)
-            source_node.setAttribute('line', bug.source.line)
-            source_node.setAttribute('col', bug.source.col)
+            source_node.setAttribute('line', str(bug.source.line))
+            source_node.setAttribute('col', str(bug.source.col))
             trace_node.appendChild(source_node)
             for location in bug.execution_path:
                 location_node = dom.createElement('location')
                 location_node.setAttribute('file',location.file)
-                location_node.setAttribute('line', location.line)
-                location_node.setAttribute('col', location.col)
+                location_node.setAttribute('line', str(location.line))
+                location_node.setAttribute('col', str(location.col))
                 trace_node.appendChild(location_node)
-            trace_node.appendChild(sink_node)
             sink_node = dom.createElement('sink')
             sink_node.setAttribute('file', bug.sink.file)
-            sink_node.setAttribute('line', bug.sink.line)
-            sink_node.setAttribute('col', bug.sink.col)
+            sink_node.setAttribute('line', str(bug.sink.line))
+            sink_node.setAttribute('col', str(bug.sink.col))
+            trace_node.appendChild(sink_node)
+            bug_node.appendChild(trace_node)
             # bug的子标签<features>
-            feat_node = dom.createElement('features')
+            features_node = dom.createElement('features')
             for feature in bug.features:
                 feature_node = dom.createElement(feature.name)
                 feature_desc = dom.createTextNode(feature.description)
                 feature_node.appendChild(feature_desc)
-                feature_node.setAttribute(feature.capability)
-                feat_node.appendChild(feature)
-            bug_node.appendChild(feat_node)
+                feature_node.setAttribute('capability', feature.capability)
+                features_node.appendChild(feature_node)
+            bug_node.appendChild(features_node)
             # bug的子标签<poc>
             # TBD
             testcase_node.appendChild(bug_node)
 
         # 把构造好的testcase dom对象放到domobj上
         self.domobj = testcase_node
+
+
+def parse_manifest(manifest):
+    xml_in = open(manifest)
+    tree = ET.parse(xml_in)
+    root = tree.getroot()
+    for testcase in root.findall('testcase'):
+        compile_command = testcase.attrib['compile_command']
+        testcase_id = testcase.attrib['id']
+        testcase_path = testcase.attrib['path']

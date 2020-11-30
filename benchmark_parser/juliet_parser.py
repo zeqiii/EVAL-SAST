@@ -118,13 +118,8 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             testcase.testcase_id = sig
             testcase.testsuite_name = "juliet"
             testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
-            if the_bug:
-                the_bug.testcase_dir = testcase.testcase_dir
-                the_bug.sink.file = os.path.join("", the_bug.sink.file)
-                """
-                with open(os.path.join(outpath, Global.BUG_METADATA), "w") as fp:
-                    fp.write(the_bug.dumps())
-                """
+            the_bug.testcase_dir = testcase.testcase_dir
+            the_bug.sink.file = os.path.join("", the_bug.sink.file)
             testcase.bugs.append(the_bug)
             # cp file to outdir
             if not os.path.exists(outpath):
@@ -132,14 +127,39 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             files = sig_file_map[sig]
             for f in support_files:
                 shutil.copy(f, outpath)
+            bug_sink = ""  # 漏洞sink处的语句
             for f in files:
                 if f.endswith(".cpp"):
                     testcase.compile_command = "g++ -DINCLUDEMAIN *.cpp *.c -lpthread"
                 shutil.copy(f, outpath)
-            """
-            with open(os.path.join(outpath, Global.TESTCASE_METADATA), "w") as fp:
-                fp.write(testcase.dumps())
-            """
+                # bug所在文件，添加标记
+                if the_bug.sink.file.find(f) >= 0 or f.find(the_bug.sink.file) >= 0:
+                    # mark bad sink
+                    content = []
+                    with open(os.path.join(outpath, os.path.basename(f)), "r") as fp:
+                        content = fp.readlines()
+                    bug_sink = content[int(the_bug.sink.line)-1].strip()
+                    content[int(the_bug.sink.line)-1] = content[int(the_bug.sink.line)-1].rstrip() + " // ##bug##\n"
+                    new_content = ""
+                    for one in content:
+                        new_content = new_content + one
+                    with open(os.path.join(outpath, os.path.basename(f)), "w") as fp:
+                        fp.write(new_content)
+            for f in files:
+                ff = os.path.join(outpath, os.path.basename(f))
+                altered = False
+                with open(ff, "r") as fp:
+                    content = fp.readlines()
+                for i in range(0, len(content)):
+                    if content[i].find(bug_sink) >= 0 and content[i].find("##bug##") < 0:
+                        content[i] = content[i].rstrip() + " // ##counterexample##\n"
+                        altered = True
+                if altered:
+                    with open(ff, "w") as fp:
+                        new_content = ""
+                        for line in content:
+                            new_content = new_content + line
+                        fp.write(new_content)
             testcases.append(testcase)
     return testcases
 
