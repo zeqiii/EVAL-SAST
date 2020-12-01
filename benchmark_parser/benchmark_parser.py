@@ -114,6 +114,7 @@ class BenchParser():
         testcases = parse_manifest(manifest)
         # 重新解析一遍漏洞
         for testcase in testcases:
+            testcase.testcase_dir_abs = os.path.abspath(os.path.join(testsuite_dir, testcase.testcase_dir))
             testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
         return testcases
 

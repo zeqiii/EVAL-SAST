@@ -208,7 +208,7 @@ def parse_manifest(manifest):
         testcase.compile_command = testcase_node.attrib['compile_command']
         testcase.bugs = []              # 包含的漏洞
         testcase.domobj = None 
-        for bug_node in testcase.findall('bug'):
+        for bug_node in testcase_node.findall('bug'):
             bug = Bug()
             cwe_type = bug_node.attrib['cwe']
             bug.cwe_type = cwe_type.split('|')
@@ -234,11 +234,12 @@ def parse_manifest(manifest):
                             location.col = int(child2.attrib['col'])
                             bug.execution_path.append(location)
                 elif child.tag == "features":
-                    feature = Feature()
-                    feature.name = child.tag
-                    feature.description = child.text
-                    feature.capability = child.attrib['capability']
-                    bug.features.append(feature)
+                    for child3 in child:
+                        feature = Feature()
+                        feature.name = child3.tag
+                        feature.description = child3.text
+                        feature.capability = child3.attrib['capability']
+                        bug.features.append(feature)
             testcase.bugs.append(bug)
         testcases.append(testcase)
     xml_in.close()
