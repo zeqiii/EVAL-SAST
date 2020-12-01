@@ -28,11 +28,14 @@ class Runner:
         if not os.path.exists(Config.OUTPUT):
             os.makedirs(Config.OUTPUT)
 
+    # 看看real_bug有没有被检测到
     def judge(self, real_bug, bugs):
         # see if there exists one bug match the real bug
         for bug in bugs:
             if real_bug.equal(bug):
+                if bug_type_compare(real_bug, bug)
                 if real_bug.is_vul == 1:
+                    if 
                     return "TP", bug
                 elif real_bug.is_vul == 0:
                     return "FP", bug
@@ -52,6 +55,11 @@ class Runner:
         for testcase in testcases:
             one_out_dir = os.path.join(out_dir, testcase.testcase_id)
             detected_bugs = self.start_one(testcase, one_out_dir)
+            for bug in testcase.bugs:
+                judge_result = self.judge(bug, detected_bugs)
+            for detected_bug in detected_bugs:
+                
+
             detection_results.append((testcase, detected_bugs))
         return detection_results
 
