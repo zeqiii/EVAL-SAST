@@ -14,13 +14,6 @@ def get_testcase_path(testcase_id, testsuite_home_dir=Config.TESTSUITE):
 
 
 class Runner:
-
-    # 1，从数据库查询testcase                       # 1，运行工具输出结果
-    # 2，根据testcase id定位testcase path           # 2，分析结果
-    # 3，调用工具输出结果                           # 3，更新数据库
-    # 4，分析结果
-    # 5，更新数据库
-
     # GLOBAL VARIANTS
     lock = threading.Lock()           # for thread safe operation
 
@@ -48,33 +41,18 @@ class Runner:
         else:
             return "FN", None
 
-    def start_one(self, testcase, one_output_path):
-        cmd = self._genCMD(testcase, one_output_path)
-        print("+++++++++++++++++++++++++")
-        print(cmd)
-        print("+++++++++++++++++++++++++")
+    def start_one(self, testcase, one_out_dir):
+        cmd = self._genCMD(testcase, one_out_dir)
         os.system(cmd)
-        bugs = self._parseOutput(testcase, one_output_path)
+        bugs = self._parseOutput(testcase, one_out_dir)
         return bugs
 
-    def start(self, testcases, output_path):
+    def start(self, testcases, out_dir):
         detection_results = []
         for testcase in testcases:
-            testcase_path = testcase.testcase_dir
-            testsuite_name = testcase.testsuite_name
-            testcase_id = testcase.testcase_id
-            one_output_path = os.path.join(output_path, testcase_id)
-            output_file = testcase_id
-            bugs = self.start_one(testcase, one_output_path)
-            detection_results.append((testcase, bugs))
-        detection_records = {}
-        for testcase, bugs in detection_results:
-            bugs_str = []
-            for bug in bugs:
-                bugs_str.append(bug.dumps())
-            detection_records[testcase.testcase_id] = bugs_str
-        with open(self.name+"_detection_results.json", "w") as fp:
-            fp.write(json.dumps(detection_records))
+            one_out_dir = os.path.join(out_dir, testcase.testcase_id)
+            detected_bugs = self.start_one(testcase, one_out_dir)
+            detection_results.append((testcase, detected_bugs))
         return detection_results
 
     # clean result
@@ -94,17 +72,7 @@ class Runner:
     def _genCMD(self, testcase, output_path, output_file="result.out"):
         return ""
 
-    # select vuls from DB
-    # please rewrite this method
-    def _select_from_DB(self, num):
-        pass
-
     # parse output data, return a list of Bug objects
     # please rewrite this method
     def _parseOutput(self, testcase, output_path, output_file="result.out"):
         return None
-
-    # update DB
-    # please rewrite this method
-    def _update(self, _id, result, details=[]):
-        pass

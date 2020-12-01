@@ -28,12 +28,13 @@ class Runner_codechecker(Runner):
         self.name = "codechecker"
 
     def _genCMD(self, testcase, output_path, output_file="result.out"):
-        if not os.path.exists(testcase.testcase_dir):
-            raise Exception(testcase.testcase_dir+" does not exist")
+        if not os.path.exists(testcase.testcase_dir_abs):
+            raise Exception(testcase.testcase_dir_abs + " does not exist")
         build_command = ""
+        # 根据不同的测试集，实现不同的编译方法
         if testcase.testsuite_name == 'juliet':
-            build_command = "\"cd %s && %s\""%(testcase.testcase_dir, testcase.compile_command)
-        cmd = "CodeChecker check --ctu -b %s -d clang-diagnostic-unused-parameter -o %s" %(build_command, output_path)
+            build_command = "\"cd %s && %s\""%(testcase.testcase_dir_abs, testcase.compile_command)
+        cmd = "CodeChecker check --ctu -b %s -o %s" %(build_command, output_path)
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.out"):
@@ -48,25 +49,14 @@ class Runner_codechecker(Runner):
         with open(report_json) as fp:
             bug_results = json.loads(fp.read())
             for bug_result in bug_results:
-                #print("============================")
-                #print(bug_result["check_name"])
-                #print(bug_result["description"])
-                #print(bug_result["category"])
-                #print(bug_result["type"])
-                #print(bug_result["location"])
-                #print(bug_result["files"])
-                #print(bug_result["path"])
                 bug = Bug()
                 bug.testcase_id = testcase.testcase_id
-                bug.testcase_dir = testcase.testcase_dir
                 bug.description = bug_result["check_name"] + " " +  bug_result["description"]
                 bug.bug_type = bug_result["type"]
                 bug.sink.line = bug_result["location"]["line"]
                 findex = bug_result["location"]["file"]
                 bug.sink.file = bug_result["files"][findex]
                 bugs.append(bug)
-        #os.system("rm -rf %s" %(output_path))
-        #os.system("mv %s %s" %(json_output_path, output_path))
         os.system("mv %s %s" %(report_json, output_path))
         os.system("rm -rf %s" %(json_output_path))
         return bugs
