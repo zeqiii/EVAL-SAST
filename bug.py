@@ -2,6 +2,7 @@
 import json
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
+from nltk.stem import WordNetLemmatizer
 from CWE import *
 
 class Feature():
@@ -163,12 +164,14 @@ def parse_manifest(manifest):
     return testcases
 
 # 判断body里面是否包含keywords
+wnl = WordNetLemmatizer() # 初始化一次
 def __has_keywords(body, keywords):
     num = 0
-    for word in keywords:
-        if word in body:
+    for word in body:
+        word = wnl.lemmatize(word)
+        if word in keywords:
             num = num + 1
-    return num
+    return num    # 返回word中包含keywords的数量
 
 # 比较个漏洞的漏洞类型是否相同
 def bug_type_compare(bug1, bug2):
@@ -190,7 +193,7 @@ def bug_type_compare(bug1, bug2):
         if 'null' in key_words1 and 'null' in key_words2:
             return True
         if __has_keywords(key_words1, ['null', 'pointer', 'dereference', 'access']) >= 2 and \
-                __has_keywords(key_words2, ['null', 'pointer', 'dereference', '']) >= 2:
+                __has_keywords(key_words2, ['null', 'pointer', 'dereference', 'access']) >= 2:
             return True
         if __has_keywords(key_words1, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2 and \
                 __has_keywords(key_words2, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2:
