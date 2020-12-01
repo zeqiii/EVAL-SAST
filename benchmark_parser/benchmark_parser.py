@@ -112,8 +112,10 @@ class BenchParser():
     def parse(self, testsuite_dir, testsuite_name):
         manifest = os.path.join(testsuite_dir, "manifest.xml")
         testcases = parse_manifest(manifest)
-        ###here
-
+        # 重新解析一遍漏洞
+        for testcase in testcases:
+            testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
+        return testcases
 
     def parse_one(self, testcase_id, testcase_dir_abs, testsuite_name):
         bugs = []
