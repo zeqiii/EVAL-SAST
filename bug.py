@@ -2,6 +2,7 @@
 import json
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
+from CWE import *
 
 class Feature():
     def __init__(self):
@@ -161,7 +162,42 @@ def parse_manifest(manifest):
     xml_in.close()
     return testcases
 
+# 判断body里面是否包含keywords
+def __has_keywords(body, keywords):
+    num = 0
+    for word in keywords:
+        if word in body:
+            num = num + 1
+    return num
+
 # 比较个漏洞的漏洞类型是否相同
 def bug_type_compare(bug1, bug2):
     # 如果有cwe信息，则先比较cwe信息
     if len(bug1.cwe_type) > 0 and len(bug2.cwe_type) > 0:
+        cwe_tree = CWETree("cwe-1000.xml")
+        for cwe1 in bug1.cwe_type:
+            cwe1 = int(cwe1.split('-')[-1])
+            for cwe2 in bug2.cwe_type:
+                cwe2 = int(cwe2.split('-')[-1])
+                if cwe_tree.hasRelation(cwe1, cwe2):
+                    return True
+    # 如果有bug_type信息，则比较bug_type信息
+    if len(bug1.bug_type) > 0 and len(bug2.bug_type) > 0:
+        bug1.bug_type = bug1.bug_type.replace('_', ' ')
+        bug2.bug_type = bug2.bug_type.replace('_', ' ')
+        key_words1 = bug1.bug_type.lower().split(' ')
+        key_words2 = bug2.bug_type.lower().split(' ')
+        if 'null' in key_words1 and 'null' in key_words2:
+            return True
+        if __has_keywords(key_words1, ['null', 'pointer', 'dereference', 'access']) >= 2 and \
+                __has_keywords(key_words2, ['null', 'pointer', 'dereference', '']) >= 2:
+            return True
+        if __has_keywords(key_words1, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2 and \
+                __has_keywords(key_words2, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2:
+            return True
+        if __has_keywords(key_words1, ['zero', 'divide']) >= 2 and \
+                __has_keywords(key_words2, ['zero', 'divide']) >= 2:
+            return True
+        if __has_keywords(key_words1, ['integer', 'over', 'flow']) >= 2 and \
+                __has_keywords(key_words2, ['integer', 'over', 'flow']) >= 2:
+            return True
