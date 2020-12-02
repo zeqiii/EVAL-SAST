@@ -7,7 +7,7 @@ sys.path.append("..")
 from bug import *
 from glo import *
 
-def __is_number(s):
+def is_number(s):
     try:
         float(s)
         return True
@@ -33,7 +33,7 @@ class BenchParser():
             part_2 = filename.split("_")[-2]
         num = ""
         for index in range(0, len(part_2)):
-            if __is_number(part_2[index]):
+            if is_number(part_2[index]):
                 num = num + part_2[index]
             else:
                 break
