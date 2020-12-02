@@ -7,25 +7,24 @@ sys.path.append("..")
 from bug import *
 from glo import *
 
+def __is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass 
+    return False
 
 # 把原测试集加工成适合自动测评的样子
 class BenchParser():
     def __init__(self):
         self.testsuite_name = ""
-
-    def __is_number(s):
-        try:
-            float(s)
-            return True
-        except ValueError:
-            pass
-        try:
-            import unicodedata
-            unicodedata.numeric(s)
-            return True
-        except (TypeError, ValueError):
-            pass 
-        return False
 
     # 从Juliet的文件名中提取测试样本名，如CWE114_Process_Control__w32_char_connect_socket_07.c 提取 CWE114_Process_Control__w32_char_connect_socket_07
     def __getTestcaseNameFromFilename(self, filename):
@@ -34,7 +33,7 @@ class BenchParser():
             part_2 = filename.split("_")[-2]
         num = ""
         for index in range(0, len(part_2)):
-            if self.__is_number(part_2[index]):
+            if __is_number(part_2[index]):
                 num = num + part_2[index]
             else:
                 break
