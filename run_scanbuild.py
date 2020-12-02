@@ -41,19 +41,15 @@ class Runner_scanbuild(Runner):
             ds.append(des)
         t = 0
         bugs = []
-        print(nodes)
         for i in range(0,len(nodes),6):
             b = nodes[i:i+6]
             bug = Bug()
+            bug.testcase_id = testcase.testcase_id
+            bug.description = ds[t][0]
             bug.bug_type = b[1]
-            bug.method =b[3]
-            bug.vul_path.append({"filename":b[2], "line":b[4]})
+            bug.sink.file = b[2]
+            bug.sink.line = int(b[4])
             bug.description=ds[t][0]
-            t=t+1
-            bug_list.append(bug)
-        
+            t = t + 1
+            bugs.append(bug)
         return bugs
-
-if __name__ == "__main__":
-    json_file = sys.argv[1]
-    outputReader(json_file)
