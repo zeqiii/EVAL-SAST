@@ -110,16 +110,23 @@ class Testcase():
             features_node = dom.createElement('features')
             for feature in bug.features:
                 feature_node = dom.createElement(feature.name)
-                print(feature.description)
                 feature_desc = dom.createTextNode(feature.description)
                 feature_node.appendChild(feature_desc)
                 feature_node.setAttribute('capability', feature.capability)
                 features_node.appendChild(feature_node)
             bug_node.appendChild(features_node)
+            # bug的子标签<detection_results>
+            detection_node = dom.createElement('detection_results')
+            for tool_name in bug.detection_results.keys():
+                tool_node = dom.createElement('tool')
+                tool_node.setAttribute('name', 'tool_name')
+                result_txt = dom.createTextNode(bug.detection_results[tool_name])
+                tool_node.appendChild(result_txt)
+                detection_node.appendChild(tool_node)
+            bug_node.appendChild(detection_node)
             # bug的子标签<poc>
             # TBD
             testcase_node.appendChild(bug_node)
-
         # 把构造好的testcase dom对象放到domobj上
         self.domobj = testcase_node
 
@@ -184,6 +191,9 @@ def parse_manifest(manifest):
                             feature.description = ""
                         feature.capability = child3.attrib['capability']
                         bug.features.append(feature)
+                elif child.tag == "detection_results":
+                    for child4 in child:
+                        bug.detection_results[child4.attrib['name']] = child4.text
             testcase.bugs.append(bug)
         testcases.append(testcase)
     xml_in.close()
