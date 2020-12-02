@@ -43,7 +43,7 @@ class Bug():
                 return True
         return False
 
-class Testcase(object):
+class Testcase():
     def __init__(self):
         self.testcase_id = ""
         self.testcase_dir = ""      # 相对于测试集所在文件夹的相对路径
@@ -52,6 +52,17 @@ class Testcase(object):
         self.compile_command = ""
         self.bugs = []              # 包含的漏洞
         self.domobj = None          # minidom对象
+
+    def copy(self):
+        t = Testcase()
+        t.testcase_id = self.testcase_id
+        t.testcase_dir = self.testcase_dir
+        t.testcase_dir_abs = self.testcase_dir_abs
+        t.testsuite_name = self.testsuite_name
+        t.compile_command = self.compile_command
+        t.bugs = []
+        t.domobj = None
+        return t
 
     def toXml(self):
         # 创建节点
