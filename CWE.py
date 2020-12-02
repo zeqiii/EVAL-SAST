@@ -34,7 +34,7 @@ class CWETree():
 
     def output(self):
         for key in self.entities.keys():
-            print self.entities[key].tostring()
+            print(self.entities[key].tostring())
 
 
     def hasRelation(self, e1, e2):
@@ -180,4 +180,4 @@ if __name__ == "__main__":
 
     cwe_tree = CWETree("cwe-1000.xml")
 
-    print cwe_tree.hasRelation(537, 536)
+    print(cwe_tree.hasRelation(537, 536))
