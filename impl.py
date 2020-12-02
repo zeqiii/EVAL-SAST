@@ -53,7 +53,8 @@ class Runner:
         detection_results = []
         dummy_testcases = [] # 存额外一份testcases，用来记录工具检测结果
         for testcase in testcases:
-            one_out_dir = os.path.join(out_dir, testcase.testcase_id)
+            one_out_dir = os.path.abspath(os.path.join(out_dir, testcase.testcase_id))
+            print(one_out_dir)
             if os.path.exists(one_out_dir): # 若已经执行过漏洞检测，则直接解析输出即可
                 detected_bugs = self._parseOutput(testcase, one_out_dir)
             else: # 否则执行漏洞检测

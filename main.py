@@ -2,6 +2,7 @@
 import argparse, json, os
 from bug import *
 from run_codechecker import Runner_codechecker
+from run_scanbuild import Runner_scanbuild
 
 
 def display(bugs):
@@ -35,7 +36,6 @@ if __name__ == "__main__":
     if args.action[0] == "scan-build":
         # 调用scan-build来执行检测
         runner = Runner_scanbuild()
-
     # 执行检测
     runner.start(testcases, out_dir)
 
