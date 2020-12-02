@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
 
 
-
+"""
     testcases, bugs, detection_results = [], [], []
 
     targets, ground_truths = testcases, bugs
@@ -91,3 +91,4 @@ if __name__ == "__main__":
     print(len(detection_results))
     #display(tps)
     #display(fps)
+"""

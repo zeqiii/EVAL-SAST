@@ -169,13 +169,4 @@ class BenchParser():
 if __name__ == "__main__":
     parser = BenchParser()
     testcases = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
-    for testcase in testcases:
-        testcase.toXml()
-    dom = minidom.Document()
-    testsuite_node = dom.createElement("testsuite")
-    testsuite_node.setAttribute('name', 'juliet')
-    for testcase in testcases:
-        testsuite_node.appendChild(testcase.domobj)
-    dom.appendChild(testsuite_node)
-    with open("manifest.xml", "w") as fp:
-        dom.writexml(fp, indent="", addindent="    ", newl="\n", encoding="UTF-8") 
+    gen_manifest(testcases, "manifest.xml")

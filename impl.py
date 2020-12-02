@@ -32,14 +32,13 @@ class Runner:
     def judge(self, real_bug, bugs):
         # see if there exists one bug match the real bug
         for bug in bugs:
-            if real_bug.equal(bug):
-                if bug_type_compare(real_bug, bug)
-                if real_bug.is_vul == 1:
-                    if 
-                    return "TP", bug
-                elif real_bug.is_vul == 0:
-                    return "FP", bug
-        if real_bug.is_vul == 0:
+            if real_bug.equal(bug): # 两个bug的位置一致
+                if bug_type_compare(real_bug, bug): # 两个bug的类型一致
+                    if real_bug.counterexample == 0:
+                        return "TP"
+                    elif real_bug.counterexample == 1:
+                        return "FP", bug
+        if real_bug.counterexample == 1:
             return "TN", None
         else:
             return "FN", None
@@ -52,16 +51,20 @@ class Runner:
 
     def start(self, testcases, out_dir):
         detection_results = []
+        dummy_testcases = [] # 存额外一份testcases，用来记录工具检测结果
         for testcase in testcases:
             one_out_dir = os.path.join(out_dir, testcase.testcase_id)
             detected_bugs = self.start_one(testcase, one_out_dir)
             for bug in testcase.bugs:
                 judge_result = self.judge(bug, detected_bugs)
-            for detected_bug in detected_bugs:
-                
-
-            detection_results.append((testcase, detected_bugs))
-        return detection_results
+                bug.detection_results[self.tool] = judge_result # 存储检测结果
+            dummy_testcase = testcase.copy()
+            dummy_testcase.bugs = detected_bugs
+            dummy_testcases.append(dummy_testcase)
+        detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
+        detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
+        gen_manifest(testcases, detected_bugs_xml) # 生成记录工具输出的xml文件
+        gen_manifest(testcases, detection_results_xml) # 生成记录工具检测结果的xml文件
 
     # clean result
     def __clean(self):

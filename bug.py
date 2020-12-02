@@ -111,6 +111,17 @@ class Testcase():
         # 把构造好的testcase dom对象放到domobj上
         self.domobj = testcase_node
 
+def gen_manifest(testcases, filename):
+    for testcase in testcases:
+        testcase.toXml()
+    dom = minidom.Document()
+    testsuite_node = dom.createElement("testsuite")
+    testsuite_node.setAttribute('name', testcases[0].testsuite_name)
+    for testcase in testcases:
+        testsuite_node.appendChild(testcase.domobj)
+    dom.appendChild(testsuite_node)
+    with open(filename, "w") as fp:
+        dom.writexml(fp, indent="", addindent="    ", newl="\n", encoding="UTF-8")
 
 def parse_manifest(manifest):
     xml_in = open(manifest)
@@ -190,17 +201,29 @@ def bug_type_compare(bug1, bug2):
         bug2.bug_type = bug2.bug_type.replace('_', ' ')
         key_words1 = bug1.bug_type.lower().split(' ')
         key_words2 = bug2.bug_type.lower().split(' ')
+
+        key_words_nullpointer = ['null', 'pointer', 'dereference', 'access']
+        key_words_bof = ['over', 'under', 'overflow', 'flow', 'underwrite', 'overread', 'underread', 'out', 'bound', 'read', 'write', 'heap', 'buffer', 'stack', 'array']
+        key_words_divide_zero = ['zero', 'divide']
+        key_words_integer_overflow = ['integer', 'over', 'flow', 'overflow', 'underflow']
+        key_words_format_string = ['format', 'string', 'uncontrol', 'control']
+
         if 'null' in key_words1 and 'null' in key_words2:
             return True
-        if __has_keywords(key_words1, ['null', 'pointer', 'dereference', 'access']) >= 2 and \
-                __has_keywords(key_words2, ['null', 'pointer', 'dereference', 'access']) >= 2:
+        if __has_keywords(key_words1, key_words_nullpointer) >= 2 and \
+                __has_keywords(key_words2, key_words_nullpointer) >= 2:
             return True
-        if __has_keywords(key_words1, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2 and \
-                __has_keywords(key_words2, ['over', 'overflow', 'flow', 'read', 'bound', 'write', 'out']) >= 2:
+        if __has_keywords(key_words1, key_words_bof) >= 2 and \
+                __has_keywords(key_words2, key_words_bof) >= 2:
             return True
-        if __has_keywords(key_words1, ['zero', 'divide']) >= 2 and \
-                __has_keywords(key_words2, ['zero', 'divide']) >= 2:
+        if __has_keywords(key_words1, key_words_divide_zero) >= 1 and \
+                __has_keywords(key_words2, key_words_divide_zero) >= 1:
             return True
-        if __has_keywords(key_words1, ['integer', 'over', 'flow']) >= 2 and \
-                __has_keywords(key_words2, ['integer', 'over', 'flow']) >= 2:
+        if __has_keywords(key_words1, key_words_integer_overflow) >= 2 and \
+                __has_keywords(key_words2, key_words_integer_overflow) >= 2:
             return True
+        if __has_keywords(key_words1, key_words_format_string) >= 2 and \
+                __has_keywords(key_words2, key_words_format_string) >= 2:
+            return True
+
+        return False
