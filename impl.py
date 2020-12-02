@@ -29,19 +29,19 @@ class Runner:
             os.makedirs(Config.OUTPUT)
 
     # 看看real_bug有没有被检测到
-    def judge(self, real_bug, bugs):
+    def judge(self, ground_truth, detected_bugs):
         # see if there exists one bug match the real bug
-        for bug in bugs:
-            if real_bug.is_loc_same(bug): # 两个bug的位置一致
-                if bug_type_compare(real_bug, bug): # 两个bug的类型一致
-                    if real_bug.counterexample == 0:
+        for bug in detected_bugs:
+            if ground_truth.is_loc_same(bug): # 两个bug的位置一致
+                if bug_type_compare(ground_truth, bug): # 两个bug的类型一致
+                    if ground_truth.counterexample == 0:
                         return "TP"
-                    elif real_bug.counterexample == 1:
-                        return "FP", bug
-        if real_bug.counterexample == 1:
-            return "TN", None
+                    elif ground_truth.counterexample == 1:
+                        return "FP"
+        if ground_truth.counterexample == 1:
+            return "TN"
         else:
-            return "FN", None
+            return "FN"
 
     def start_one(self, testcase, one_out_dir):
         cmd = self._genCMD(testcase, one_out_dir)
@@ -58,9 +58,9 @@ class Runner:
                 detected_bugs = self._parseOutput(testcase, one_out_dir)
             else: # 否则执行漏洞检测
                 detected_bugs = self.start_one(testcase, one_out_dir)
-            for bug in testcase.bugs:
-                judge_result = self.judge(bug, detected_bugs)
-                bug.detection_results[self.tool] = judge_result # 存储检测结果
+            for ground_truth in testcase.bugs:
+                judge_result = self.judge(ground_truth, detected_bugs)
+                ground_truth.detection_results[self.tool] = judge_result # 存储检测结果
             dummy_testcase = testcase.copy()
             dummy_testcase.bugs = detected_bugs
             dummy_testcases.append(dummy_testcase)

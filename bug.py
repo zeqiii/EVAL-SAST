@@ -158,6 +158,7 @@ def parse_manifest(manifest):
         testcase.domobj = None 
         for bug_node in testcase_node.findall('bug'):
             bug = Bug()
+            bug.testcase_id = testcase.testcase_id
             cwe_type = bug_node.attrib['cwe']
             bug.cwe_type = cwe_type.split('|')
             bug.bug_type = bug_node.attrib['type']
@@ -224,6 +225,8 @@ def bug_type_compare(bug1, bug2):
     if len(bug1.bug_type) > 0 and len(bug2.bug_type) > 0:
         bug1.bug_type = bug1.bug_type.replace('_', ' ')
         bug2.bug_type = bug2.bug_type.replace('_', ' ')
+        bug1.bug_type = bug1.bug_type.replace('-', ' ')
+        bug2.bug_type = bug2.bug_type.replace('-', ' ')
         key_words1 = bug1.bug_type.lower().split(' ')
         key_words2 = bug2.bug_type.lower().split(' ')
 
@@ -251,11 +254,17 @@ def bug_type_compare(bug1, bug2):
                 __has_keywords(key_words2, key_words_format_string) >= 2:
             return True
 
+        print("bug type not same")
         return False
+
+    print("not sure")
+    return True
 
 
 if __name__ == "__main__":
     testcases = parse_manifest(sys.argv[1])
+    print(testcases[0].testcase_id)
+    gen_manifest(testcases, "ttt")
     for t in testcases:
         for bug in t.bugs:
             for f in bug.features:

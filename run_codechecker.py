@@ -55,7 +55,7 @@ class Runner_codechecker(Runner):
                 bug.bug_type = bug_result["type"]
                 bug.sink.line = bug_result["location"]["line"]
                 findex = bug_result["location"]["file"]
-                bug.sink.file = bug_result["files"][findex]
+                bug.sink.file = bug_result["files"][findex].split(testcase.testcase_dir)[-1].strip('/') # 取相对路径
                 bugs.append(bug)
         os.system("mv %s %s" %(report_json, output_path))
         os.system("rm -rf %s" %(json_output_path))
