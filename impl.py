@@ -32,7 +32,7 @@ class Runner:
     def judge(self, real_bug, bugs):
         # see if there exists one bug match the real bug
         for bug in bugs:
-            if real_bug.equal(bug): # 两个bug的位置一致
+            if real_bug.is_loc_same(bug): # 两个bug的位置一致
                 if bug_type_compare(real_bug, bug): # 两个bug的类型一致
                     if real_bug.counterexample == 0:
                         return "TP"

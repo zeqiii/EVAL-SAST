@@ -1,6 +1,5 @@
 # -*- coding=utf-8 -*-
 import argparse, json, os
-from benchmark_parser import BenchParser
 from bug import *
 from run_codechecker import Runner_codechecker
 
@@ -25,17 +24,15 @@ if __name__ == "__main__":
     out_dir = args.output
     testcases = parse_manifest(manifest_file)
     for testcase in testcases:
-        testcase.tescase_dir_abs = os.path.abspath(os.path.join(testsuite_path, testcase.testcase_dir))
+        testcase.testcase_dir_abs = os.path.abspath(os.path.join(testsuite_path, testcase.testcase_dir))
     testsuite_name = testcases[0].testsuite_name
-
-    bp = BenchParser()
 
     # 初始化检测工具接口
     runner = None # 检测工具接口runner
     if args.action[0] == "codechecker":
         # 调用codechecker来执行检测
         runner = Runner_codechecker()
-    if args.tool == "scan-build":
+    if args.action[0] == "scan-build":
         # 调用scan-build来执行检测
         runner = Runner_scanbuild()
 

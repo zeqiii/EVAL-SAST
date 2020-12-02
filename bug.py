@@ -35,7 +35,7 @@ class Bug():
 
     # 对比本身与参数bug是否在同一位置
     # 注：在同一位置并不一定代表同一漏洞
-    def compare(self, bug):
+    def is_loc_same(self, bug):
         if self.testcase_id != bug.testcase_id:
             return False
         if self.sink.file == bug.sink.file:
@@ -43,7 +43,7 @@ class Bug():
                 return True
         return False
 
-class Testcase():
+class Testcase(object):
     def __init__(self):
         self.testcase_id = ""
         self.testcase_dir = ""      # 相对于测试集所在文件夹的相对路径
