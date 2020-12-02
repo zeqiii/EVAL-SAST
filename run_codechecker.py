@@ -25,7 +25,7 @@ def outputReader(output_file):
 class Runner_codechecker(Runner):
     def __init__(self):
         Runner.__init__(self)
-        self.name = "codechecker"
+        self.tool = "codechecker"
 
     def _genCMD(self, testcase, output_path, output_file="result.out"):
         if not os.path.exists(testcase.testcase_dir_abs):

@@ -110,6 +110,7 @@ class Testcase():
             features_node = dom.createElement('features')
             for feature in bug.features:
                 feature_node = dom.createElement(feature.name)
+                print(feature.description)
                 feature_desc = dom.createTextNode(feature.description)
                 feature_node.appendChild(feature_desc)
                 feature_node.setAttribute('capability', feature.capability)
@@ -178,6 +179,9 @@ def parse_manifest(manifest):
                         feature = Feature()
                         feature.name = child3.tag
                         feature.description = child3.text
+                        if feature.description == None:
+                            #当没有text节点时，description会被赋值为None，这里处理一下
+                            feature.description = ""
                         feature.capability = child3.attrib['capability']
                         bug.features.append(feature)
             testcase.bugs.append(bug)
@@ -238,3 +242,13 @@ def bug_type_compare(bug1, bug2):
             return True
 
         return False
+
+
+if __name__ == "__main__":
+    testcases = parse_manifest(sys.argv[1])
+    for t in testcases:
+        for bug in t.bugs:
+            for f in bug.features:
+                if f.description == None:
+                    print(t.testcase_id)
+                    exit(0)

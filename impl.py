@@ -54,7 +54,10 @@ class Runner:
         dummy_testcases = [] # 存额外一份testcases，用来记录工具检测结果
         for testcase in testcases:
             one_out_dir = os.path.join(out_dir, testcase.testcase_id)
-            detected_bugs = self.start_one(testcase, one_out_dir)
+            if os.path.exists(one_out_dir): # 若已经执行过漏洞检测，则直接解析输出即可
+                detected_bugs = self._parseOutput(testcase, one_out_dir)
+            else: # 否则执行漏洞检测
+                detected_bugs = self.start_one(testcase, one_out_dir)
             for bug in testcase.bugs:
                 judge_result = self.judge(bug, detected_bugs)
                 bug.detection_results[self.tool] = judge_result # 存储检测结果
@@ -63,7 +66,7 @@ class Runner:
             dummy_testcases.append(dummy_testcase)
         detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
         detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
-        gen_manifest(testcases, detected_bugs_xml) # 生成记录工具输出的xml文件
+        gen_manifest(dummy_testcases, detected_bugs_xml) # 生成记录工具输出的xml文件
         gen_manifest(testcases, detection_results_xml) # 生成记录工具检测结果的xml文件
 
     # clean result
