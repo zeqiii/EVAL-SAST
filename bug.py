@@ -79,6 +79,8 @@ class Testcase():
             if len(bug.cwe_type) > 0:                   # 漏洞CWE分类
                 cwe_type_str = ""
                 for cwe in bug.cwe_type:
+                    # 处理一下cwe字符串，统一改为CWE-XXX的格式
+                    cwe = "CWE-" + cwe.strip("CWE").strip("cwe").strip("-").strip("_")
                     cwe_type_str = cwe_type_str + "%s|"%(cwe)
                 cwe_type_str = cwe_type_str[:-1]
                 bug_node.setAttribute('cwe', cwe_type_str)
@@ -210,11 +212,13 @@ def __has_keywords(body, keywords):
             num = num + 1
     return num    # 返回word中包含keywords的数量
 
+
+cwe_tree = CWETree("cwe-1000.xml")
+
 # 比较个漏洞的漏洞类型是否相同
 def bug_type_compare(bug1, bug2):
     # 如果有cwe信息，则先比较cwe信息
     if len(bug1.cwe_type) > 0 and len(bug2.cwe_type) > 0:
-        cwe_tree = CWETree("cwe-1000.xml")
         for cwe1 in bug1.cwe_type:
             cwe1 = int(cwe1.split('-')[-1])
             for cwe2 in bug2.cwe_type:
