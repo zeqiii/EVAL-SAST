@@ -50,6 +50,7 @@ class Runner_flawfinder(Runner):
             if linetext.startswith("  "):
                 continue
             bug = Bug()
+            bug.testcase_id = testcase.testcase_id
             bug_location = linetext.split("  ")[0]
             bug_type = linetext.split("  ")[1]
             parts = bug_location.split(":")
@@ -62,6 +63,7 @@ class Runner_flawfinder(Runner):
             if bug.description.split("(")[-1].startswith("CWE"):
                 bug.cwe_type = bug.description.split("(")[-1].strip().strip(")").replace(" ", "").replace(":", ",").split(",")
             bugs.append(bug)
+        f.close()
         return bugs
 
 if __name__ == "__main__":
