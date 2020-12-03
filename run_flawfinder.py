@@ -1,5 +1,5 @@
 # -*- coding=utf-8 -*-
-import os, sys, re
+import os, sys, re, subprocess
 from impl import *
 from glo import *
 from bug import *
@@ -16,6 +16,8 @@ class Runner_flawfinder(Runner):
         lines = raw.split("\n")
         for line in lines:
             parts = line.split("\t")
+            if len(parts) < 3:
+                continue
             self.flawfinder_rules[parts[0]] = parts[2]
 
     def _genCMD(self, testcase, output_path, output_file="result.out"):
@@ -39,8 +41,10 @@ class Runner_flawfinder(Runner):
             if not linetext:
                 f.close()
                 return bugs
-        while linetext.find("ANALYSIS SUMMARY:") < 0:
+        while True:
             linetext = f.readline()
+            if linetext.find("ANALYSIS SUMMARY:") >= 0:
+                break
             if len(linetext.strip()) == 0:
                 continue
             if linetext.startswith("  "):
@@ -59,3 +63,7 @@ class Runner_flawfinder(Runner):
                 bug.cwe_type = bug.description.split("(")[-1].strip().strip(")").replace(" ", "").replace(":", ",").split(",")
             bugs.append(bug)
         return bugs
+
+if __name__ == "__main__":
+    runner = Runner_flawfinder()
+    print(runner.flawfinder_rules)

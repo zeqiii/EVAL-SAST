@@ -229,6 +229,16 @@ def bug_type_compare(bug1, bug2):
         bug2.bug_type = bug2.bug_type.replace('-', ' ')
         key_words1 = bug1.bug_type.lower().split(' ')
         key_words2 = bug2.bug_type.lower().split(' ')
+        key_words1_ex = bug1.description.split(' ')
+        key_words2_ex = bug2.description.split(' ')
+
+        # 选择长度最长的关键词
+        chosen_key_words1 = key_words1
+        chosen_key_words2 = key_words2
+        if (len(chosen_key_words1) < len(key_words1_ex)):
+            chosen_key_words1 = key_words1_ex
+        if (len(chosen_key_words2) < len(key_words2_ex)):
+            chosen_key_words2 = key_words2_ex
 
         key_words_nullpointer = ['null', 'pointer', 'dereference', 'access']
         key_words_bof = ['over', 'under', 'overflow', 'flow', 'underwrite', 'overread', 'underread', 'out', 'bound', 'read', 'write', 'heap', 'buffer', 'stack', 'array']
@@ -238,20 +248,20 @@ def bug_type_compare(bug1, bug2):
 
         if 'null' in key_words1 and 'null' in key_words2:
             return True
-        if __has_keywords(key_words1, key_words_nullpointer) >= 2 and \
-                __has_keywords(key_words2, key_words_nullpointer) >= 2:
+        if __has_keywords(chosen_key_words1, key_words_nullpointer) >= 2 and \
+                __has_keywords(chosen_key_words2, key_words_nullpointer) >= 2:
             return True
-        if __has_keywords(key_words1, key_words_bof) >= 2 and \
-                __has_keywords(key_words2, key_words_bof) >= 2:
+        if __has_keywords(chosen_key_words1, key_words_bof) >= 2 and \
+                __has_keywords(chosen_key_words2, key_words_bof) >= 2:
             return True
-        if __has_keywords(key_words1, key_words_divide_zero) >= 1 and \
-                __has_keywords(key_words2, key_words_divide_zero) >= 1:
+        if __has_keywords(chosen_key_words1, key_words_divide_zero) >= 1 and \
+                __has_keywords(chosen_key_words2, key_words_divide_zero) >= 1:
             return True
-        if __has_keywords(key_words1, key_words_integer_overflow) >= 2 and \
-                __has_keywords(key_words2, key_words_integer_overflow) >= 2:
+        if __has_keywords(chosen_key_words1, key_words_integer_overflow) >= 2 and \
+                __has_keywords(chosen_key_words2, key_words_integer_overflow) >= 2:
             return True
-        if __has_keywords(key_words1, key_words_format_string) >= 2 and \
-                __has_keywords(key_words2, key_words_format_string) >= 2:
+        if __has_keywords(chosen_key_words1, key_words_format_string) >= 2 and \
+                __has_keywords(chosen_key_words2, key_words_format_string) >= 2:
             return True
 
         print("bug type not same")

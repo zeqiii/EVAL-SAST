@@ -3,6 +3,7 @@ import argparse, json, os
 from bug import *
 from run_codechecker import Runner_codechecker
 from run_scanbuild import Runner_scanbuild
+from run_flawfinder import Runner_flawfinder
 
 
 def display(bugs):
@@ -15,7 +16,7 @@ def display(bugs):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", metavar="ACTTION[codechecker]", type=str, nargs=1, help='choose tools')
+    parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder')
     parser.add_argument('--input', '-i', help='Testsuite path')
     parser.add_argument('--output', '-o', help='Output path, tool\'s output')
 
@@ -30,12 +31,15 @@ if __name__ == "__main__":
 
     # 初始化检测工具接口
     runner = None # 检测工具接口runner
-    if args.action[0] == "codechecker":
+    if args.tool[0] == "codechecker":
         # 调用codechecker来执行检测
         runner = Runner_codechecker()
-    if args.action[0] == "scan-build":
+    if args.tool[0] == "scan-build":
         # 调用scan-build来执行检测
         runner = Runner_scanbuild()
+    if args.tool[0] == "flawfinder":
+        # 调用flawfinder来执行检测
+        runner = Runner_flawfinder()
     # 执行检测
     runner.start(testcases, out_dir)
 
