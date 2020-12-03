@@ -27,7 +27,11 @@ class Runner_cppcheck(Runner):
         xml_in = open(os.path.join(output_path, output_file))
         tree = ET.parse(xml_in)
         root = tree.getroot()
-        for error_node in root.findall("error"):
+        errors_nodes = root.findall("errors")
+        error_nodes = []
+        for errors_node in errors_nodes:
+            error_nodes.extend(errors_node.findall("error"))
+        for error_node in error_nodes:
             bug = Bug()
             bug.testcase_id = testcase.testcase_id
             bug.bug_type = error_node.attrib['id']
