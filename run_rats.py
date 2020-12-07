@@ -27,8 +27,7 @@ class Runner_rats(Runner):
         xml_in = open(os.path.join(output_path, output_file))
         tree = ET.parse(xml_in)
         root = tree.getroot()
-        rats_output_node = root.findall("rats_output")[0]
-        for vulnerability_node in rats_output_node.findall("vulnerability"):
+        for vulnerability_node in root.findall("vulnerability"):
             bug = Bug()
             bug.testcase_id = testcase.testcase_id
             bug.bug_type = vulnerability_node.findall("type")[0].text
