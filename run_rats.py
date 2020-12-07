@@ -19,7 +19,7 @@ class Runner_rats(Runner):
         if not os.path.exists(output_path):
             os.makedirs(output_path) # 对于flawfinder，需要我们来创建存放检测结果的文件夹
         # 检测结果存放在result.xml文件中
-        cmd = "rats --xml --quiet %s 2> %s" %(testcase.testcase_dir_abs, os.path.join(output_path, output_file))
+        cmd = "rats --xml --quiet %s > %s" %(testcase.testcase_dir_abs, os.path.join(output_path, output_file))
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.xml"):
