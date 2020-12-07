@@ -5,6 +5,7 @@ from run_codechecker import Runner_codechecker
 from run_scanbuild import Runner_scanbuild
 from run_flawfinder import Runner_flawfinder
 from run_cppcheck import Runner_cppcheck
+from run_rats import Runner_rats
 
 
 def display(bugs):
@@ -17,7 +18,7 @@ def display(bugs):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck')
+    parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck|rats')
     parser.add_argument('--input', '-i', help='Testsuite path')
     parser.add_argument('--output', '-o', help='Output path, tool\'s output')
 
@@ -44,6 +45,9 @@ if __name__ == "__main__":
     if args.tool[0] == "cppcheck":
         # 调用cppcheck来执行检测
         runner = Runner_cppcheck()
+    if args.tool[0] == "rats":
+        # 调用rats来执行检测
+        runner = Runner_rats()
     # 执行检测
     runner.start(testcases, out_dir)
 
