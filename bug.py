@@ -3,6 +3,7 @@ import json
 import xml.etree.ElementTree as ET
 import xml.dom.minidom as minidom
 from nltk.stem import WordNetLemmatizer
+from glo import *
 from CWE import *
 
 class Feature():
@@ -213,7 +214,7 @@ def __has_keywords(body, keywords):
     return num    # 返回word中包含keywords的数量
 
 
-cwe_tree = CWETree("cwe-1000.xml")
+cwe_tree = CWETree(Config.CWEXML)
 
 # 比较个漏洞的漏洞类型是否相同
 def bug_type_compare(bug1, bug2):

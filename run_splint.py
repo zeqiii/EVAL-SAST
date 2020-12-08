@@ -22,10 +22,12 @@ class Runner_splint(Runner):
         index = 0
         for parent, dirs, files in os.walk(testcase.testcase_dir_abs):
             for f in files:
-                cmds.append("splint -warnposix +csvoverwrite +trytorecover -csv %s %s" %(os.path.join(output_path), "result%d.csv"%(index)), os.path.join(parent, f))
+                cmds.append("splint -warnposix -syntax +csvoverwrite +trytorecover -csv %s %s" %(os.path.join(output_path, "result%d.csv"%(index)), os.path.join(parent, f)))
+                index = index + 1
         cmd = ""
         for one in cmds:
-            cmd = cmd + one + " && "
+            cmd = cmd + one + ";"
+        cmd = cmd.rstrip(";")
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.xml"):

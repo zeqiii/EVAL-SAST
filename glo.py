@@ -76,6 +76,7 @@ class Config:
     TMP = HOME + '/tmp'
     OPT = LIBS+'/opt2'
     TESTSUITE = HOME + '/testsuite'
+    CWEXML = HOME + '/cwe-1000.xml'
 
 class OnehotDict:
 
