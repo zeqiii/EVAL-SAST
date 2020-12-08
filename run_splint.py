@@ -1,25 +1,24 @@
 # -*- coding=utf-8 -*-
-import os, sys
-import xml.etree.ElementTree as ET
+import os, sys, csv
 from impl import *
 from glo import *
 from bug import *
 
-class Runner_rats(Runner):
+class Runner_splint(Runner):
     def __init__(self):
         Runner.__init__(self)
-        self.tool = "rats"
+        self.tool = "splint"
 
     def _genCMD(self, testcase, output_path, output_file="result.xml"):
         if not os.path.exists(testcase.testcase_dir_abs):
             raise Exception(testcase.testcase_dir_abs + " does not exist")
         build_command = ""
         # 根据不同的测试集，实现不同的编译方法
-        # rats
+        # splint
         if not os.path.exists(output_path):
-            os.makedirs(output_path) # 对于rats，需要我们来创建存放检测结果的文件夹
+            os.makedirs(output_path) # 对于splint，需要我们来创建存放检测结果的文件夹
         # 检测结果存放在result.xml文件中
-        cmd = "rats --xml --quiet %s > %s" %(testcase.testcase_dir_abs, os.path.join(output_path, output_file))
+        cmd = "splint -warnposix +posixlib +csvoverwrite +trytorecover -csv %s %s" %(os.path.join(output_path, output_file), testcase.testcase_dir_abs)
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.xml"):

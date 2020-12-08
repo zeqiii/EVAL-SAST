@@ -17,7 +17,7 @@ class Runner_cppcheck(Runner):
         # 根据不同的测试集，实现不同的编译方法
         # cppcheck不需要实现编译
         if not os.path.exists(output_path):
-            os.makedirs(output_path) # 对于flawfinder，需要我们来创建存放检测结果的文件夹
+            os.makedirs(output_path) # 对于cppcheck，需要我们来创建存放检测结果的文件夹
         # 检测结果存放在result.xml文件中
         cmd = "cppcheck --xml --enable=warning %s 2> %s" %(testcase.testcase_dir_abs, os.path.join(output_path, output_file))
         return cmd

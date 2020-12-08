@@ -139,7 +139,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     with open(os.path.join(outpath, os.path.basename(f)), "r") as fp:
                         content = fp.readlines()
                     bug_sink = content[int(the_bug.sink.line)-1].strip()
-                    content[int(the_bug.sink.line)-1] = content[int(the_bug.sink.line)-1].rstrip() + " // ##bug##\n"
+                    content[int(the_bug.sink.line)-1] = content[int(the_bug.sink.line)-1].rstrip() + " /* ##bug## */\n"
                     new_content = ""
                     for one in content:
                         new_content = new_content + one
@@ -152,7 +152,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                     content = fp.readlines()
                 for i in range(0, len(content)):
                     if content[i].find(bug_sink) >= 0 and content[i].find("##bug##") < 0:
-                        content[i] = content[i].rstrip() + " // ##counterexample##\n"
+                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
                         altered = True
                 if altered:
                     with open(ff, "w") as fp:
