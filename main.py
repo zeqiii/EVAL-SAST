@@ -6,6 +6,7 @@ from run_scanbuild import Runner_scanbuild
 from run_flawfinder import Runner_flawfinder
 from run_cppcheck import Runner_cppcheck
 from run_rats import Runner_rats
+from run_splint import Runner_splint
 
 
 def display(bugs):
@@ -48,6 +49,9 @@ if __name__ == "__main__":
     if args.tool[0] == "rats":
         # 调用rats来执行检测
         runner = Runner_rats()
+    if args.tool[0] == "splint":
+        # 调用splint来执行检测
+        runner = Runner_splint()
     # 执行检测
     runner.start(testcases, out_dir)
 
