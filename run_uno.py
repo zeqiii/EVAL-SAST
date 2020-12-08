@@ -24,15 +24,18 @@ class Runner_uno(Runner):
     def _parseOutput(self, testcase, output_path, output_file="result.out"):
         bugs = []
         with open(os.path.join(output_path, output_file)) as fp:
-            line = fp.readline()
-            while line:
-                if line.find("check completed"):
+            line = ""
+            while True:
+                line = fp.readline()
+                if line == None or line.find("check completed") >= 0:
                     break
                 if line.find("uno:") > 0:
-                    bug = Bug()
-                    bug.testcase_id = testcase.testcase_id
                     line2 = fp.readline()
                     line3 = fp.readline()
+                    if not (line2.strip().startswith("statement") and line3.strip().startswith("declaration")):
+                        continue
+                    bug = Bug()
+                    bug.testcase_id = testcase.testcase_id
                     line = line.strip().lstrip("uno:").strip()
                     bug.description = line.split(":")[2].strip()
                     bug.sink.file = line.split(":")[0].split(testcase.testcase_dir)[-1].strip("/")
