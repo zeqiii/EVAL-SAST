@@ -1,5 +1,5 @@
 # -*- coding=utf-8 -*-
-import os, sys, csv
+import os, sys
 from impl import *
 from glo import *
 from bug import *
@@ -29,7 +29,7 @@ class Runner_uno(Runner):
                 line = fp.readline()
                 if line == None or line.find("check completed") >= 0:
                     break
-                if line.find("uno:") > 0:
+                if line.find("uno:") >= 0:
                     line2 = fp.readline()
                     line3 = fp.readline()
                     if not (line2.strip().startswith("statement") and line3.strip().startswith("declaration")):
@@ -44,4 +44,10 @@ class Runner_uno(Runner):
         return bugs
 
 if __name__ == "__main__":
-    pass
+    runner = Runner_uno()
+    testcase = Testcase()
+    testcase.testcase_id = "test"
+    testcase.testcase_dir = "/"
+    bugs = runner._parseOutput(testcase, sys.argv[1])
+    for bug in bugs:
+        print(bug.sink.file)
