@@ -18,26 +18,34 @@ class Runner_splint(Runner):
         if not os.path.exists(output_path):
             os.makedirs(output_path) # 对于splint，需要我们来创建存放检测结果的文件夹
         # 检测结果存放在result.xml文件中
-        cmd = "splint -warnposix +posixlib +csvoverwrite +trytorecover -csv %s %s" %(os.path.join(output_path, output_file), testcase.testcase_dir_abs)
+        cmds = []
+        index = 0
+        for parent, dirs, files in os.walk(testcase.testcase_dir_abs):
+            for f in files:
+                cmds.append("splint -warnposix +csvoverwrite +trytorecover -csv %s %s" %(os.path.join(output_path), "result%d.csv"%(index)), os.path.join(parent, f))
+        cmd = ""
+        for one in cmds:
+            cmd = cmd + one + " && "
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.xml"):
         bugs = []
-        xml_in = open(os.path.join(output_path, output_file))
-        tree = ET.parse(xml_in)
-        root = tree.getroot()
-        for vulnerability_node in root.findall("vulnerability"):
-            bug = Bug()
-            bug.testcase_id = testcase.testcase_id
-            bug.bug_type = vulnerability_node.findall("type")[0].text
-            bug.description = vulnerability_node.findall("message")[0].text
-
-            file_node = vulnerability_node.findall("file")[0]
-            # 记录sink点
-            bug.sink.file = file_node.findall("name")[0].text.replace("//", "/").split(testcase.testcase_dir)[-1].strip("/")
-            bug.sink.line = int(file_node.findall("line")[0].text)
-            bugs.append(bug)
-        xml_in.close()
+        for parent, dirs, files in os.walk(output_path):
+            for f in files:
+                with open(os.path.join(parent, f)) as fp:
+                    reader = csv.reader(fp)
+                    content = list(reader)
+                    if len(content) < 1:
+                        continue
+                    for i in range(1, len(content)):
+                        bug = Bug()
+                        bug.testcase_id = testcase.testcase_id
+                        bug.bug_type = content[i][2]
+                        bug.description = content[i][8]
+                        bug.sink.file = content[i][4].split(testcase.testcase_dir)[-1].strip("/")
+                        bug.sink.line = int(content[i][5])
+                        bug.sink.col = int(content[i][6])
+                        bugs.append(bug)
         return bugs
 
 if __name__ == "__main__":
