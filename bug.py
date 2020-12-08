@@ -227,7 +227,7 @@ def bug_type_compare(bug1, bug2):
                 if cwe_tree.hasRelation(cwe1, cwe2):
                     return True
     # 如果有bug_type信息，则比较bug_type信息
-    if len(bug1.bug_type) > 0 and len(bug2.bug_type) > 0:
+    if (len(bug1.bug_type) > 0 and len(bug2.bug_type) > 0) or (len(bug1.description) > 0 and len(bug2.description) > 0):
         bug1.bug_type = bug1.bug_type.replace('_', ' ')
         bug2.bug_type = bug2.bug_type.replace('_', ' ')
         bug1.bug_type = bug1.bug_type.replace('-', ' ')
