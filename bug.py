@@ -122,7 +122,7 @@ class Testcase():
             detection_node = dom.createElement('detection_results')
             for tool_name in bug.detection_results.keys():
                 tool_node = dom.createElement('tool')
-                tool_node.setAttribute('name', 'tool_name')
+                tool_node.setAttribute('name', tool_name)
                 result_txt = dom.createTextNode(bug.detection_results[tool_name])
                 tool_node.appendChild(result_txt)
                 detection_node.appendChild(tool_node)
