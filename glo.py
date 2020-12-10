@@ -69,7 +69,6 @@ class Global:
 
 
 class Config:
-
     HOME = os.path.dirname(os.path.abspath(__file__))
     OUTPUT = HOME + '/' + 'output_tmp'
     LIBS = HOME+'/libs'
@@ -77,6 +76,11 @@ class Config:
     OPT = LIBS+'/opt2'
     TESTSUITE = HOME + '/testsuite'
     CWEXML = HOME + '/cwe-1000.xml'
+
+    db_addr = "172.18.100.15"
+    db_user = "mo_software"
+    db_pwd = "ndrc10_insp"
+    db_name = "testcase_db"
 
 class OnehotDict:
 

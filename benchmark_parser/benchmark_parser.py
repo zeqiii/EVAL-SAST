@@ -6,6 +6,7 @@ from xml.etree import ElementTree as ET
 sys.path.append("..")
 from bug import *
 from glo import *
+from dao import *
 
 def is_number(s):
     try:
@@ -166,6 +167,26 @@ class BenchParser():
 
 
 if __name__ == "__main__":
-    parser = BenchParser()
-    testcases = parser.copyAndParse("/home/varas/Juliet_Test_Suite/C", "parsed_juliet", testsuite_name="juliet", cwe_list=["CWE476"])
-    gen_manifest(testcases, "manifest.xml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("action", metavar="ACTION", type=str, nargs=1, help='choose action: parse|upload')
+    parser.add_argument('--input', '-i', help="path of the original test suite | path of the manifest file")
+    parser.add_argument('--output', '-o', help="output path of the parsed testsuite")
+    parser.add_argument('--name', '-n', help="name of the test suite")
+    args = parser.parse_args()
+
+    _input = args.input
+    _output = args.output
+    testsuite_name = args.name
+
+    if args.action[0] == "parse":
+        parser = BenchParser()
+        #cwe_list = ["CWE78","CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE191","CWE369","CWE401","CWE415","CWE416","CWE457","CWE467","CWE476","CWE680","CWE690"]
+        cwe_list = ["CWE476"]
+        testcases = parser.copyAndParse(_input, _output, testsuite_name=testsuite_name, cwe_list=cwe_list)
+        gen_manifest(testcases, os.path.join(_output, "manifest.xml"))
+
+    if args.action[1] == "upload":
+        db = DBUtil()
+        testcases = parse_manifest(_input)
+        db.insert_testcase(testcases)
+        db.insert_groundtruth_bug(testcases)
