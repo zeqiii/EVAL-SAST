@@ -69,6 +69,22 @@ class Runner:
         gen_manifest(dummy_testcases, detected_bugs_xml) # 生成记录工具输出的xml文件
         gen_manifest(testcases, detection_results_xml) # 生成记录工具检测结果的xml文件
 
+    # 把测试结果上传到ceph和数据库中
+    def upload_result(self, out_dir, task):
+        # 看看out_dir中是否有detected_bugs和detection_results的xml文件
+        detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
+        detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
+        if not os.path.exists(detected_bugs_xml) or not os.path.exists(detection_results_xml):
+            raise Exception("detected_bugs or detection_results xml file not found")
+        # upload detected_bugs
+        
+        # use ceph upload detected_bugs_xml
+
+        testcases = parse_manifest(detection_results_xml)
+        total_bugs = 0
+        tp, fp, fn = 0, 0, 0
+
+
     # clean result
     def __clean(self):
         print("cleaning...")

@@ -71,3 +71,6 @@ class DBUtil:
                 finally:
                     DBUtil.lock.release()
         self.conn.commit()
+
+    def insert_result(self, testcases):
+        1
