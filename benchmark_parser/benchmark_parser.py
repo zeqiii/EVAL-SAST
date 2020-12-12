@@ -185,8 +185,9 @@ if __name__ == "__main__":
         testcases = parser.copyAndParse(_input, _output, testsuite_name=testsuite_name, cwe_list=cwe_list)
         gen_manifest(testcases, os.path.join(_output, "manifest.xml"))
 
-    if args.action[1] == "upload":
+    if args.action[0] == "upload":
         db = DBUtil()
         testcases = parse_manifest(_input)
         db.insert_testcase(testcases)
         db.insert_groundtruth_bug(testcases)
+        db.disconnect()

@@ -11,8 +11,7 @@ class DBUtil:
         self.connected = False
     def connect(self):
         try:
-            DBUtil.conn = pymysql.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name)
-            DBUtil.conn.set_character_set('utf8')
+            DBUtil.conn = pymysql.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name, charset='utf8')
             DBUtil.conn.ping(True)
             DBUtil.cursor = self.conn.cursor()
             self.connected = True
@@ -20,6 +19,7 @@ class DBUtil:
             DBUtil.conn = None
             DBUtil.cursor = None
             print("DBUtil, connect failed")
+            print(str(e))
     def disconnect(self):
         try:
             DBUtil.cursor.close()
@@ -38,10 +38,10 @@ class DBUtil:
                 DBUtil.lock.acquire()
                 self.cursor.execute(sql)
             except Exception as e:
-                print("error insert testcase")
+                print(str(e))
             finally:
                 DBUtil.lock.release()
-        self.disconnect()
+        self.conn.commit()
 
     def insert_groundtruth_bug(self, testcases):
         if not self.connected:
@@ -54,8 +54,8 @@ class DBUtil:
                 features = []
                 for feature in bug.features:
                     features.append(feature.name)
-                sql = "insert into eval_groundtruth_bug set testcase_id='%s', counterexample=%d, bug_type='%s' \
-                    severity='%s' , description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s'\
+                sql = "insert into eval_groundtruth_bug set testcase_id='%s', counterexample=%d, bug_type='%s', \
+                    severity='%s', description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s', \
                     features='%s', poc='%s', detection_results='%s'" \
                 %(pymysql.escape_string(testcase.testcase_id), bug.counterexample, pymysql.escape_string(bug.bug_type), \
                     pymysql.escape_string(bug.severity), pymysql.escape_string(bug.description), pymysql.escape_string(str(bug.cwe_type)), \
@@ -66,7 +66,8 @@ class DBUtil:
                     DBUtil.lock.acquire()
                     self.cursor.execute(sql)
                 except Exception as e:
-                    print("error insert testcase")
+                    print("error insert bug")
+                    print(str(e))
                 finally:
                     DBUtil.lock.release()
-        self.disconnect()
+        self.conn.commit()
