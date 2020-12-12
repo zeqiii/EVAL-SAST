@@ -57,11 +57,11 @@ class DBUtil:
                 sql = "insert into eval_groundtruth_bug set testcase_id='%s', counterexample=%d, bug_type='%s' \
                     severity='%s' , description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s'\
                     features='%s', poc='%s', detection_results='%s'" \
-                %(MySQLdb.escape_string(testcase.testcase_id), bug.counterexample, MySQLdb.escape_string(bug.bug_type), \
-                    MySQLdb.escape_string(bug.severity), MySQLdb.escape_string(bug.description), MySQLdb.escape_string(str(bug.cwe_type)), \
-                    MySQLdb.escape_string(bug.source.toString()), MySQLdb.escape_string(bug.sink.toString()), \
-                    MySQLdb.escape_string(str(locations)), MySQLdb.escape_string(str(features)), MySQLdb.escape_string(bug.poc), \
-                    MySQLdb.escape_string(str(bug.detection_results)))
+                %(pymysql.escape_string(testcase.testcase_id), bug.counterexample, pymysql.escape_string(bug.bug_type), \
+                    pymysql.escape_string(bug.severity), pymysql.escape_string(bug.description), pymysql.escape_string(str(bug.cwe_type)), \
+                    pymysql.escape_string(bug.source.toString()), pymysql.escape_string(bug.sink.toString()), \
+                    pymysql.escape_string(str(locations)), pymysql.escape_string(str(features)), pymysql.escape_string(bug.poc), \
+                    pymysql.escape_string(str(bug.detection_results)))
                 try:
                     DBUtil.lock.acquire()
                     self.cursor.execute(sql)
