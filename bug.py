@@ -18,6 +18,11 @@ class Location():
         self.line = -1
         self.col = -1
 
+    def toString(self):
+        s = ""
+        s = self.file + ":" + str(self.line) + ":" + str(self.col)
+        return s
+
 class Bug():
     def __init__(self):
         self.testcase_id = ""
