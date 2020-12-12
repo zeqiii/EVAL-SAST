@@ -1,4 +1,4 @@
-import MySQLdb, threading
+import pymysql, threading
 from glo import *
 
 class DBUtil:
@@ -11,12 +11,12 @@ class DBUtil:
         self.connected = False
     def connect(self):
         try:
-            DBUtil.conn = MySQLdb.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name)
+            DBUtil.conn = pymysql.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name)
             DBUtil.conn.set_character_set('utf8')
             DBUtil.conn.ping(True)
             DBUtil.cursor = self.conn.cursor()
             self.connected = True
-        except Exception, e:
+        except Exception as e:
             DBUtil.conn = None
             DBUtil.cursor = None
             print("DBUtil, connect failed")
@@ -25,7 +25,7 @@ class DBUtil:
             DBUtil.cursor.close()
             DBUtil.conn.close()
             self.connected = False
-        except Exception, e:
+        except Exception as e:
             print("DBUtil: disconnect error")
 
     def insert_testcase(self, testcases):
@@ -37,7 +37,7 @@ class DBUtil:
             try:
                 DBUtil.lock.acquire()
                 self.cursor.execute(sql)
-            except Exception, e:
+            except Exception as e:
                 print("error insert testcase")
             finally:
                 DBUtil.lock.release()
@@ -56,16 +56,16 @@ class DBUtil:
                     features.append(feature.name)
                 sql = "insert into eval_groundtruth_bug set testcase_id='%s', counterexample=%d, bug_type='%s' \
                     severity='%s' , description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s'\
-                    features='%s', poc='%s', detection_results='%s'"
+                    features='%s', poc='%s', detection_results='%s'" \
                 %(MySQLdb.escape_string(testcase.testcase_id), bug.counterexample, MySQLdb.escape_string(bug.bug_type), \
-                    MySQLdb.escape_string(bug.severity), MySQLdb.escape_string(bug.description), MySQLdb.escape_string(bug.cwe_type)\
-                    MyQSLdb.escape_string(bug.source.toString()), MySQLdb.escape_string(bug.sink.toString()), \
-                    MySQLdb.escape_string(str(locations)), MySQLdb.escape_string(features.toString()), MySQLdb.escape_string(bug.poc)\
+                    MySQLdb.escape_string(bug.severity), MySQLdb.escape_string(bug.description), MySQLdb.escape_string(str(bug.cwe_type)), \
+                    MySQLdb.escape_string(bug.source.toString()), MySQLdb.escape_string(bug.sink.toString()), \
+                    MySQLdb.escape_string(str(locations)), MySQLdb.escape_string(str(features)), MySQLdb.escape_string(bug.poc), \
                     MySQLdb.escape_string(str(bug.detection_results)))
                 try:
                     DBUtil.lock.acquire()
                     self.cursor.execute(sql)
-                except Exception, e:
+                except Exception as e:
                     print("error insert testcase")
                 finally:
                     DBUtil.lock.release()
