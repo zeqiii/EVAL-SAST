@@ -95,13 +95,27 @@ class Runner:
             pymysql.escape_string(detected_bugs_xml))
         db.cursor.execute(sql)
         db.conn.commit()
+
+        # 使用ceph上传整个检测结果
+        index = out_dir.rstrip("/").rfind("/")
+        root = ""
+        sub_dir = out_dir.rstrip("/")
+        if index > 0:
+            root = out_dir[0:index]
+            sub_dir = out_dir.rstrip("/")[index+1:]
+        os.system("cd %s; zip -r %s.zip %s" %(root, sub_dir, sub_dir))
+        os.system("python2 %s --c 0 --r %s --l %s" %(Config.ceph_du_py, sub_dir+".zip", os.path.join(root, sub_dir+".zip")))
         
         total_bugs = 0  # 工具报出的所有漏洞总和
         for one in detected_results:
             total_bugs = total_bugs + len(one.bugs)
-        tp, fp, fn = 0, 0, 0
+        total_groundtruth_bugs, total_groundtruth_counterexamples, tp, tn, fp, fn = 0, 0, 0, 0, 0, 0
         for one in testcases:
             for bug in one.bugs:
+                if bug.counterexample == 0:
+                    total_groundtruth_bugs = total_groundtruth_bugs + 1
+                elif bug.counterexample == 1:
+                    total_groundtruth_counterexamples = total_groundtruth_counterexamples + 1
                 r = bug.detection_results[self.tool]
                 if r == "TP":
                     tp = tp + 1
@@ -109,10 +123,16 @@ class Runner:
                     fp = fp + 1
                 elif r == "FN":
                     fn = fn + 1
+                elif r == "TN":
+                    tn = tn + 1
 
-        
+        # 上传结果数据
         sql = "insert into eval_result set task_id=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
-        result_url='%s', "
+        result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d" \
+        %(task, total_bugs, fn/total_groundtruth_bugs, fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+            total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn)
+        db.cursor.execute(sql)
+        db.conn.commit()
 
 
     # clean result

@@ -44,6 +44,7 @@ if __name__ == "__main__":
         print("Specify --input or --testsuite")
         exit(1)
 
+    # 测试集路径
     testsuite_path = ""
     if args.input:
         testsuite_path = args.input  # input file
@@ -52,16 +53,19 @@ if __name__ == "__main__":
         if not os.path.exsits(testsuite_path_tmp):
             # 从ceph上下载测试集然后解压缩
             download_url = download_url(args.testsuite)
-            os.system("python2 %s --c %d --r %s --l %s" %(Config.ceph_du_py, 1, download_url, Config.TESTSUITE))
-            #os.system("cd %s; unzip ")
-
-    manifest_file = os.path.join(testsuite_path, "manifest.xml")
-    out_dir = args.output        # output file
-    if not out_dir:
-        out_dir = Config.TMP
+            os.system("python2 %s --c %d --r %s --l %s" %(Config.ceph_du_py, 1, download_url, os.path.join(Config.TESTSUITE, download_url)))
+            os.system("cd %s; unzip %s" %(Config.TESTSUITE, download_url))
+    # 任务id
     task = -1                    # task id, -1代表没有特别指定的task id
     if args.task:
         task = int(args.task)    # read task id
+    # 工具输出存储路径
+    out_dir = args.output        # output file
+    if not out_dir:
+        out_dir = os.path.join(Config.TMP, "%s_task%d" %(args.tool, task))
+
+    # manifest文件
+    manifest_file = os.path.join(testsuite_path, "manifest.xml")
     testcases = parse_manifest(manifest_file)
     for testcase in testcases:
         testcase.testcase_dir_abs = os.path.abspath(os.path.join(testsuite_path, testcase.testcase_dir))
