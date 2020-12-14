@@ -74,7 +74,7 @@ class DBUtil:
                     DBUtil.lock.release()
         self.conn.commit()
 
-    def update_testsuite(name=args.name, download_url=args.name+".zip", type=_type):
+    def update_testsuite(self, name, download_url, type=0):
         if not self.connected:
             self.connect()
         # 检查是否是更新

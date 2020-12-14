@@ -179,7 +179,8 @@ if __name__ == "__main__":
     _type = 0
     if args.type:
         _type = int(args.type)
-        if _type != 0 or _type != 1:
+        print(_type)
+        if _type != 0 and _type != 1:
             print("--type can only be 0 or 1")
             exit(1)
 
