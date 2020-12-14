@@ -94,7 +94,7 @@ class BenchParser():
         self.testsuite_name = testsuite_name
         indir = os.path.abspath(indir)
         outdir = os.path.abspath(outdir)
-        if self.testsuite_name == 'juliet':
+        if self.testsuite_name.startswith('juliet'):
             for f in os.listdir(indir):
                 if f.startswith('manifest') and f.endswith('.xml'):
                     f = os.path.join(indir, f)
@@ -120,7 +120,7 @@ class BenchParser():
 
     def parse_one(self, testcase_id, testcase_dir_abs, testsuite_name):
         bugs = []
-        if testsuite_name == 'juliet':
+        if testsuite_name.startswith('juliet'):
             for parent, dirnames, fnames in os.walk(testcase_dir_abs):
                 for fname in fnames:
                     if fname.endswith("c") or fname.endswith("cpp") or fname.endswith("java"):
@@ -170,24 +170,36 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("action", metavar="ACTION", type=str, nargs=1, help='choose action: parse|upload')
     parser.add_argument('--input', '-i', help="path of the original test suite | path of the manifest file")
-    parser.add_argument('--output', '-o', help="output path of the parsed testsuite")
+    #parser.add_argument('--output', '-o', help="output path of the parsed testsuite")
     parser.add_argument('--name', '-n', help="name of the test suite")
+    parser.add_argument('--type', '-t', help="type of testsuite, 0 synthetic, 1 real-world")
+
     args = parser.parse_args()
-
     _input = args.input
-    _output = args.output
-    testsuite_name = args.name
+    _type = 0
+    if args.type:
+        _type = int(args.type)
+        if _type != 0 or _type != 1:
+            print("--type can only be 0 or 1")
+            exit(1)
 
+    db = DBUtil()
+    db.connect()
     if args.action[0] == "parse":
         parser = BenchParser()
         #cwe_list = ["CWE78","CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE191","CWE369","CWE401","CWE415","CWE416","CWE457","CWE467","CWE476","CWE680","CWE690"]
         cwe_list = ["CWE476"]
-        testcases = parser.copyAndParse(_input, _output, testsuite_name=testsuite_name, cwe_list=cwe_list)
-        gen_manifest(testcases, os.path.join(_output, "manifest.xml"))
-
+        # 用测试集的名称作为输出文件夹的名称
+        testcases = parser.copyAndParse(args.input, args.name, testsuite_name=args.name, cwe_list=cwe_list)
+        gen_manifest(testcases, os.path.join(args.name, "manifest.xml"))
+        # 压缩
+        os.system("zip -r %s.zip %s" %(args.name, args.name))
+        # 上传
+        os.system("python2 %s --c %d --r %s --l %s" %(Config.ceph_du_py, 0, args.name+".zip", args.name+".zip"))
+        # 更新数据表eval_testsuite
+        db.update_testsuite(name=args.name, download_url=args.name+".zip", type=_type)
     if args.action[0] == "upload":
-        db = DBUtil()
         testcases = parse_manifest(_input)
         db.insert_testcase(testcases)
         db.insert_groundtruth_bug(testcases)
-        db.disconnect()
+    db.disconnect()

@@ -73,3 +73,20 @@ class DBUtil:
                 finally:
                     DBUtil.lock.release()
         self.conn.commit()
+
+    def update_testsuite(name=args.name, download_url=args.name+".zip", type=_type):
+        if not self.connected:
+            self.connect()
+        # 检查是否是更新
+        sql = "select * from eval_testsuite where testsuite_name='%s'" %(pymysql.escape_string(name))
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        if len(result) <= 0:
+            sql = "insert into eval_testsuite set testsuite_name='%s', download_url='%s', type=%d" \
+            %(pymysql.escape_string(name), pymysql.escape_string(download_url), type)
+            self.cursor.execute(sql)
+        else:
+            sql = "update eval_testsuite set download_url='%s', type=%d where testsuite_name='%s'" \
+            %(pymysql.escape_string(download_url), type, pymysql.escape_string(name))
+            self.cursor.execute(sql)
+        self.conn.commit()
