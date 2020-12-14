@@ -100,6 +100,8 @@ class BenchParser():
                     f = os.path.join(indir, f)
                     bugs = self.__parseJulietManifest(f, cwe_list_filter=cwe_list)
             testcases = Juliet_parser.create_single_testcase(indir, outdir, cwe_list=cwe_list, preprocessed_bugs=bugs)
+            for testcase in testcases:
+                testcase.testsuite_name = testsuite_name
             return testcases
 
     def copyAndParse(self, indir, outdir, testsuite_name='', cwe_list=[]):
