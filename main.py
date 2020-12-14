@@ -26,7 +26,7 @@ def download_url(testsuite_name):
     db.connect()
     db.cursor.execute(sql)
     results = db.cursor.fetchall()
-    return results[0]
+    return results[0][0]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -49,8 +49,8 @@ if __name__ == "__main__":
     if args.input:
         testsuite_path = args.input  # input file
     else:
-        testsuite_path_tmp = os.path.join(Config.TESTSUITE, args.testsuite)
-        if not os.path.exsits(testsuite_path_tmp):
+        testsuite_path = os.path.join(Config.TESTSUITE, args.testsuite)
+        if not os.path.exists(testsuite_path):
             # 从ceph上下载测试集然后解压缩
             download_url = download_url(args.testsuite)
             os.system("python2 %s --c %d --r %s --l %s" %(Config.ceph_du_py, 1, download_url, os.path.join(Config.TESTSUITE, download_url)))
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # 工具输出存储路径
     out_dir = args.output        # output file
     if not out_dir:
-        out_dir = os.path.join(Config.TMP, "%s_task%d" %(args.tool, task))
+        out_dir = os.path.join(Config.TMP, "%s_task%d" %(args.tool[0], task))
 
     # manifest文件
     manifest_file = os.path.join(testsuite_path, "manifest.xml")

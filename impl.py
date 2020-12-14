@@ -3,15 +3,8 @@ import os, threading, json, shutil, time, traceback
 
 from glo import Config
 from bug import *
+from dao import *
 
-
-def get_testcase_path(testcase_id, testsuite_home_dir=Config.TESTSUITE):
-    for parent, dirs, files in os.walk(testsuite_home_dir):
-        parent = os.path.abspath(parent)
-        for d in dirs:
-            if d == testcase_id and parent.find(os.path.abspath(Config.OUTPUT)) < 0:
-                return os.path.abspath(os.path.join(parent, d))
-    return None
 
 class Runner:
     # GLOBAL VARIANTS
@@ -25,8 +18,6 @@ class Runner:
         self.has_parsed = False       # flag to see if parsing has been finished
         if not os.path.exists(Config.TMP):
             os.makedirs(Config.TMP)
-        if not os.path.exists(Config.OUTPUT):
-            os.makedirs(Config.OUTPUT)
 
     # 看看real_bug有没有被检测到
     def judge(self, ground_truth, detected_bugs):
@@ -86,6 +77,7 @@ class Runner:
             raise Exception("detected_bugs or detection_results xml file not found")
 
         db = DBUtil()
+        db.connect()
         testcases = parse_manifest(detection_results_xml)
         detected_results = parse_manifest(detected_bugs_xml)
         # use ceph upload detected_bugs_xml
@@ -127,25 +119,29 @@ class Runner:
                     tn = tn + 1
 
         # 上传结果数据
-        sql = "insert into eval_result set task_id=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
+        sql = "select * from eval_result where task=%d" %(task)
+        db.cursor.execute(sql)
+        result = db.cursor.fetchall()
+        if len(result) <= 0:
+            sql = "insert into eval_result set task=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
         result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d" \
-        %(task, total_bugs, fn/total_groundtruth_bugs, fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+        %(task, total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
             total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn)
+        else:
+            sql = "update eval_result set detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
+        result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d where task=%d" \
+        %(total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+            total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, task)
         db.cursor.execute(sql)
         db.conn.commit()
+        db.disconnect()
 
 
     # clean result
     def __clean(self):
         print("cleaning...")
-        shutil.rmtree(Config.OUTPUT)
-        os.makedirs(Config.OUTPUT)
         shutil.rmtree(Config.TMP)
         os.makedirs(Config.TMP)
-        files = os.listdir(Config.HOME)
-        for f in files:
-            if f.endswith(".o") or f.endswith(".class"):
-                os.remove(os.path.join(Config.HOME, f))
 
     # generate cmd based on testcase_path and output_path, in order to call tools
     # please rewrite this method

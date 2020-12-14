@@ -167,7 +167,10 @@ def parse_manifest(manifest):
         for bug_node in testcase_node.findall('bug'):
             bug = Bug()
             bug.testcase_id = testcase.testcase_id
-            cwe_type = bug_node.attrib['cwe']
+            try:
+                cwe_type = bug_node.attrib['cwe']
+            except Exception as e:
+                cwe_type = ""
             bug.cwe_type = cwe_type.split('|')
             bug.bug_type = bug_node.attrib['type']
             bug.counterexample = int(bug_node.attrib['iscounterexample'])
