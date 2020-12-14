@@ -1,5 +1,6 @@
 # -*- coding=utf-8 -*-
 import os, threading, json, shutil, time, traceback
+
 from glo import Config
 from bug import *
 
@@ -11,7 +12,6 @@ def get_testcase_path(testcase_id, testsuite_home_dir=Config.TESTSUITE):
             if d == testcase_id and parent.find(os.path.abspath(Config.OUTPUT)) < 0:
                 return os.path.abspath(os.path.join(parent, d))
     return None
-
 
 class Runner:
     # GLOBAL VARIANTS
@@ -49,7 +49,7 @@ class Runner:
         bugs = self._parseOutput(testcase, one_out_dir)
         return bugs
 
-    def start(self, testcases, out_dir):
+    def start(self, testcases, out_dir, task=-1):
         detection_results = []
         dummy_testcases = [] # 存额外一份testcases，用来记录工具检测结果
         for testcase in testcases:
@@ -64,25 +64,55 @@ class Runner:
             dummy_testcase = testcase.copy()
             dummy_testcase.bugs = detected_bugs
             dummy_testcases.append(dummy_testcase)
-        detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
-        detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
+        if task >= 0:
+            detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s_task%d.xml"%(self.tool, task))
+            detection_results_xml = os.path.join(out_dir, "detection_results_%s_task%d.xml"%(self.tool, task))
+        else:
+            detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
+            detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
         gen_manifest(dummy_testcases, detected_bugs_xml) # 生成记录工具输出的xml文件
         gen_manifest(testcases, detection_results_xml) # 生成记录工具检测结果的xml文件
 
     # 把测试结果上传到ceph和数据库中
     def upload_result(self, out_dir, task):
         # 看看out_dir中是否有detected_bugs和detection_results的xml文件
-        detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
-        detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
+        if task >= 0:
+            detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s_task%d.xml"%(self.tool, task))
+            detection_results_xml = os.path.join(out_dir, "detection_results_%s_task%d.xml"%(self.tool, task))
+        else:
+            detected_bugs_xml = os.path.join(out_dir, "detected_bugs_%s.xml"%(self.tool))
+            detection_results_xml = os.path.join(out_dir, "detection_results_%s.xml"%(self.tool))
         if not os.path.exists(detected_bugs_xml) or not os.path.exists(detection_results_xml):
             raise Exception("detected_bugs or detection_results xml file not found")
-        # upload detected_bugs
-        
-        # use ceph upload detected_bugs_xml
 
+        db = DBUtil()
         testcases = parse_manifest(detection_results_xml)
-        total_bugs = 0
+        detected_results = parse_manifest(detected_bugs_xml)
+        # use ceph upload detected_bugs_xml
+        os.system("python2 %s --c 0 --r %s --l %s" %(Config.ceph_du_py, detected_bugs_xml, detected_bugs_xml))
+        sql = "insert into eval_detected_bugs set task_id=%d, tool_name='%s', testsuite_name='%s', path_ceph='%s'" \
+        %(task, pymysql.escape_string(self.tool), pymysql.escape_string(testcases[0].testsuite_name), \
+            pymysql.escape_string(detected_bugs_xml))
+        db.cursor.execute(sql)
+        db.conn.commit()
+        
+        total_bugs = 0  # 工具报出的所有漏洞总和
+        for one in detected_results:
+            total_bugs = total_bugs + len(one.bugs)
         tp, fp, fn = 0, 0, 0
+        for one in testcases:
+            for bug in one.bugs:
+                r = bug.detection_results[self.tool]
+                if r == "TP":
+                    tp = tp + 1
+                elif r == "FP":
+                    fp = fp + 1
+                elif r == "FN":
+                    fn = fn + 1
+
+        
+        sql = "insert into eval_result set task_id=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
+        result_url='%s', "
 
 
     # clean result

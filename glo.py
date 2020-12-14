@@ -70,17 +70,18 @@ class Global:
 
 class Config:
     HOME = os.path.dirname(os.path.abspath(__file__))
-    OUTPUT = HOME + '/' + 'output_tmp'
     LIBS = HOME+'/libs'
     TMP = HOME + '/tmp'
     OPT = LIBS+'/opt2'
-    TESTSUITE = HOME + '/testsuite'
+    TESTSUITE = HOME + '/testsuites'
     CWEXML = HOME + '/cwe-1000.xml'
 
     db_addr = "172.18.100.15"
     db_user = "mo_software"
     db_pwd = "ndrc10_insp"
     db_name = "testcase_db"
+
+    ceph_du_py = os.path.join(HOME, 'ceph_du.py')
 
 class OnehotDict:
 

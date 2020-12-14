@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
-import argparse, json, os
+import argparse, json, os, glo
 from bug import *
+from dao import *
 from run_codechecker import Runner_codechecker
 from run_scanbuild import Runner_scanbuild
 from run_flawfinder import Runner_flawfinder
@@ -18,17 +19,46 @@ def display(bugs):
         print("description: " + bug.description)
         print("sink: " + bug.sink.toString())
 
+# 根据testsuite name去数据库中查询其download url
+def download_url(testsuite_name):
+    sql = "select download_url from eval_testsuite where testsuite_name='%s'" %(testsuite_name)
+    db = DBUtil()
+    db.connect()
+    db.cursor.execute(sql)
+    results = db.cursor.fetchall()
+    return results[0]
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck|rats')
-    parser.add_argument('--input', '-i', help='Testsuite path')
+    parser.add_argument('--input', '-i', help='Testsuite path. --input and --testsuite are mutually exclusive')
     parser.add_argument('--output', '-o', help='Output path, tool\'s output')
     parser.add_argument('--task', '-t', help='Specify a task id')
+    parser.add_argument('--testsuite', '-n', help="Specify a testsuite name. --input and --testsuite are mutually exclusive")
 
     args = parser.parse_args()
-    testsuite_path = args.input  # input file
+
+    if args.input and args.testsuite:
+        exit(1)
+    if not args.input and not args.testsuite:
+        print("Specify --input or --testsuite")
+        exit(1)
+
+    testsuite_path = ""
+    if args.input:
+        testsuite_path = args.input  # input file
+    else:
+        testsuite_path_tmp = os.path.join(Config.TESTSUITE, args.testsuite)
+        if not os.path.exsits(testsuite_path_tmp):
+            # 从ceph上下载测试集然后解压缩
+            download_url = download_url(args.testsuite)
+            os.system("python2 %s --c %d --r %s --l %s" %(Config.ceph_du_py, 1, download_url, Config.TESTSUITE))
+            #os.system("cd %s; unzip ")
+
     manifest_file = os.path.join(testsuite_path, "manifest.xml")
     out_dir = args.output        # output file
+    if not out_dir:
+        out_dir = Config.TMP
     task = -1                    # task id, -1代表没有特别指定的task id
     if args.task:
         task = int(args.task)    # read task id
@@ -62,7 +92,7 @@ if __name__ == "__main__":
         runner = Runner_uno()
 
     # 执行检测
-    runner.start(testcases, out_dir)
+    runner.start(testcases, out_dir, task)
     # 上传结果
     if task > 0:
         runner.upload_result(out_dir, task)

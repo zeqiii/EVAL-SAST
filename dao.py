@@ -11,13 +11,15 @@ class DBUtil:
         self.connected = False
     def connect(self):
         try:
-            DBUtil.conn = pymysql.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name, charset='utf8')
-            DBUtil.conn.ping(True)
-            DBUtil.cursor = self.conn.cursor()
-            self.connected = True
+            if not self.connected:
+                DBUtil.conn = pymysql.connect(Config.db_addr, Config.db_user, Config.db_pwd, Config.db_name, charset='utf8')
+                DBUtil.conn.ping(True)
+                DBUtil.cursor = self.conn.cursor()
+                self.connected = True
         except Exception as e:
             DBUtil.conn = None
             DBUtil.cursor = None
+            self.connected = False
             print("DBUtil, connect failed")
             print(str(e))
     def disconnect(self):
@@ -71,6 +73,3 @@ class DBUtil:
                 finally:
                     DBUtil.lock.release()
         self.conn.commit()
-
-    def insert_result(self, testcases):
-        1
