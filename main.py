@@ -26,7 +26,10 @@ def download_url(testsuite_name):
     db.connect()
     db.cursor.execute(sql)
     results = db.cursor.fetchall()
-    return results[0][0]
+    if len(results) >= 1:
+        return results[0][0]
+    else:
+        raise Exception("There is no testsuite named %s" %(testsuite_name))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -1,5 +1,5 @@
 # -*- coding=utf-8 -*-
-import os, threading, json, shutil, time, traceback
+import os, threading, json, shutil, time, traceback, datetime
 
 from glo import Config
 from bug import *
@@ -82,9 +82,19 @@ class Runner:
         detected_results = parse_manifest(detected_bugs_xml)
         # use ceph upload detected_bugs_xml
         os.system("python2 %s --c 0 --r %s --l %s" %(Config.ceph_du_py, detected_bugs_xml, detected_bugs_xml))
-        sql = "insert into eval_detected_bugs set task_id=%d, tool_name='%s', testsuite_name='%s', path_ceph='%s'" \
-        %(task, pymysql.escape_string(self.tool), pymysql.escape_string(testcases[0].testsuite_name), \
-            pymysql.escape_string(detected_bugs_xml))
+
+        sql = "select * from eval_detected_bugs where task_id=%d" %(task)
+        db.cursor.execute(sql)
+        result = db.cursor.fetchall()
+        dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not result or len(result) <= 0:
+            sql = "insert into eval_detected_bugs set task_id=%d, tool_name='%s', testsuite_name='%s', path_ceph='%s', date=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S')" \
+                %(task, pymysql.escape_string(self.tool), pymysql.escape_string(testcases[0].testsuite_name), \
+                pymysql.escape_string(detected_bugs_xml), dt)
+        else:
+            sql = "update eval_detected_bugs set tool_name='%s', testsuite_name='%s', path_ceph='%s', date=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S') where task_id=%d" \
+                %(pymysql.escape_string(self.tool), pymysql.escape_string(testcases[0].testsuite_name), \
+                pymysql.escape_string(detected_bugs_xml), dt, task)
         db.cursor.execute(sql)
         db.conn.commit()
 
@@ -122,16 +132,19 @@ class Runner:
         sql = "select * from eval_result where task=%d" %(task)
         db.cursor.execute(sql)
         result = db.cursor.fetchall()
-        if len(result) <= 0:
+        dt=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not result or len(result) <= 0:
             sql = "insert into eval_result set task=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
-        result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d" \
-        %(task, total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
-            total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn)
+                result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d, \
+                end_time=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S')" \
+                %(task, total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+                total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, dt)
         else:
             sql = "update eval_result set detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
-        result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d where task=%d" \
-        %(total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
-            total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, task)
+                result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d, \
+                end_time=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S') where task=%d" \
+                %(total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+                total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, dt, task)
         db.cursor.execute(sql)
         db.conn.commit()
         db.disconnect()
