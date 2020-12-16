@@ -33,7 +33,7 @@ def download_url(testsuite_name):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck|rats')
+    parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck|rats|splint|uno')
     parser.add_argument('--input', '-i', help='Testsuite path. --input and --testsuite are mutually exclusive')
     parser.add_argument('--output', '-o', help='Output path, tool\'s output')
     parser.add_argument('--task', '-t', help='Specify a task id')
