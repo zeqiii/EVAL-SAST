@@ -158,7 +158,9 @@ class BenchParser():
                                             if bug.sink.line >= int(startline) and bug.sink.line <= int(endline):
                                                 part = key2.split('_')[-1]
                                                 if not part.startswith('good') and not part.startswith('bad'):
-                                                    part = key2.split('_')[-2]
+                                                    part = key2.split(':')[-1]
+                                                    if len(key2.split('_')) >= 2:
+                                                        part = key2.split('_')[-2]
                                                 feature.name = feature.name + "_" + part
                                     bug.features.append(feature)
                                     bugs.append(bug)

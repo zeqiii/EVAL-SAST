@@ -34,8 +34,17 @@ class DBUtil:
         if not self.connected:
             self.connect()
         for testcase in testcases:
-            sql = "insert into eval_testcase set testcase_id='%s', testsuite_name='%s', testcase_dir='%s', compile_command='%s'" \
-            %(testcase.testcase_id, testcase.testsuite_name, testcase.testcase_dir, testcase.compile_command)
+            sql = "select * from eval_testcase where testcase_name='%s'" %(pymysql.escape_string(testcase.testcase_id))
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+            if len(result) <= 0:
+                sql = "insert into eval_testcase set testcase_name='%s', testsuite_name='%s', testcase_dir='%s', compile_command='%s'" \
+                %(pymysql.escape_string(testcase.testcase_id), pymysql.escape_string(testcase.testsuite_name), pymysql.escape_string(testcase.testcase_dir), \
+                    pymysql.escape_string(testcase.compile_command))
+            else:
+                sql = "update eval_testcase set testsuite_name='%s', testcase_dir='%s', compile_command='%s' where testcase_name='%s'" \
+                %(pymysql.escape_string(testcase.testsuite_name), pymysql.escape_string(testcase.testcase_dir), \
+                    pymysql.escape_string(testcase.compile_command), pymysql.escape_string(testcase.testcase_id))
             try:
                 DBUtil.lock.acquire()
                 self.cursor.execute(sql)
@@ -56,14 +65,28 @@ class DBUtil:
                 features = []
                 for feature in bug.features:
                     features.append(feature.name)
-                sql = "insert into eval_groundtruth_bug set testcase_id='%s', counterexample=%d, bug_type='%s', \
-                    severity='%s', description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s', \
-                    features='%s', poc='%s', detection_results='%s'" \
-                %(pymysql.escape_string(testcase.testcase_id), bug.counterexample, pymysql.escape_string(bug.bug_type), \
-                    pymysql.escape_string(bug.severity), pymysql.escape_string(bug.description), pymysql.escape_string(str(bug.cwe_type)), \
-                    pymysql.escape_string(bug.source.toString()), pymysql.escape_string(bug.sink.toString()), \
-                    pymysql.escape_string(str(locations)), pymysql.escape_string(str(features)), pymysql.escape_string(bug.poc), \
-                    pymysql.escape_string(str(bug.detection_results)))
+                sql = "select * from eval_groundtruth_bugs where testcase_name='%s' and sink='%s' and bug_type='%s'" \
+                %(pymysql.escape_string(testcase.testcase_id), pymysql.escape_string(bug.sink.toString()), pymysql.escape_string(bug.bug_type))
+                self.cursor.execute(sql)
+                result = self.cursor.fetchall()
+                if len(result) <= 0:
+                    sql = "insert into eval_groundtruth_bugs set testcase_name='%s', counterexample=%d, bug_type='%s', \
+                        severity='%s', description='%s', cwe_type='%s', source='%s', sink='%s', execution_path='%s', \
+                        features='%s', poc='%s', detection_results='%s'" \
+                    %(pymysql.escape_string(testcase.testcase_id), bug.counterexample, pymysql.escape_string(bug.bug_type), \
+                        pymysql.escape_string(bug.severity), pymysql.escape_string(bug.description), pymysql.escape_string(str(bug.cwe_type)), \
+                        pymysql.escape_string(bug.source.toString()), pymysql.escape_string(bug.sink.toString()), \
+                        pymysql.escape_string(str(locations)), pymysql.escape_string(str(features)), pymysql.escape_string(bug.poc), \
+                        pymysql.escape_string(str(bug.detection_results)))
+                else:
+                    sql = "update eval_groundtruth_bugs set counterexample=%d, \
+                        severity='%s', description='%s', cwe_type='%s', source='%s', execution_path='%s', \
+                        features='%s', poc='%s', detection_results='%s' where testcase_name='%s' and sink='%s' and bug_type='%s'" \
+                    %(bug.counterexample, \
+                        pymysql.escape_string(bug.severity), pymysql.escape_string(bug.description), pymysql.escape_string(str(bug.cwe_type)), \
+                        pymysql.escape_string(bug.source.toString()), pymysql.escape_string(str(locations)), pymysql.escape_string(str(features)), \
+                        pymysql.escape_string(bug.poc), pymysql.escape_string(str(bug.detection_results)), pymysql.escape_string(testcase.testcase_id), \
+                        pymysql.escape_string(bug.sink.toString()), pymysql.escape_string(bug.bug_type))
                 try:
                     DBUtil.lock.acquire()
                     self.cursor.execute(sql)
