@@ -30,14 +30,19 @@ class Runner_rats(Runner):
         for vulnerability_node in root.findall("vulnerability"):
             bug = Bug()
             bug.testcase_id = testcase.testcase_id
-            bug.bug_type = vulnerability_node.findall("type")[0].text
+            if len(vulnerability_node.findall("type")) <= 0:
+                bug.bug_type = "RATS_NONE"
+            else:
+                bug.bug_type = vulnerability_node.findall("type")[0].text
             bug.description = vulnerability_node.findall("message")[0].text
 
             file_node = vulnerability_node.findall("file")[0]
             # 记录sink点
             bug.sink.file = file_node.findall("name")[0].text.replace("//", "/").split(testcase.testcase_dir)[-1].strip("/")
-            bug.sink.line = int(file_node.findall("line")[0].text)
-            bugs.append(bug)
+            for one in file_node.findall("line"):
+                bug_new = bug.copy()
+                bug_new.sink.line = int(one.text)
+                bugs.append(bug_new)
         xml_in.close()
         return bugs
 

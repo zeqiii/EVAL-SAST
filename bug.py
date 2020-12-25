@@ -12,6 +12,13 @@ class Feature():
         self.description = "" # 描述
         self.capability = "" # 处理该语法特征所需能力
 
+    def copy(self):
+        feat = Feature()
+        feat.name = self.name
+        feat.description = self.description
+        feat.capability = self.capability
+        return feat
+
 class Location():
     def __init__(self):
         self.file = ""
@@ -22,6 +29,13 @@ class Location():
         s = ""
         s = self.file + ":" + str(self.line) + ":" + str(self.col)
         return s
+
+    def copy(self):
+        loc = Location()
+        loc.file = self.file
+        loc.line = self.line
+        loc.col = self.col
+        return loc
 
 class Bug():
     def __init__(self):
@@ -48,6 +62,33 @@ class Bug():
             if self.sink.line == bug.sink.line:
                 return True
         return False
+
+    def copy(self):
+        bug = Bug()
+        bug.testcase_id = self.testcase_id
+        bug.counterexample = self.counterexample
+        bug.bug_type = self.bug_type
+        bug.severity = self.severity
+        bug.description = self.description
+        bug.cwe_type = []
+        for one in self.cwe_type:
+            bug.cwe_type.append(one)
+        bug.source = self.source.copy()
+        bug.sink = self.sink.copy()
+        bug.other_suspicious = []
+        for one in self.other_suspicious:
+            bug.other_suspicious.append(one.copy())
+        bug.execution_path = []
+        for one in self.execution_path:
+            bug.execution_path.append(one.copy())
+        bug.features = []
+        for one in self.features:
+            bug.features.append(one.copy())
+        bug.poc = self.poc
+        bug.detection_results = {}
+        for key in self.detection_results:
+            bug.detection_results[key] = self.detection_results[key]
+        return bug
 
 class Testcase():
     def __init__(self):
