@@ -128,6 +128,13 @@ class Runner:
                 elif r == "TN":
                     tn = tn + 1
 
+        missing_rate = 0.0
+        if total_groundtruth_bugs > 0:
+            missing_rate = 1.0*fn/total_groundtruth_bugs
+        false_rate = 0.0
+        if total_groundtruth_counterexamples > 0:
+            false_rate = 1.0*fp/total_groundtruth_counterexamples
+
         # 上传结果数据
         sql = "select * from eval_result where task=%d" %(task)
         db.cursor.execute(sql)
@@ -137,13 +144,13 @@ class Runner:
             sql = "insert into eval_result set task=%d, detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
                 result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d, \
                 end_time=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S')" \
-                %(task, total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+                %(task, total_bugs, missing_rate, false_rate, sub_dir+".zip", \
                 total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, dt)
         else:
             sql = "update eval_result set detected_vul_total=%d, missing_rate=%f, false_rate=%f, \
                 result_url='%s', marked_true_toal=%d, marked_false_toal=%d, tp_num=%d, fp_num=%d, tn_num=%d, fn_num=%d, \
                 end_time=str_to_date('%s', '%%Y-%%m-%%d %%H:%%i:%%S') where task=%d" \
-                %(total_bugs, 1.0*fn/total_groundtruth_bugs, 1.0*fp/total_groundtruth_counterexamples, sub_dir+".zip", \
+                %(total_bugs, missing_rate, false_rate, sub_dir+".zip", \
                 total_groundtruth_bugs, total_groundtruth_counterexamples, tp, fp, tn, fn, dt, task)
         db.cursor.execute(sql)
         db.conn.commit()
