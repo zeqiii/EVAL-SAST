@@ -83,6 +83,8 @@ class Config:
 
     ceph_du_py = os.path.join(HOME, 'ceph_du.py')
 
+    CODECHECKER_HOME = "/home/varas/codechecker"
+
 class OnehotDict:
 
     RESERVED_FUNC = []

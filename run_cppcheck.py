@@ -36,7 +36,8 @@ class Runner_cppcheck(Runner):
             bug.testcase_id = testcase.testcase_id
             bug.bug_type = error_node.attrib['id']
             bug.description = error_node.attrib['verbose']
-            bug.cwe_type.append("CWE-%s"%(error_node.attrib['cwe']))
+            if 'cwe' in error_node.attrib.keys():
+                bug.cwe_type.append("CWE-%s"%(error_node.attrib['cwe']))
             location_nodes = error_node.findall("location")
             if not location_nodes:
                 continue
