@@ -26,6 +26,8 @@ class Runner_codechecker(Runner):
     def __init__(self):
         Runner.__init__(self)
         self.tool = "codechecker"
+        self.tool_executable = os.path.join(Config.CODECHECKER_HOME, "build/CodeChecker/bin/CodeChecker")
+        self.activate_file = os.path.join(Config.CODECHECKER_HOME, "venv/bin/activate")
 
     def _genCMD(self, testcase, output_path, output_file="result.out"):
         if not os.path.exists(testcase.testcase_dir_abs):
@@ -34,7 +36,9 @@ class Runner_codechecker(Runner):
         # 根据不同的测试集，实现不同的编译方法
         if testcase.testsuite_name == 'juliet':
             build_command = "\"cd %s && %s\""%(testcase.testcase_dir_abs, testcase.compile_command)
-        cmd = "CodeChecker check --ctu -b %s -o %s" %(build_command, output_path)
+        # activate
+        os.system("source %s" %(self.activate_file))
+        cmd = "%s check --ctu -b %s -o %s" %(self.tool_executable, build_command, output_path)
         return cmd
 
     def _parseOutput(self, testcase, output_path, output_file="result.out"):
@@ -42,7 +46,7 @@ class Runner_codechecker(Runner):
         json_output_path = os.path.join(Config.TMP, "%s"%(testcase.testcase_id))
         if not os.path.exists(json_output_path):
             os.makedirs(json_output_path)
-        cmd = "CodeChecker parse -e %s -o %s %s" %("json", json_output_path, output_path)
+        cmd = "%s parse -e %s -o %s %s" %(self.tool_executable, "json", json_output_path, output_path)
         os.system(cmd)
         report_json = os.path.join(json_output_path, "reports.json")
         bugs = []
