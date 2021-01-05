@@ -76,10 +76,17 @@ class Config:
     TESTSUITE = HOME + '/testsuites'
     CWEXML = HOME + '/cwe-1000.xml'
 
-    db_addr = "172.18.108.110"
-    db_user = "root"
-    db_pwd = "mima1234"
-    db_name = "varas_eval_cms1"
+    # db for test
+    db_addr = "172.18.100.15"
+    db_user = "mo_software"
+    db_pwd = "ndrc10_insp"
+    db_name = "testcase_db"
+
+    # db for varas platform
+    #db_addr = "172.18.100.19"
+    #db_user = "sys_dev"
+    #db_pwd = "dev1234"
+    #db_name = "varas_sys_db"
 
     ceph_du_py = os.path.join(HOME, 'ceph_du.py')
 
