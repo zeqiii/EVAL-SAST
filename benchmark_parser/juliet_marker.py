@@ -84,6 +84,9 @@ if __name__ == "__main__":
     with open(args.keywords) as fp:
         content = fp.readlines()
         for one in content:
+            one = one.strip()
+            if not one:
+                continue
             key = one.split("@@")[0].strip()
             value = one.split("@@")[1].strip()
             keywords[key] = value

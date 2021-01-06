@@ -1,0 +1,9 @@
+CWE476_NULL_Pointer_Dereference__binary_if @@ if ((twoIntsStructPointer != NULL) && (twoIntsStructPointer->intOne == 5))
+CWE476_NULL_Pointer_Dereference__char @@ printHexCharLine(data[0]);
+CWE476_NULL_Pointer_Dereference__class @@ printIntLine(data->intOne);
+CWE476_NULL_Pointer_Dereference__deref_after_check @@ printLine("pointer is NULL");
+CWE476_NULL_Pointer_Dereference__int @@ printIntLine(*data);
+CWE476_NULL_Pointer_Dereference__int64_t @@ printLongLongLine(*data);
+CWE476_NULL_Pointer_Dereference__long @@ printLongLine(*data);
+CWE476_NULL_Pointer_Dereference__struct @@ printIntLine(data->intOne);
+CWE476_NULL_Pointer_Dereference__wchar_t @@ printWcharLine(data[0]);
