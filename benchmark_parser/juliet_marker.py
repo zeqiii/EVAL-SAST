@@ -7,6 +7,20 @@ import juliet_parser
 tool = os.path.join(Config.LIBS, "tooling_sample")
 f_fun_info = os.path.join(Config.TMP, "func_line.info")
 
+# 从Juliet的文件名中提取测试样本名，如CWE114_Process_Control__w32_char_connect_socket_07.c 提取 CWE114_Process_Control__w32_char_connect_socket
+def getSignature(filename):
+    part_2 = filename.split("_")[-1]
+    if part_2.startswith("good") or part_2.startswith("bad"):
+        part_2 = filename.split("_")[-2]
+    num = ""
+    for index in range(0, len(part_2)):
+        if is_number(part_2[index]):
+            num = num + part_2[index]
+        else:
+            break
+    signature = filename.split("_"+num)[0]
+    return signature
+
 # gen function line info using libtooling
 def gen_func_info(sourcefile):
     # -DINCLUDEMAIN 是为了适配juliet的编译而增加的预定义宏
@@ -49,18 +63,21 @@ def mark_counterexamples(in_dir, keywords):
             # 除去testcasesupport文件
             if f in Global.JULIET_TESTCASESUPPORT:
                 continue
+
+            signature = getSignature(f)
             ff = os.path.join(parent, f)
             altered = False
+            content = []
+
             with open(ff, "r") as fp:
                 content = fp.readlines()
-            for key in keywords.keys():
-                if ff.find(key) >= 0:
-                    keyword = keywords[key]
-                    for i in range(0, len(content)):
-                        if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
-                                and content[i].find("##counterexample##")< 0:
-                            content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
-                            altered = True
+                
+            keyword = keywords[signature]
+            for i in range(0, len(content)):
+                if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
+                        and content[i].find("##counterexample##")< 0:
+                    content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
+                    altered = True
             if altered:
                 with open(ff, "w") as fp:
                     new_content = ""
