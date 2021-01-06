@@ -18,6 +18,7 @@ def is_number(s):
     return False
 
 # 从Juliet的文件名中提取测试样本名，如CWE114_Process_Control__w32_char_connect_socket_07.c 提取 CWE114_Process_Control__w32_char_connect_socket
+# signature可以看作是目标程序的种类
 def getSignature(filename):
     part_2 = filename.split("_")[-1]
     if part_2.startswith("good") or part_2.startswith("bad"):
@@ -41,12 +42,18 @@ def mark_counterexamples(in_dir, keywords):
                 continue
 
             signature = getSignature(f)
+            if signature not in keywords.keys(): # 没有反例/不设反例/不关注该类目标程序的反例
+                continue
+
             ff = os.path.join(parent, f)
             altered = False
             content = []
 
             with open(ff, "r") as fp:
                 content = fp.readlines()
+
+            if signature not in keywords.keys():
+                continue
 
             keyword = keywords[signature]
             for i in range(0, len(content)):
@@ -84,4 +91,5 @@ if __name__ == "__main__":
             value = one.split("@@")[1].strip()
             keywords[key] = value
 
+    print(keywords)
     mark_counterexamples(args.input, keywords)
