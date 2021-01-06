@@ -33,7 +33,7 @@ def getSignature(filename):
     return signature
 
 # 用一种简单暴力的方式标注目标程序中的反例所在位置
-# keywords = {signature: keyword}
+# keywords = {signature: [keyword1, keyword2, ...]} 反例可能有不同的表现
 def mark_counterexamples(in_dir, keywords):
     for parent, dirs, files in os.walk(in_dir):
         for f in files:
@@ -52,15 +52,14 @@ def mark_counterexamples(in_dir, keywords):
             with open(ff, "r") as fp:
                 content = fp.readlines()
 
-            if signature not in keywords.keys():
-                continue
-
             keyword = keywords[signature]
             for i in range(0, len(content)):
-                if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
-                        and content[i].find("##counterexample##")< 0:
-                    content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
-                    altered = True
+                for one in keyword:
+                    if content[i].find(one) >= 0 and content[i].find("##bug##") < 0 \
+                            and content[i].find("##counterexample##")< 0:
+                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
+                        altered = True
+                        break
             if altered:
                 with open(ff, "w") as fp:
                     new_content = ""
@@ -85,11 +84,13 @@ if __name__ == "__main__":
         content = fp.readlines()
         for one in content:
             one = one.strip()
-            if not one:
+            if not one or one.startswith("#"):
                 continue
             key = one.split("@@")[0].strip()
             value = one.split("@@")[1].strip()
-            keywords[key] = value
+            if key not in keywords.keys():
+                keywords[key] = []
+            keywords[key].append(value)
 
     print(keywords)
     mark_counterexamples(args.input, keywords)

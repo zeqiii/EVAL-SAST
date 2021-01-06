@@ -7,3 +7,19 @@ CWE476_NULL_Pointer_Dereference__int64_t @@ printLongLongLine(*data);
 CWE476_NULL_Pointer_Dereference__long @@ printLongLine(*data);
 CWE476_NULL_Pointer_Dereference__struct @@ printIntLine(data->intOne);
 CWE476_NULL_Pointer_Dereference__wchar_t @@ printWcharLine(data[0]);
+
+# s01
+CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memcpy @@ memcpy(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memmove @@ memmove(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+CWE121_Stack_Based_Buffer_Overflow__CWE129_connect_socket @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_fgets @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_fscanf @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_large @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_listen_socket @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_rand @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE131_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE131_memcpy @@ memcpy(data, source, 10*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE131_memmove @@ memmove(data, source, 10*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)wcscpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)strcpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_cpy @@ strcpy(data, source);
