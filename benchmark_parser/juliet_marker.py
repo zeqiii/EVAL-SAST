@@ -42,6 +42,7 @@ def parse_func_info(lines, filters=[]):
     return info
 
 # 用一种简单暴力的方式标注目标程序中的反例所在位置
+# keywords = {signature: keyword}
 def mark_counterexamples(in_dir, keywords):
     for parent, dirs, files in os.walk(in_dir):
         for f in files:
@@ -52,12 +53,14 @@ def mark_counterexamples(in_dir, keywords):
             altered = False
             with open(ff, "r") as fp:
                 content = fp.readlines()
-            for i in range(0, len(content)):
-                for keyword in keywords:
-                    if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
-                            and content[i].find("##counterexample##")< 0:
-                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
-                        altered = True
+            for key in keywords.keys():
+                if ff.find(key) >= 0:
+                    keyword = keywords[key]
+                    for i in range(0, len(content)):
+                        if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
+                                and content[i].find("##counterexample##")< 0:
+                            content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
+                            altered = True
             if altered:
                 with open(ff, "w") as fp:
                     new_content = ""
@@ -71,15 +74,18 @@ def mark_counterexamples(in_dir, keywords):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', '-i', help="path of the test suite")
+    # 记录关键字的文件，每行中，@@左边为目标程序种类，@@右边为该类目标程序中反例的关键词
     parser.add_argument('--keywords', '-k', help="path of file that stores the keywords of counterexamples")
     args = parser.parse_args()
     if not args.keywords or not args.input:
         print("no input or keywords!")
         exit(1)
-    keywords = []
+    keywords = {}
     with open(args.keywords) as fp:
-        keywords = fp.readlines()
-        for i in range(0, len(keywords)):
-            keywords[i] = keywords[i].strip()
-            
+        content = fp.readlines()
+        for one in content:
+            key = one.split("@@")[0].strip()
+            value = one.split("@@")[1].strip()
+            keywords[key] = value
+
     mark_counterexamples(args.input, keywords)
