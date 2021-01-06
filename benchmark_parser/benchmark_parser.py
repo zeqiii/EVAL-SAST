@@ -176,11 +176,17 @@ if __name__ == "__main__":
     parser.add_argument('--input', '-i', help="path of the original test suite | path of the manifest file")
     #parser.add_argument('--output', '-o', help="output path of the parsed testsuite")
     parser.add_argument('--name', '-n', help="name of the test suite")
+    parser.add_argument('--cwe', '-c', help="cwe list, split with ',' e.g. -c \"CWE121,CWE122\"")
     parser.add_argument('--type', '-t', help="type of testsuite, 0 synthetic, 1 real-world")
 
     args = parser.parse_args()
     _input = args.input
     _type = 0
+    _cwe = []
+    if args.cwe:
+        _cwe = args.cwe.split(",")
+        for i in range(0, len(_cwe)):
+            _cwe[i] = _cwe[i].strip()
     if args.type:
         _type = int(args.type)
         print(_type)
@@ -193,9 +199,8 @@ if __name__ == "__main__":
     if args.action[0] == "parse":
         parser = BenchParser()
         #cwe_list = ["CWE78","CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE191","CWE369","CWE401","CWE415","CWE416","CWE457","CWE467","CWE476","CWE680","CWE690"]
-        cwe_list = ["CWE476"]
         # 用测试集的名称作为输出文件夹的名称
-        testcases = parser.copyAndParse(args.input, args.name, testsuite_name=args.name, cwe_list=cwe_list)
+        testcases = parser.copyAndParse(args.input, args.name, testsuite_name=args.name, cwe_list=_cwe)
         gen_manifest(testcases, os.path.join(args.name, "manifest.xml"))
         # 压缩
         os.system("zip -r %s.zip %s" %(args.name, args.name))
