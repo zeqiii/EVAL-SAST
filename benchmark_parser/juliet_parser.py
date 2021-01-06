@@ -145,6 +145,8 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                         new_content = new_content + one
                     with open(os.path.join(outpath, os.path.basename(f)), "w") as fp:
                         fp.write(new_content)
+            """
+            # 弃用这里对反例的标注，因为存在逻辑漏洞
             for f in files:
                 ff = os.path.join(outpath, os.path.basename(f))
                 altered = False
@@ -160,6 +162,7 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
                         for line in content:
                             new_content = new_content + line
                         fp.write(new_content)
+            """
             testcases.append(testcase)
     return testcases
 

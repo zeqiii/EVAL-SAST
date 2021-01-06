@@ -1,8 +1,7 @@
 # -*- coding=utf-8 -*-
-import os, sys, zipfile, shutil
+import os, sys, argparse
 sys.path.append("..")
 from glo import *
-from bug import *
 import juliet_parser
 
 tool = os.path.join(Config.LIBS, "tooling_sample")
@@ -42,3 +41,45 @@ def parse_func_info(lines, filters=[]):
         info[filepath][funname][funinfo[0]] = linenum
     return info
 
+# 用一种简单暴力的方式标注目标程序中的反例所在位置
+def mark_counterexamples(in_dir, keywords):
+    for parent, dirs, files in os.walk(in_dir):
+        for f in files:
+            # 除去testcasesupport文件
+            if f in Global.JULIET_TESTCASESUPPORT:
+                continue
+            ff = os.path.join(parent, f)
+            altered = False
+            with open(ff, "r") as fp:
+                content = fp.readlines()
+            for i in range(0, len(content)):
+                for keyword in keywords:
+                    if content[i].find(keyword) >= 0 and content[i].find("##bug##") < 0 \
+                            and content[i].find("##counterexample##")< 0:
+                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
+                        altered = True
+            if altered:
+                with open(ff, "w") as fp:
+                    new_content = ""
+                    for line in content:
+                        new_content = new_content + line
+                    fp.write(new_content)
+
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', '-i', help="path of the test suite")
+    parser.add_argument('--keywords', '-k', help="path of file that stores the keywords of counterexamples")
+    args = parser.parse_args()
+    if not args.keywords or not args.input:
+        print("no input or keywords!")
+        exit(1)
+    keywords = []
+    with open(args.keywords) as fp:
+        keywords = fp.readlines()
+        for i in range(0, len(keywords)):
+            keywords[i] = keywords[i].strip()
+            
+    mark_counterexamples(args.input, keywords)
