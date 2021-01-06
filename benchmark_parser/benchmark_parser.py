@@ -104,6 +104,7 @@ class BenchParser():
                 testcase.testsuite_name = testsuite_name
             return testcases
 
+    # 拷贝原有测试集，并按照我们定义的测试集结构重新组织，然后解析原有测试集中的标注信息，构造新测试集的manifest文件
     def copyAndParse(self, indir, outdir, testsuite_name='', cwe_list=[]):
         bugs = []
         testcases = self.copy(indir, outdir, testsuite_name=testsuite_name, cwe_list=cwe_list)
@@ -111,6 +112,7 @@ class BenchParser():
             testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
         return testcases
 
+    # 再解析一遍测试集，更新测试集的标注
     def parse(self, testsuite_dir, testsuite_name):
         manifest = os.path.join(testsuite_dir, "manifest.xml")
         testcases = parse_manifest(manifest)
@@ -120,6 +122,7 @@ class BenchParser():
             testcase.bugs = self.parse_one(testcase.testcase_id, testcase.testcase_dir_abs, testsuite_name)
         return testcases
 
+    # 对一个测试集进行解析
     def parse_one(self, testcase_id, testcase_dir_abs, testsuite_name):
         bugs = []
         if testsuite_name.startswith('juliet'):
@@ -172,7 +175,7 @@ class BenchParser():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", metavar="ACTION", type=str, nargs=1, help='choose action: parse|upload')
+    parser.add_argument("action", metavar="ACTION", type=str, nargs=1, help='choose action: parse|refresh|upload')
     parser.add_argument('--input', '-i', help="path of the original test suite | path of the manifest file")
     #parser.add_argument('--output', '-o', help="output path of the parsed testsuite")
     parser.add_argument('--name', '-n', help="name of the test suite")
@@ -196,11 +199,15 @@ if __name__ == "__main__":
 
     db = DBUtil()
     db.connect()
-    if args.action[0] == "parse":
+    if args.action[0] == "parse" or args.action[0] == "refresh":
         parser = BenchParser()
         #cwe_list = ["CWE78","CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE191","CWE369","CWE401","CWE415","CWE416","CWE457","CWE467","CWE476","CWE680","CWE690"]
         # 用测试集的名称作为输出文件夹的名称
-        testcases = parser.copyAndParse(args.input, args.name, testsuite_name=args.name, cwe_list=_cwe)
+        testcases = []
+        if args.action[0] == "parse":
+            testcases = parser.copyAndParse(args.input, args.name, testsuite_name=args.name, cwe_list=_cwe)
+        elif args.action[0] == "refresh":
+            testcases = parser.parse(args.input, args.name)
         gen_manifest(testcases, os.path.join(args.name, "manifest.xml"))
         # 压缩
         os.system("zip -r %s.zip %s" %(args.name, args.name))
