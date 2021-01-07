@@ -93,6 +93,7 @@ class Bug():
 class Testcase():
     def __init__(self):
         self.testcase_id = ""
+        self.testcase_type = ""     # basic, varient
         self.testcase_dir = ""      # 相对于测试集所在文件夹的相对路径
         self.testcase_dir_abs = ""  # 绝对路径
         self.testsuite_name = ""
@@ -103,6 +104,7 @@ class Testcase():
     def copy(self):
         t = Testcase()
         t.testcase_id = self.testcase_id
+        t.testcase_type = self.testcase_type
         t.testcase_dir = self.testcase_dir
         t.testcase_dir_abs = self.testcase_dir_abs
         t.testsuite_name = self.testsuite_name
@@ -116,6 +118,7 @@ class Testcase():
         dom = minidom.Document()
         testcase_node = dom.createElement("testcase")
         testcase_node.setAttribute('id', self.testcase_id) # 测试样本名称属性
+        testcase_node.setAttribute('type', self.testcase_type) # 测试样本类型（基础or变种）
         testcase_node.setAttribute('path', self.testcase_dir) # 测试样本相对路径
         testcase_node.setAttribute('compile_command', self.compile_command) # 测试样本的编译命令
         # 开始添加bug
@@ -200,6 +203,7 @@ def parse_manifest(manifest):
     for testcase_node in root.findall('testcase'):
         testcase = Testcase()
         testcase.testcase_id = testcase_node.attrib['id']
+        testcase.testcase_type = testcase_node.attrib['type']
         testcase.testcase_dir = testcase_node.attrib['path']      # 相对于测试集所在文件夹的相对路径
         testcase.testsuite_name = testsuite_name
         testcase.compile_command = testcase_node.attrib['compile_command']

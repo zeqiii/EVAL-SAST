@@ -114,8 +114,13 @@ def create_single_testcase(juliet_home_dir, outdir, cwe_list=[], preprocessed_bu
             relative_path = os.path.join(sig.split("__")[0], sig)
             outpath = os.path.join(outdir, relative_path)
             testcase.testcase_dir = relative_path
+            testcase.testcase_type = 
             testcase.testcase_dir_abs = os.path.abspath(outpath)
             testcase.testcase_id = sig
+            if sig.endswith("_01"):
+                testcase.testcase_type = "basic"
+            else:
+                testcase.testcase_type = "varient"
             testcase.testsuite_name = "juliet"
             testcase.compile_command = "gcc -DINCLUDEMAIN *.c -lpthread"
             the_bug.testcase_dir = testcase.testcase_dir
