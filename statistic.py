@@ -1,6 +1,7 @@
- import argparse
+import argparse, os
+from bug import *
 
- class Statistic:
+class Statistic:
     def __init__(self):
         self.tool = ""
 
