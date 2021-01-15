@@ -23,3 +23,27 @@ CWE121_Stack_Based_Buffer_Overflow__CWE131_memmove @@ memmove(data, source, 10*s
 CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)wcscpy(dest, data);
 CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)strcpy(dest, data);
 CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_cpy @@ strcpy(data, source);
+
+# s02
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memcpy @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memmove @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_ncpy @@ strncpy(data, source, strlen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_cpy @@ strcpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memcpy @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memmove @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_ncpy @@ strncpy(data, source, strlen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_cpy @@ wcscpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memcpy @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memmove @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_ncpy @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_cpy @@ wcscpy(data, source);
+
+#s03
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_ncpy @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_loop @@ data[i] = source[i];
