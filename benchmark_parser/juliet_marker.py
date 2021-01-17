@@ -2,6 +2,7 @@
 import os, sys, argparse
 sys.path.append("..")
 from glo import *
+from juliet_parser import *
 
 def is_number(s):
     try:
@@ -32,6 +33,26 @@ def getSignature(filename):
     signature = filename.split("_"+num)[0]
     return signature
 
+# 自动生成反例关键词标注
+def gen_keywords(in_dir):
+
+    keywords = {}
+
+    for parent, dirs, files in os.walk(in_dir):
+        for f in files:
+            # 除去testcasesupport文件
+            if f in Global.JULIET_TESTCASESUPPORT:
+                continue
+            signature = getSignature(f)
+            if signature in keywords.keys():
+                continue
+
+            ff = os.path.join(parent, f)
+            info = parse_func_info(gen_func_info(ff))
+            print(info)
+
+
+
 # 用一种简单暴力的方式标注目标程序中的反例所在位置
 # keywords = {signature: [keyword1, keyword2, ...]} 反例可能有不同的表现
 def mark_counterexamples(in_dir, keywords):
@@ -44,6 +65,8 @@ def mark_counterexamples(in_dir, keywords):
             signature = getSignature(f)
             if signature not in keywords.keys(): # 没有反例/不设反例/不关注该类目标程序的反例
                 continue
+
+            if os.path.splitext(f)
 
             ff = os.path.join(parent, f)
             altered = False
@@ -66,7 +89,6 @@ def mark_counterexamples(in_dir, keywords):
                     for line in content:
                         new_content = new_content + line
                     fp.write(new_content)
-
 
 
 
