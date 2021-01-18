@@ -48,7 +48,7 @@ class Statistic:
         if not os.path.exists(detected_bugs_xml) or not os.path.exists(detection_results_xml):
             raise Exception("detected_bugs or detection_results xml file not found")
 
-        self.testcases = sorted(parse_manifest(detection_results_xml))
+        self.testcases = sorted(parse_manifest(detection_results_xml), key=lambda testcase: testcase.testcase_id)
         self.detected_results = parse_manifest(detected_bugs_xml)
 
     # 统计结果

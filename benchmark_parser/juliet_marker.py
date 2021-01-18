@@ -40,6 +40,8 @@ def gen_keywords(in_dir):
 
     for parent, dirs, files in os.walk(in_dir):
         for f in files:
+            if not f.endswith(".c") and not f.endswith(".cpp"):
+                continue
             # 除去testcasesupport文件
             if f in Global.JULIET_TESTCASESUPPORT:
                 continue
@@ -68,6 +70,7 @@ def gen_keywords(in_dir):
                         break
                 if keyword not in keywords[signature]:
                     keywords[signature].append(keyword)
+    return keywords
 
 
 
@@ -85,7 +88,7 @@ def mark_counterexamples(in_dir, keywords):
             if signature not in keywords.keys(): # 没有反例/不设反例/不关注该类目标程序的反例
                 continue
 
-            if os.path.splitext(f)
+            #if os.path.splitext(f)
 
             ff = os.path.join(parent, f)
             altered = False
@@ -121,6 +124,9 @@ if __name__ == "__main__":
         print("no input or keywords!")
         exit(1)
     keywords = {}
+    keywords = gen_keywords(args.input)
+    print(keywords)
+    """
     with open(args.keywords) as fp:
         content = fp.readlines()
         for one in content:
@@ -135,3 +141,4 @@ if __name__ == "__main__":
 
     print(keywords)
     mark_counterexamples(args.input, keywords)
+    """

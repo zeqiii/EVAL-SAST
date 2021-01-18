@@ -22,7 +22,7 @@ def gen_func_info(sourcefile):
 def parse_func_info(lines, filters=[]):
     # {
     #  filename: 
-    #  {fun_name1: (startline, endline), fun_name2: (startline, endline)}
+    #  {fun_name1: {startline:xx1, endline:yy1}, fun_name2: {startline:xx2, endline:yy2}}
     # }
     info = {}
     for line in lines:
