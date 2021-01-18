@@ -44,12 +44,31 @@ def gen_keywords(in_dir):
             if f in Global.JULIET_TESTCASESUPPORT:
                 continue
             signature = getSignature(f)
-            if signature in keywords.keys():
-                continue
+            #if signature in keywords.keys():
+            #    continue
+            keywords[signature] = []
 
             ff = os.path.join(parent, f)
             info = parse_func_info(gen_func_info(ff))
-            print(info)
+            
+            # 寻找 /* FLAW  或者  /* POTENTIAL FLAW:
+            is_comment = False
+            with open(ff) as fp:
+                lines = fp.readlines()
+                for i in range(0, len(lines)):
+                    if lines[i].strip().startswith("/* FLAW") or lines[i].strip().startswith("/* POTENTIAL FLAW"):
+                        is_comment = True
+                        continue
+                    if is_comment and lines[i].strip().startswith("*"):
+                        continue
+                    if not is_comment:
+                        continue
+                    else:
+                        keyword = lines[i].strip().split("/*")[0].strip()
+                        break
+                if keyword not in keywords[signature]:
+                    keywords[signature].append(keyword)
+
 
 
 
