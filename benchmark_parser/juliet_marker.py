@@ -63,11 +63,9 @@ def gen_keywords(in_dir):
                         continue
                     if is_comment and lines[i].strip().startswith("*"):
                         continue
-                    if not is_comment:
-                        continue
-                    else:
+                    if is_comment:
                         keyword = lines[i].strip().split("/*")[0].strip()
-                        break
+                        is_comment = False
                 if keyword not in keywords[signature]:
                     keywords[signature].append(keyword)
     return keywords
