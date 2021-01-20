@@ -33,6 +33,22 @@ def getSignature(filename):
     signature = filename.split("_"+num)[0]
     return signature
 
+def __line_i_in_which_func(info, i):
+    for filename in info.keys():
+        value = info[filename]
+        for funcname in value.keys():
+            func_range = value[funcname]
+            start = int(func_range["startline"])
+            end = int(func_range["endline"])
+            if i < end and i > start:
+                return funcname
+    return None
+
+def __func_is_good(funcname):
+    if (funcname.startswith("good") or funcname.endswith("good")):
+        return True
+    return False
+
 # 自动生成反例关键词标注
 def gen_keywords(in_dir):
 
@@ -65,9 +81,11 @@ def gen_keywords(in_dir):
                         continue
                     if is_comment:
                         keyword = lines[i].strip().split("/*")[0].strip()
+                        func_name = __line_i_in_which_func(info, i) # 第i行在哪个函数中
+                        if func_is_good(func_name):
+                            if keyword not in keywords[signature]:
+                                keywords[signature].append(keyword)
                         is_comment = False
-                if keyword not in keywords[signature]:
-                    keywords[signature].append(keyword)
     return keywords
 
 
