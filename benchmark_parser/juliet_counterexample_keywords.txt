@@ -1,49 +1,153 @@
-CWE476_NULL_Pointer_Dereference__binary_if @@ if ((twoIntsStructPointer != NULL) && (twoIntsStructPointer->intOne == 5))
-CWE476_NULL_Pointer_Dereference__char @@ printHexCharLine(data[0]);
-CWE476_NULL_Pointer_Dereference__class @@ printIntLine(data->intOne);
-CWE476_NULL_Pointer_Dereference__deref_after_check @@ printLine("pointer is NULL");
-CWE476_NULL_Pointer_Dereference__int @@ printIntLine(*data);
-CWE476_NULL_Pointer_Dereference__int64_t @@ printLongLongLine(*data);
-CWE476_NULL_Pointer_Dereference__long @@ printLongLine(*data);
-CWE476_NULL_Pointer_Dereference__struct @@ printIntLine(data->intOne);
-CWE476_NULL_Pointer_Dereference__wchar_t @@ printWcharLine(data[0]);
+# signature @@ bad source @@ "bad" sink
+# bad source or bad sink的多个要素用##间隔
+# CONST代表常量
+# MACRO代表宏展开
+# f:xxx代表函数xxx
+# t:xxx代表变量类型xxx
+
+CWE476_NULL_Pointer_Dereference__binary_if @@ CONST @@ if ((twoIntsStructPointer != NULL) && (twoIntsStructPointer->intOne == 5))
+CWE476_NULL_Pointer_Dereference__char @@ CONST @@ printHexCharLine(data[0]);
+CWE476_NULL_Pointer_Dereference__class @@ CONST @@ printIntLine(data->intOne);
+CWE476_NULL_Pointer_Dereference__deref_after_check @@ CONST @@ printLine("pointer is NULL");
+CWE476_NULL_Pointer_Dereference__int @@ CONST @@ printIntLine(*data);
+CWE476_NULL_Pointer_Dereference__int64_t @@ CONST @@ printLongLongLine(*data);
+CWE476_NULL_Pointer_Dereference__long @@ CONST @@ printLongLine(*data);
+CWE476_NULL_Pointer_Dereference__struct @@ CONST @@ printIntLine(data->intOne);
+CWE476_NULL_Pointer_Dereference__wchar_t @@ CONST @@ printWcharLine(data[0]);
 
 # s01
-CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memcpy @@ memcpy(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
-CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memmove @@ memmove(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
-CWE121_Stack_Based_Buffer_Overflow__CWE129_connect_socket @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE129_fgets @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE129_fscanf @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE129_large @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE129_listen_socket @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE129_rand @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE131_loop @@ data[i] = source[i];
-CWE121_Stack_Based_Buffer_Overflow__CWE131_memcpy @@ memcpy(data, source, 10*sizeof(int));
-CWE121_Stack_Based_Buffer_Overflow__CWE131_memmove @@ memmove(data, source, 10*sizeof(int));
-CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)wcscpy(dest, data);
-CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ (void)strcpy(dest, data);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_cpy @@ strcpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memcpy @@ f:sizeof @@ memcpy(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+CWE121_Stack_Based_Buffer_Overflow__char_type_overrun_memmove @@ f:sizeof @@ memmove(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+CWE121_Stack_Based_Buffer_Overflow__CWE129_connect_socket @@ f:recv @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_fgets @@ f:fgets @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_fscanf @@ f:fscanf @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_large @@ CONST @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_listen_socket @@ f:recv @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE129_rand @@ f:rand @@ buffer[data] = 1;
+CWE121_Stack_Based_Buffer_Overflow__CWE131_loop f:alloca##MACRO @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE131_memcpy @@ f:alloca##MACRO @@ memcpy(data, source, 10*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE131_memmove @@ f:alloca##MACRO @@ memmove(data, source, 10*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ CONST##f:strlen##t:wchar_t @@ (void)wcscpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ CONST##f:strlen##t:wchar_t @@ (void)strcpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_cpy @@ CONST##f:sizeof##f:alloca##t:char @@ strcpy(data, source);
 
 # s02
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_loop @@ data[i] = source[i];
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memcpy @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memmove @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_ncpy @@ strncpy(data, source, strlen(source) + 1);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_cpy @@ strcpy(data, source);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_loop @@ data[i] = source[i];
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memcpy @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memmove @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_ncpy @@ strncpy(data, source, strlen(source) + 1);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_cpy @@ wcscpy(data, source);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_loop @@ data[i] = source[i];
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memcpy @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memmove @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_ncpy @@ wcsncpy(data, source, wcslen(source) + 1);
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_cpy @@ wcscpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_loop @@ CONST##f:alloca##f:strlen##f:sizeof##t:char @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memcpy @@ CONST##f:alloca##f:strlen##f:sizeof##t:char @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_memmove @@ CONST##f:alloca##f:strlen##f:sizeof##t:char @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_alloca_ncpy @@ CONST##f:alloca##f:strlen##f:sizeof##t:char @@ strncpy(data, source, strlen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_cpy @@ CONST##t:char[] @@ strcpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_loop @@ CONST##f:strlen##t:char[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memcpy @@ CONST##f:strlen##t:char[]##f:sizeof @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_memmove @@ CONST##t:char[]##f:strlen##f:sizeof @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_char_declare_ncpy @@ CONST##t:char[]##f:strlen @@ strncpy(data, source, strlen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_cpy @@ CONST##t:wchar_t##f:alloca##f:sizeof##MACRO @@ wcscpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_loop @@ CONST##t:wchar_t##f:alloca##f:sizeof##MACRO##f:wcslen @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memcpy @@ CONST##t:wchar_t##f:alloca##f:sizeof##MACRO##f:wcslen @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_memmove @@ CONST##t:wchar_t##f:alloca##f:sizeof##MACRO##f:wcslen @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_alloca_ncpy @@ CONST##t:wchar_t##f:alloca##f:sizeof##MACRO##f:wcslen @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_cpy @@ CONST##t:wchar_t[] @@ wcscpy(data, source);
 
 #s03
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop @@ data[i] = source[i];
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
-CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_ncpy @@ wcsncpy(data, source, wcslen(source) + 1);
-CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_loop @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_loop @@ CONST##t:wchar_t[]##f:wcslen @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memcpy @@ CONST##t:wchar_t[]##f:wcslen##f:sizeof @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_memmove @@ CONST##t:wchar_t[]##f:wcslen##f:sizeof @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE193_wchar_t_declare_ncpy @@ CONST##t:wchar_t[]##f:wcslen @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_loop @@ CONST##f:alloca##f:sizeof##char[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_memcpy @@ CONST##alloca##MACRO##f:sizeof##t:char[] @@ memcpy(data, source, 100*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_memmove @@ CONST##alloca##MACRO##f:sizeof##t:char[] @@ memmove(data, source, 100*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_ncat @@ CONST##alloca##MACRO##f:sizeof##t:char[] @@ strncat(data, source, 100);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_ncpy_01 @@ CONST##alloca##MACRO##f:sizeof##t:char[] @@ strncpy(data, source, 100-1);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_alloca_snprintf @@ CONST##alloca##MACRO##f:sizeof##t:char[] @@ SNPRINTF(data, 100, "%s", source);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_loop @@ CONST##t:char[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_memcpy @@ CONST##t:char[]##f:sizeof @@ memcpy(data, source, 100*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_memmove @@ CONST##t:char[]##f:sizeof @@ memmove(data, source, 100*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_ncat @@ CONST##t:char[] @@ strncat(data, source, 100);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_ncpy @@ CONST##t:char[] @@ strncpy(data, source, 100-1);
+
+#s04
+CWE121_Stack_Based_Buffer_Overflow__CWE805_char_declare_snprintf @@ CONST##t:char[] @@ SNPRINTF(data, 100, "%s", source);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_alloca_loop @@ CONST##t:int[]##f:alloca##f:sizeof @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_alloca_memcpy @@ CONST##t:int[]##f:alloca##f:sizeof @@ memcpy(data, source, 100*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_alloca_memmove @@ CONST##t:int[]##f:alloca##f:sizeof @@ memmove(data, source, 100*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_loop @@ CONST##t:int[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memcpy @@ CONST##t:int[]##f:sizeof @@ memcpy(data, source, 100*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int_declare_memmove @@ CONST##t:int[]##f:sizeof @@ memmove(data, source, 100*sizeof(int));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_alloca_loop @@ CONST##t:int64_t##t:int64_t[]##f:sizeof##f:alloca##MACRO @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_alloca_memcpy @@ CONST##t:int64_t##t:int64_t[]##f:sizeof##f:alloca##MACRO @@ memcpy(data, source, 100*sizeof(int64_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_alloca_memmove @@ CONST##t:int64_t##t:int64_t[]##f:sizeof##f:alloca##MACRO @@ memmove(data, source, 100*sizeof(int64_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_declare_loop @@ CONST##t:int64_t[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_declare_memcpy @@ CONST##t:int64_t[]##f:sizeof @@ memcpy(data, source, 100*sizeof(int64_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_int64_t_declare_memmove @@ CONST##t:int64_t[]##f:sizeof @@ memmove(data, source, 100*sizeof(int64_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_alloca_loop @@ CONST##t:STRUCT##f:alloca##f:sizeof##MACRO @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_alloca_memcpy @@ CONST##t:STRUCT##f:alloca##f:sizeof##MACRO @@ memcpy(data, source, 100*sizeof(twoIntsStruct));
+
+#s05
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_alloca_memmove @@ CONST##t:STRUCT##f:alloca##f:sizeof##MACRO @@ memmove(data, source, 100*sizeof(twoIntsStruct));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_declare_loop @@ CONST##t:STRUCT @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_declare_memcpy @@ CONST##t:STRUCT##f:sizeof @@ memcpy(data, source, 100*sizeof(twoIntsStruct));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_struct_declare_memmove @@ CONST##t:STRUCT##f:sizeof @@ memmove(data, source, 100*sizeof(twoIntsStruct));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_ncat @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ wcsncat(data, source, 100);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ wcsncpy(data, source, 100-1);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_alloca_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof##f:alloca##MACRO @@ SNPRINTF(data, 100, L"%s", source);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_loop @@ CONST##t:wchar_t##t:wchar_t[] @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_ncat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcsncat(data, source, 100);
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_ncpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcsncpy(data, source, 100-1);
+
+# s06
+CWE121_Stack_Based_Buffer_Overflow__CWE805_wchar_t_declare_snprintf @@ CONST##t:wchar_t##t:wchar_t[] @@ SNPRINTF(data, 100, L"%s", source);
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_loop @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ dest[i] = data[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_memcpy @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ memcpy(dest, data, strlen(data)*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_memmove @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ memmove(dest, data, strlen(data)*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_ncat @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ strncat(dest, data, strlen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_ncpy @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ strncpy(dest, data, strlen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_alloca_snprintf @@ CONST##f:alloca##MACRO##f:sizeof##t:char##t:char[]##f:strlen @@ SNPRINTF(dest, strlen(data), "%s", data);
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_loop @@ CONST##t:char##t:char[]##f:strlen @@ dest[i] = data[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_memcpy @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memcpy(dest, data, strlen(data)*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_memmove @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memmove(dest, data, strlen(data)*sizeof(char));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_ncat @@ CONST##t:char##t:char[]##f:strlen @@ strncat(dest, data, strlen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_ncpy @@ CONST##t:char##t:char[]##f:strlen @@ strncpy(dest, data, strlen(data));
+
+# s07
+CWE121_Stack_Based_Buffer_Overflow__CWE806_char_declare_snprintf @@ CONST##t:char##t:char[]##f:strlen @@ SNPRINTF(dest, strlen(data), "%s", data);
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ dest[i] = data[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ memcpy(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ memmove(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_ncat @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ wcsncat(dest, data, wcslen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ wcsncpy(dest, data, wcslen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_alloca_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##f:wcslen##MACRO @@ SNPRINTF(dest, wcslen(data), L"%s", data);
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ dest[i] = data[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memcpy(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memmove(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_ncat @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ wcsncat(dest, data, wcslen(data));
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ wcsncpy(dest, data, wcslen(data));
+
+# s08
+CWE121_Stack_Based_Buffer_Overflow__CWE806_wchar_t_declare_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ SNPRINTF(dest, wcslen(data), L"%s", data);
+CWE121_Stack_Based_Buffer_Overflow__dest_char_alloca_cat @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##MACRO @@ strcat(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_char_alloca_cpy @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##MACRO @@ strcpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_char_declare_cat @@ CONST##t:char##t:char[] @@ strcat(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_char_declare_cpy @@ CONST##t:char##t:char[] @@ strcpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_wchar_t_alloca_cat @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##MACRO##f:sizeof @@ wcscat(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_wchar_t_alloca_cpy @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##MACRO##f:sizeof @@ cscpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_wchar_t_declare_cat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscat(data, source);
+CWE121_Stack_Based_Buffer_Overflow__dest_wchar_t_declare_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(data, source);
+CWE121_Stack_Based_Buffer_Overflow__placement_new_alloca @@ CONST##t:CLASS##f:sizeof##f:alloca @@ classTwo->intTwo = 10;
+CWE121_Stack_Based_Buffer_Overflow__placement_new_declare @@ CONST##t:CLASS##f:sizeof @@ classTwo->intTwo = 10;
+CWE121_Stack_Based_Buffer_Overflow__src_char_alloca_cat @@ CONST##t:char##t:char[]##f:alloca##f:sizeof##MACRO @@ strcat(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_char_alloca_cpy @@ CONST##t:char##t:char[]##f:alloca##f:sizeof##MACRO @@ strcpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_char_declare_cat @@ CONST##t:char##t:char[] @@ strcat(dest, data);
+
+# s09
+CWE121_Stack_Based_Buffer_Overflow__src_char_declare_cpy @@ CONST##t:char##t:char[] @@ strcpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_alloca_cat @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##MACRO @@ wcscat(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_alloca_cpy @@ CONST##t:wchar_t##t:wchar_t[]##f:alloca##f:sizeof##MACRO @@ wcscpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_declare_cat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscat(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_declare_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(dest, data);
+CWE121_Stack_Based_Buffer_Overflow__wchar_t_type_overrun_memcpy @@ CONST##t:STRUCT##f:sizeof @@ memcpy(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+CWE121_Stack_Based_Buffer_Overflow__wchar_t_type_overrun_memmove @@ CONST##t:STRUCT##f:sizeof @@ memmove(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
