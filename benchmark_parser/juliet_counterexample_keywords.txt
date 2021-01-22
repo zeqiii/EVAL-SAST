@@ -151,3 +151,155 @@ CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_declare_cat @@ CONST##t:wchar_t#
 CWE121_Stack_Based_Buffer_Overflow__src_wchar_t_declare_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(dest, data);
 CWE121_Stack_Based_Buffer_Overflow__wchar_t_type_overrun_memcpy @@ CONST##t:STRUCT##f:sizeof @@ memcpy(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
 CWE121_Stack_Based_Buffer_Overflow__wchar_t_type_overrun_memmove @@ CONST##t:STRUCT##f:sizeof @@ memmove(structCharVoid.charFirst, SRC_STR, sizeof(structCharVoid.charFirst));
+
+#s01
+CWE122_Heap_Based_Buffer_Overflow__char_type_overrun_memcpy @@ CONST##t:STRUCT##f:malloc##f:sizeof @@ memcpy(structCharVoid->charFirst, SRC_STR, sizeof(structCharVoid->charFirst));
+CWE122_Heap_Based_Buffer_Overflow__char_type_overrun_memmove @@ CONST##t:STRUCT##f:malloc##f:sizeof @@ memmove(structCharVoid->charFirst, SRC_STR, sizeof(*structCharVoid));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_connect_socket @@ t:int[]##f:recv##f:atoi @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_fgets @@ t:int[]##f:fgets##f:atoi @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_fscanf @@ t:int[]##f:fscanf##f:atoi @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_large @@ CONST##t:int[] @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_listen_socket @@ CONST##t:int[]##f:recv##f:atoi @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE129_rand @@ f:rand##t:int[] @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_char_cpy @@ t:char[]##CONST @@ strcpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_char_loop @@ CONST##t:char[]##f:strlen @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_char_memcpy @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_char_memmove @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_char_ncpy @@ CONST##t:char##t:char[]##f:strlen @@ strncpy(data, source, strlen(source) + 1);
+
+#s02
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE193_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_loop @@ CONST##t:char##t:char[] @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_memcpy @@ CONST##t:char##t:char[]##f:sizeof @@ memcpy(data, source, 100*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_memmove @@ CONST##t:char##t:char[]##f:sizeof @@ memmove(data, source, 100*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_ncat @@ CONST##t:char##t:char[] @@ strncat(data, source, 100);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_ncpy @@ CONST##t:char##t:char[] @@ strncpy(data, source, 100-1);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_char_snprintf @@ CONST##t:char##t:char[] @@ SNPRINTF(data, 100, "%s", source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_class_loop @@ CONST##t:CLASS##t:CLASS[] @@ data[i] = source[i];
+
+# s03
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_class_memcpy @@ CONST##t:CLASS##t:CLASS[]##f:sizeof @@ memcpy(data, source, 100*sizeof(TwoIntsClass));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_class_memmove @@ CONST##t:CLASS##t:CLASS[]##f:sizeof @@ memmove(data, source, 100*sizeof(TwoIntsClass));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int_loop @@ CONST##t:int[] @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int_memcpy @@ CONST##t:int[]##f:sizeof @@ memcpy(data, source, 100*sizeof(int));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int_memmove @@ CONST##t:int[]##f:sizeof @@ memmove(data, source, 100*sizeof(int));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int64_t_loop @@ CONST##t:int64##t:int64_t[] @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int64_t_memcpy @@ CONST##t:int64_t##t:int64_t[]##f:sizeof @@ memcpy(data, source, 100*sizeof(int64_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_int64_t_memmove @@ CONST##t:int64_t##t:int64_t[]##f:sizeof @@ memmove(data, source, 100*sizeof(int64_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[] @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:sizeof @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_ncat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcsncat(data, source, 100);
+
+# s04
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcsncpy(data, source, 100-1);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE805_wchar_t_snprintf @@ CONST##t:wchar_t##t:wchar_t[] @@ SNPRINTF(data, 100, L"%s", source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_loop @@ CONST##t:char##t:char[]##f:strlen @@ dest[i] = data[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_memcpy @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memcpy(dest, data, strlen(data)*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_memmove @@ CONST##t:char##t:char[]##f:strlen##f:sizeof @@ memmove(dest, data, strlen(data)*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_ncat @@ CONST##t:char##t:char[]##f:strlen @@ strncat(dest, data, strlen(data));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_ncpy @@ CONST##t:char##t:char[]##f:strlen @@ strncpy(dest, data, strlen(data));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_char_snprintf @@ CONST##t:char##t:char[]##f:strlen @@ SNPRINTF(dest, strlen(data), "%s", data);
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ dest[i] = data[i];
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memcpy(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen##f:sizeof @@ memmove(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_ncat @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ wcsncat(dest, data, wcslen(data));
+
+#s05
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ wcsncpy(dest, data, wcslen(data));
+CWE122_Heap_Based_Buffer_Overflow__cpp_CWE806_wchar_t_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##f:wcslen @@ SNPRINTF(dest, wcslen(data), L"%s", data);
+CWE122_Heap_Based_Buffer_Overflow__cpp_dest_char_cat @@ CONST##t:char##t:char[] @@ strcat(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_dest_char_cpy @@ CONST##t:char##t:char[] @@ strcpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_dest_wchar_t_cat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscat(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_dest_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__cpp_src_char_cat @@ CONST##t:char##t:char[] @@ strcat(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__cpp_src_char_cpy @@ CONST##t:char##t:char[] @@ strcpy(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__cpp_src_wchar_t_cat @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscat(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__cpp_src_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[] @@ wcscpy(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__CWE131_loop @@ CONST##t:int##f:sizeof##f:malloc @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__CWE131_memcpy @@ CONST##t:int##f:sizeof##f:malloc @@ memcpy(data, source, 10*sizeof(int));
+
+# s06
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_connect_socket @@ f:recv##f:atoi##f:malloc##f:sizeof##t:int @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_fgets @@ f:fgets##f:atoi##f:malloc##f:sizeof##t:int @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_fscanf @@ f:fscanf##f:malloc##f:sizeof##t:int @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_large @@ CONST##t:int##t:int[]##f:malloc##f:sizeof @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_listen_socket @@ f:recv##f:atoi##f:malloc##f:sizeof##t:int##t:int[] @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE129_rand @@ f:rand##f:malloc##f:sizeof##t:int##t:int[] @@ buffer[data] = 1;
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_char_cpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strcpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_char_loop @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_char_memcpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ memcpy(data, source, (strlen(source) + 1) * sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__CWE131_memmove @@ CONST##t:int##t:int[]##f:sizeof##f:malloc @@ memmove(data, source, 10*sizeof(int));
+CWE122_Heap_Based_Buffer_Overflow__CWE135 @@ CONST##t:wchar_t##f:sizeof##f:calloc##f:strlen @@ (void)strcpy(dest, data);
+
+#s07
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_char_memmove @@ CONST##t:char##t:char[]##f:sizeof##f:malloc##f:strlen @@ memmove(data, source, (strlen(source) + 1) * sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_char_ncpy @@ CONST##t:char##t:char[]##f:sizeof##f:malloc##f:strlen @@ strncpy(data, source, strlen(source) + 1);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof @@ wcscpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ memcpy(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ memmove(data, source, (wcslen(source) + 1) * sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE193_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ wcsncpy(data, source, wcslen(source) + 1);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_loop @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_memcpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ memcpy(data, source, 100*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_memmove @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ memmove(data, source, 100*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_ncat @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strncat(data, source, 100);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_ncpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strncpy(data, source, 100-1);
+
+#s08
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_char_snprintf @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ SNPRINTF(data, 100, "%s", source);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int_loop @@ CONST##t:int##t:int[]##f:malloc##f:sizeof @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int_memcpy @@ CONST##t:int##t:int[]##f:malloc##f:sizeof @@ memcpy(data, source, 100*sizeof(int));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int_memmove @@ CONST##t:int##t:int[]##f:malloc##f:sizeof @@ memmove(data, source, 100*sizeof(int));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int64_t_loop @@ CONST##t:int64_t##t:int64_t[]##f:malloc##f:sizeof @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int64_t_memcpy @@ CONST##t:int64_t##t:int64_t[]##f:malloc##f:sizeof @@ memcpy(data, source, 100*sizeof(int64_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_int64_t_memmove @@ CONST##t:int64_t##t:int64_t[]##f:malloc##f:sizeof @@ memmove(data, source, 100*sizeof(int64_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_struct_loop @@ CONST##t:STRUCT##t:STRUCT[]##f:malloc##f:sizeof @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_struct_memcpy @@ CONST##t:STRUCT##t:STRUCT[]##f:malloc##f:sizeof @@ memcpy(data, source, 100*sizeof(twoIntsStruct));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_struct_memmove @@ CONST##t:STRUCT##t:STRUCT[]##f:malloc##f:sizeof @@ memmove(data, source, 100*sizeof(twoIntsStruct));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ data[i] = source[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ memcpy(data, source, 100*sizeof(wchar_t));
+
+#s09
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_ncat @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ wcsncat(data, source, 100);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ wcsncpy(data, source, 100-1);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE805_wchar_t_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##malloc##f:sizeof @@ SNPRINTF(data, 100, L"%s", source);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_loop @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ dest[i] = data[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_memcpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ memcpy(dest, data, strlen(data)*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_memmove @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ memmove(dest, data, strlen(data)*sizeof(char));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_ncat @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ strncat(dest, data, strlen(data));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_ncpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ strncpy(dest, data, strlen(data));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_char_snprintf @@ CONST##t:char##t:char[]##f:malloc##f:sizeof##f:strlen @@ SNPRINTF(dest, strlen(data), "%s", data);
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_loop @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ dest[i] = data[i];
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_memcpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ memcpy(dest, data, wcslen(data)*sizeof(wchar_t));
+
+#s10
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_memmove @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ memmove(dest, data, wcslen(data)*sizeof(wchar_t));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_ncat @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ wcsncat(dest, data, wcslen(data));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_ncpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ wcsncpy(dest, data, wcslen(data));
+CWE122_Heap_Based_Buffer_Overflow__c_CWE806_wchar_t_snprintf @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof##f:wcslen @@ SNPRINTF(dest, wcslen(data), L"%s", data);
+CWE122_Heap_Based_Buffer_Overflow__c_dest_char_cat @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strcat(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_dest_char_cpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strcpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_dest_wchar_t_cat @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof @@ wcscat(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_dest_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof @@ wcscpy(data, source);
+CWE122_Heap_Based_Buffer_Overflow__c_src_char_cat @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strcat(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__c_src_char_cpy @@ CONST##t:char##t:char[]##f:malloc##f:sizeof @@ strcpy(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__c_src_wchar_t_cat @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof @@ wcscat(dest, data);
+CWE122_Heap_Based_Buffer_Overflow__c_src_wchar_t_cpy @@ CONST##t:wchar_t##t:wchar_t[]##f:malloc##f:sizeof @@ wcscpy(dest, data);
+
+#s11
+CWE122_Heap_Based_Buffer_Overflow__placement_new @@ t:CLASS @@ classTwo->intTwo = 10;
+CWE122_Heap_Based_Buffer_Overflow__sizeof_double @@ t:double##f:malloc##f:sizeof @@ printDoubleLine(*data);
+CWE122_Heap_Based_Buffer_Overflow__sizeof_int64_t @@ t:int64_t##f:malloc##f:sizeof @@ printLongLongLine(*data);
+CWE122_Heap_Based_Buffer_Overflow__sizeof_struct @@ t:STRUCT##f:malloc##f:sizeof @@ printStructLine(data);
+CWE122_Heap_Based_Buffer_Overflow__wchar_t_type_overrun_memcpy @@ CONST##t:STRUCT##f:sizeof @@ memcpy(structCharVoid->charFirst, SRC_STR, sizeof(structCharVoid->charFirst));
+
+#s01
+CWE124_Buffer_Underwrite__char_alloca_cpy @@ CONST##t:char*##f:sizeof##f:alloca @@ strcpy(data, source);
+CWE124_Buffer_Underwrite__char_alloca_loop @@ CONST##t:char*##f:sizeof##f:alloca @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__char_alloca_memcpy @@ CONST##t:char*##f:sizeof##f:alloca @@ memcpy(data, source, 100*sizeof(char));
