@@ -300,6 +300,58 @@ CWE122_Heap_Based_Buffer_Overflow__sizeof_struct @@ t:STRUCT##f:malloc##f:sizeof
 CWE122_Heap_Based_Buffer_Overflow__wchar_t_type_overrun_memcpy @@ CONST##t:STRUCT##f:sizeof @@ memcpy(structCharVoid->charFirst, SRC_STR, sizeof(structCharVoid->charFirst));
 
 #s01
-CWE124_Buffer_Underwrite__char_alloca_cpy @@ CONST##t:char*##f:sizeof##f:alloca @@ strcpy(data, source);
-CWE124_Buffer_Underwrite__char_alloca_loop @@ CONST##t:char*##f:sizeof##f:alloca @@ data[i] = source[i];
-CWE124_Buffer_Underwrite__char_alloca_memcpy @@ CONST##t:char*##f:sizeof##f:alloca @@ memcpy(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__char_alloca_cpy @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##CALCULATION @@ strcpy(data, source);
+CWE124_Buffer_Underwrite__char_alloca_loop @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__char_alloca_memcpy @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##CALCULATION @@ memcpy(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__char_alloca_memmove @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##CALCULATION @@ memmove(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__char_alloca_ncpy @@ CONST##t:char##t:char[]##f:sizeof##f:alloca##CALCULATION @@ strncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__char_declare_cpy @@ CONST##t:char##t:char[]##CALCULATION @@ strcpy(data, source);
+CWE124_Buffer_Underwrite__char_declare_loop @@ CONST##t:char##t:char[]##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__char_declare_memcpy @@ CONST##t:char##t:char[]##f:sizeof##CALCULATION @@ memcpy(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__char_declare_memmove @@ CONST##t:char##t:char[]##f:sizeof##CALCULATION @@ memmove(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__char_declare_ncpy @@ CONST##t:char##t:char[]##CALCULATION @@ strncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__CWE839_connect_socket @@ f:recv##f:atoi @@ buffer[data] = 1;
+CWE124_Buffer_Underwrite__CWE839_fgets @@ f:fgets##f:atoi @@ buffer[data] = 1;
+CWE124_Buffer_Underwrite__CWE839_fscanf @@ f:fscanf @@ buffer[data] = 1;
+CWE124_Buffer_Underwrite__CWE839_listen_socket @@ f:recv##f:atoi @@ buffer[data] = 1;
+
+#s02
+CWE124_Buffer_Underwrite__CWE839_negative @@ CONST @@ buffer[data] = 1;
+CWE124_Buffer_Underwrite__CWE839_rand @@ f:rand @@ buffer[data] = 1;
+CWE124_Buffer_Underwrite__malloc_char_cpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ strcpy(data, source);
+CWE124_Buffer_Underwrite__malloc_char_loop @@ CONST##f:malloc##f:sizeof##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__malloc_char_memcpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memcpy(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__malloc_char_memmove @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memmove(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__malloc_char_ncpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ strncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__malloc_wchar_t_cpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ wcscpy(data, source);
+CWE124_Buffer_Underwrite__malloc_wchar_t_loop @@ CONST##f:malloc##f:sizeof##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__malloc_wchar_t_memcpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__malloc_wchar_t_memmove @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__malloc_wchar_t_ncpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ wcsncpy(data, source, 100-1);
+
+#s03
+CWE124_Buffer_Underwrite__new_char_cpy @@ CONST##CALCULATION @@ strcpy(data, source);
+CWE124_Buffer_Underwrite__new_char_loop @@ CONST##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__new_char_memcpy @@ CONST##f:sizeof##CALCULATION @@ memcpy(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__new_char_memmove @@ CONST##f:sizeof##CALCULATION @@ memmove(data, source, 100*sizeof(char));
+CWE124_Buffer_Underwrite__new_char_ncpy @@ CONST##CALCULATION @@ strncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__new_wchar_t_cpy @@ CONST##CALCULATION##t:wchar_t @@ wcscpy(data, source);
+CWE124_Buffer_Underwrite__new_wchar_t_loop @@ CONST##CALCULATION##t:wchar_t @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__new_wchar_t_memcpy @@ CONST##f:sizeof##CALCULATION##t:wchar_t @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__new_wchar_t_memmove @@ CONST##f:sizeof##CALCULATION##t:wchar_t @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__new_wchar_t_ncpy @@ CONST##CALCULATION##t:wchar_t @@ wcsncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__wchar_t_alloca_cpy @@ CONST##f:sizeof##f:alloca##CALCULATION##t:wchar_t @@ wcscpy(data, source);
+CWE124_Buffer_Underwrite__wchar_t_alloca_loop @@ CONST##f:sizeof##f:alloca##CALCULATION##t:wchar_t @@ data[i] = source[i];
+
+#s04
+CWE124_Buffer_Underwrite__wchar_t_alloca_memcpy @@ CONST##f:sizeof##f:alloca##CALCULATION##t:wchar_t @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__wchar_t_alloca_memmove @@ CONST##f:sizeof##f:alloca##CALCULATION##t:wchar_t @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__wchar_t_alloca_ncpy @@ CONST##f:sizeof##f:alloca##CALCULATION##t:wchar_t @@ wcsncpy(data, source, 100-1);
+CWE124_Buffer_Underwrite__wchar_t_declare_cpy @@ CONST##t:wchar_t##CALCULATION @@ wcscpy(data, source);
+CWE124_Buffer_Underwrite__wchar_t_declare_loop @@ CONST##t:wchar_t##CALCULATION @@ data[i] = source[i];
+CWE124_Buffer_Underwrite__wchar_t_declare_memcpy @@ CONST##t:wchar_t##CALCULATION##f:sizeof @@ memcpy(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__wchar_t_declare_memmove @@ CONST##t:wchar_t##CALCULATION##f:sizeof @@ memmove(data, source, 100*sizeof(wchar_t));
+CWE124_Buffer_Underwrite__wchar_t_declare_ncpy @@ CONST##t:wchar_t##CALCULATION @@ wcsncpy(data, source, 100-1);
+
+#s01
+CWE126_Buffer_Overread__char_alloca_loop @@ CONST##f:sizeof##f:alloca##f:strlen @@ dest[i] = data[i];
