@@ -618,3 +618,14 @@ CWE190_Integer_Overflow__short_rand_preinc @@ t:short##f:rand @@ ++data;
 CWE190_Integer_Overflow__unsigned_int_fscanf_preinc @@ t:unsigned int##f:fscanf @@ ++data;
 CWE190_Integer_Overflow__unsigned_int_max_preinc @@ t:unsigned int##CONST @@ ++data;
 CWE190_Integer_Overflow__unsigned_int_rand_preinc @@ t:unsigned int##f:rand @@ ++data;
+
+#s01
+CWE369_Divide_by_Zero__float_connect_socket @@ t:float##f:recv##f:atof @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__float_fgets @@ t:float##f:fgets##f:atof @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__float_fscanf @@ t:float##f:fscanf @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__float_listenSocket @@ t:float##f:recv##f:atof @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__float_rand @@ t:float##f:rand @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__float_zero @@ t:float##f:CONST @@ int result = (int)(100.0 / data);
+CWE369_Divide_by_Zero__int_connect_socket_divide @@ t:int##f:recv##f:atoi @@ printIntLine(100 / data);
+CWE369_Divide_by_Zero__int_connect_socket_modulo @@ t:int##f:recv##f:atoi @@ printIntLine(100 % data);
+CWE369_Divide_by_Zero__int_fgets_divide @@ t:int##f:fgets##f:atoi @@ printIntLine(100 / data);
