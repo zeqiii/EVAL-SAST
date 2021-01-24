@@ -355,3 +355,123 @@ CWE124_Buffer_Underwrite__wchar_t_declare_ncpy @@ CONST##t:wchar_t##CALCULATION 
 
 #s01
 CWE126_Buffer_Overread__char_alloca_loop @@ CONST##f:sizeof##f:alloca##f:strlen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__char_alloca_memcpy @@ CONST##f:sizeof##f:alloca##f:strlen @@ memcpy(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__char_alloca_memmove @@ CONST##f:sizeof##f:alloca##f:strlen @@ memmove(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__char_declare_loop @@ CONST##f:strlen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__char_declare_memcpy @@ CONST##f:strlen##f:sizeof @@ memcpy(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__char_declare_memmove @@ CONST##f:strlen##f:sizeof @@ memmove(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__CWE129_connect_socket @@ f:recv##f:atoi @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE129_fgets @@ f:fgets##f:atoi @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE129_fscanf @@ f:fscanf @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE129_large @@ CONST @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE129_listen_socket @@ f:recv##f:atoi @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE129_rand @@ f:rand @@ printIntLine(buffer[data]);
+CWE126_Buffer_Overread__CWE170_char_loop @@ CONST##f:memset @@ printLine(dest);
+CWE126_Buffer_Overread__CWE170_char_memcpy @@ CONST##f:memcpy##f:memset @@ printLine(dest);
+CWE126_Buffer_Overread__CWE170_char_strncpy @@ CONST##f:strncpy##f:memset @@ printLine(dest);
+CWE126_Buffer_Overread__CWE170_wchar_t_loop @@ CONST##f:wmemset##t:wchar_t @@ printWLine(dest);
+CWE126_Buffer_Overread__CWE170_wchar_t_memcpy @@ CONST##f:wmemset##t:wchar_t##f:sizeof##f:memcpy @@ printWLine(dest);
+CWE126_Buffer_Overread__CWE170_wchar_t_strncpy @@ CONST##f:wmemset##t:wchar_t##f:wcsncpy @@ printWLine(dest);
+CWE126_Buffer_Overread__malloc_char_loop @@ CONST##f:sizeof##f:malloc##f:strlen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__malloc_char_memcpy @@ CONST##f:sizeof##f:malloc##f:strlen @@ memcpy(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__malloc_char_memmove @@ CONST##f:sizeof##f:malloc##f:strlen @@ memmove(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__malloc_wchar_t_loop @@ CONST##f:sizeof##f:malloc##t:wchar_t##f:wcslen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__malloc_wchar_t_memcpy @@ CONST##f:sizeof##f:malloc##t:wchar_t##f:wcslen @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__malloc_wchar_t_memmove @@ CONST##f:sizeof##f:malloc##t:wchar_t##f:wcslen @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__new_char_loop @@ CONST##f:strlen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__new_char_memcpy @@ CONST##f:strlen##f:sizeof @@ memcpy(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__new_char_memmove @@ CONST##f:strlen##f:sizeof @@ memmove(dest, data, strlen(dest)*sizeof(char));
+CWE126_Buffer_Overread__new_wchar_t_loop @@ CONST##f:wcslen##t:wchar_t @@ dest[i] = data[i];
+CWE126_Buffer_Overread__new_wchar_t_memcpy @@ CONST##f:wcslen##t:wchar_t##f:sizeof @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
+
+#s03
+CWE126_Buffer_Overread__new_wchar_t_memmove @@ CONST##f:wcslen##t:wchar_t##f:sizeof @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__wchar_t_alloca_loop @@ CONST##f:alloca##t:wchar_t##f:wcslen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__wchar_t_alloca_memcpy @@ CONST##f:alloca##t:wchar_t##f:wcslen @@ CONST##f:wcslen##t:wchar_t##f:sizeof @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__wchar_t_alloca_memmove @@ CONST##f:alloca##f:wcslen##t:wchar_t##f:sizeof @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__wchar_t_declare_loop @@ CONST##t:wchar_t##f:wcslen @@ dest[i] = data[i];
+CWE126_Buffer_Overread__wchar_t_declare_memcpy @@ CONST##t:wchar_t##f:wcslen##f:sizeof @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__wchar_t_declare_memmove @@ CONST##t:wchar_t##f:wcslen##f:sizeof @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
+
+#s01
+CWE127_Buffer_Underread__char_alloca_cpy @@ CONST##f:alloca##f:sizeof @@ strcpy(dest, data);
+CWE127_Buffer_Underread__char_alloca_loop @@ CONST##f:alloca##f:sizeof @@ dest[i] = data[i];
+CWE127_Buffer_Underread__char_alloca_memcpy @@ CONST##f:alloca##f:sizeof @@ memcpy(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__char_alloca_memmove @@ CONST##f:alloca##f:sizeof @@ memmove(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__char_alloca_ncpy @@ CONST##f:alloca##f:sizeof##f:strlen @@ strncpy(dest, data, strlen(dest));
+CWE127_Buffer_Underread__char_declare_cpy @@ CONST @@ strcpy(dest, data);
+CWE127_Buffer_Underread__char_declare_loop @@ CONST @@ dest[i] = data[i];
+CWE127_Buffer_Underread__char_declare_memcpy @@ CONST##f:sizeof @@ memcpy(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__char_declare_memmove @@ CONST##f:sizeof @@ memmove(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__char_declare_ncpy @@ CONST##f:strlen @@ strncpy(dest, data, strlen(dest));
+CWE127_Buffer_Underread__CWE839_connect_socket @@ f:recv##f:atoi @@ printIntLine(buffer[data]);
+CWE127_Buffer_Underread__CWE839_fgets @@ f:fgets##f:atoi @@ printIntLine(buffer[data]);
+CWE127_Buffer_Underread__CWE839_fscanf @@ f:fscanf @@ printIntLine(buffer[data]);
+CWE127_Buffer_Underread__CWE839_listen_socket @@ f:recv##f:atoi printIntLine(buffer[data]);
+
+#s02
+CWE127_Buffer_Underread__CWE839_negative @@ CONST @@ printIntLine(buffer[data]);
+CWE127_Buffer_Underread__CWE839_rand @@ f:rand @@ printIntLine(buffer[data]);
+CWE127_Buffer_Underread__malloc_char_cpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ strcpy(dest, data);
+CWE127_Buffer_Underread__malloc_char_loop @@ CONST##f:malloc##f:sizeof##CALCULATION @@ dest[i] = data[i];
+CWE127_Buffer_Underread__malloc_char_memcpy @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memcpy(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__malloc_char_memmove @@ CONST##f:malloc##f:sizeof##CALCULATION @@ memmove(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__malloc_char_ncpy @@ CONST##f:malloc##f:sizeof##CALCULATION##f:strlen @@ strncpy(dest, data, strlen(dest));
+CWE127_Buffer_Underread__malloc_wchar_t_cpy @@ CONST##f:malloc##f:sizeof##CALCULATION##t:wchar_t @@ wcscpy(dest, data);
+CWE127_Buffer_Underread__malloc_wchar_t_loop @@ CONST##f:malloc##f:sizeof##CALCULATION##t:wchar_t @@ dest[i] = data[i];
+CWE127_Buffer_Underread__malloc_wchar_t_memcpy @@ CONST##f:malloc##f:sizeof##CALCULATION##t:wchar_t @@ memcpy(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__malloc_wchar_t_memmove @@ CONST##f:malloc##f:sizeof##CALCULATION##t:wchar_t @@ memmove(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__malloc_wchar_t_ncpy @@ CONST##f:malloc##f:sizeof##CALCULATION##t:wchar_t##f:wcslen @@ wcsncpy(dest, data, wcslen(dest));
+
+#s03
+CWE127_Buffer_Underread__new_char_cpy @@ CONST##CALCULATION @@ strcpy(dest, data);
+CWE127_Buffer_Underread__new_char_loop @@ CONST##CALCULATION @@ dest[i] = data[i];
+CWE127_Buffer_Underread__new_char_memcpy @@ CONST##CALCULATION##f:sizeof @@ memcpy(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__new_char_memmove @@ CONST##CALCULATION##f:sizeof @@ memmove(dest, data, 100*sizeof(char));
+CWE127_Buffer_Underread__new_char_ncpy @@ CONST##CALCULATION##f:strlen @@ strncpy(dest, data, strlen(dest));
+CWE127_Buffer_Underread__new_wchar_t_cpy @@ CONST##CALCULATION##t:wchar_t @@ wcscpy(dest, data);
+CWE127_Buffer_Underread__new_wchar_t_loop @@ CONST##CALCULATION##t:wchar_t @@ dest[i] = data[i];
+CWE127_Buffer_Underread__new_wchar_t_memcpy @@ CONST##CALCULATION##f:sizeof##t:wchar_t @@ memcpy(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__new_wchar_t_memmove @@ CONST#CALCULATION##f:sizeof##t:wchar_t @@ memmove(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__new_wchar_t_ncpy @@ CONST##CALCULATION##f:wcslen##t:wchar_t @@ wcsncpy(dest, data, wcslen(dest));
+CWE127_Buffer_Underread__wchar_t_alloca_cpy @@ CONST##f:alloca##f:sizeof##CALCULATION @@ wcscpy(dest, data);
+CWE127_Buffer_Underread__wchar_t_alloca_loop @@ CONST##f:alloca##f:sizeof##t:wchar_t##CALCULATION @@ dest[i] = data[i];
+
+#s04
+CWE127_Buffer_Underread__wchar_t_alloca_memcpy @@ CONST##f:alloca##f:sizeof##t:wchar_t##CALCULATION @@ memcpy(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__wchar_t_alloca_memmove @@ CONST##f:alloca##f:sizeof##t:wchar_t##CALCULATION @@ memmove(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__wchar_t_alloca_ncpy @@ CONST##f:alloca##f:sizeof##t:wchar_t##CALCULATION##f:wcslen @@ wcsncpy(dest, data, wcslen(dest));
+CWE127_Buffer_Underread__wchar_t_declare_cpy @@ CONST##t:wchar_t##CALCULATION @@ wcscpy(dest, data);
+CWE127_Buffer_Underread__wchar_t_declare_loop @@ CONST##t:wchar_t##CALCULATION @@ dest[i] = data[i];
+CWE127_Buffer_Underread__wchar_t_declare_memcpy @@ CONST##t:wchar_t##CALCULATION##f:sizeof @@ memcpy(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__wchar_t_declare_memmove @@ CONST##t:wchar_t##CALCULATION##f:sizeof @@ memmove(dest, data, 100*sizeof(wchar_t));
+CWE127_Buffer_Underread__wchar_t_declare_ncpy @@ CONST##t:wchar_t##CALCULATION##f:wcslen @@ wcsncpy(dest, data, wcslen(dest));
+
+#s01
+CWE134_Uncontrolled_Format_String__char_connect_socket_fprintf @@ f:recv @@ fprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__char_connect_socket_printf @@ f:recv @@ printf(data);
+CWE134_Uncontrolled_Format_String__char_connect_socket_snprintf @@ f:recv @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__char_connect_socket_vfprintf @@ f:recv @@ vfprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__char_connect_socket_vprintf @@ f:recv @@ vprintf(data, args);
+CWE134_Uncontrolled_Format_String__char_connect_socket_w32_vsnprintf @@ f:recv @@ vsnprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__char_console_fprintf @@ f:fgets @@ fprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__char_console_printf @@ f:fgets @@ printf(data);
+CWE134_Uncontrolled_Format_String__char_console_snprintf @@ f:fgets @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__char_console_vfprintf @@ f:fgets @@ vfprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__char_console_vprintf @@ f:fgets @@ vprintf(data, args);
+
+#s02
+CWE134_Uncontrolled_Format_String__char_console_w32_vsnprintf @@ f:fgets @@ vsnprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__char_environment_fprintf @@ f:getenv @@ fprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__char_environment_printf @@ f:getenv @@ printf(data);
+CWE134_Uncontrolled_Format_String__char_environment_snprintf @@ f:getenv @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__char_environment_vfprintf @@ f:getenv @@ vfprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__char_environment_vprintf @@ f:getenv @@ vprintf(data, args);
+CWE134_Uncontrolled_Format_String__char_environment_w32_vsnprintf @@ f:getenv @@ vsnprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__char_file_fprintf @@ f:fopen##f:fgets @@ fprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__char_file_printf @@ f:fopen##f:fgets  @@ printf(data);
+CWE134_Uncontrolled_Format_String__char_file_snprintf @@ f:fopen##f:fgets @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__char_file_vfprintf @@ f:fopen##f:fgets @@ vfprintf(stdout, data, args);
+
+#s03
+CWE134_Uncontrolled_Format_String__char_file_vprintf @@ 
