@@ -474,4 +474,147 @@ CWE134_Uncontrolled_Format_String__char_file_snprintf @@ f:fopen##f:fgets @@ SNP
 CWE134_Uncontrolled_Format_String__char_file_vfprintf @@ f:fopen##f:fgets @@ vfprintf(stdout, data, args);
 
 #s03
-CWE134_Uncontrolled_Format_String__char_file_vprintf @@ 
+CWE134_Uncontrolled_Format_String__char_file_vprintf @@ f:fopen##f:fgets @@ vprintf(data, args);
+CWE134_Uncontrolled_Format_String__char_file_w32_vsnprintf @@ f:fopen##f:fgets @@ vsnprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__char_listen_socket_fprintf @@ f:recv @@ fprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__char_listen_socket_printf @@ f:recv @@ printf(data);
+CWE134_Uncontrolled_Format_String__char_listen_socket_snprintf @@ f:recv @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__char_listen_socket_vfprintf @@ f:recv @@ vfprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__char_listen_socket_vprintf @@ f:recv @@ vprintf(data, args);
+CWE134_Uncontrolled_Format_String__char_listen_socket_w32_vsnprintf @@ f:recv @@ vsnprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_fprintf @@ f:recv @@ fwprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_printf @@ f:recv @@ wprintf(data);
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_snprintf @@ f:recv @@ SNPRINTF(dest, 100-1, data);
+
+#s04
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_vfprintf @@ f:recv @@ vfwprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_vprintf @@ f:recv @@ vwprintf(data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_connect_socket_w32_vsnprintf @@ f:recv @@ _vsnwprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_console_fprintf @@ f:fgetws @@ fwprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__wchar_t_console_printf @@ f:fgetws @@ wprintf(data);
+CWE134_Uncontrolled_Format_String__wchar_t_console_snprintf @@ f:fgetws @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__wchar_t_console_vfprintf @@ f:fgetws @@ vfwprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_console_vprintf @@ f:fgetws @@ vwprintf(data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_console_w32_vsnprintf @@ f:fgetws @@ _vsnwprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_environment_fprintf @@ f:getenv @@ fwprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__wchar_t_environment_printf @@ f:getenv @@ wprintf(data);
+
+#s05
+CWE134_Uncontrolled_Format_String__wchar_t_environment_snprintf @@ f:getenv @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__wchar_t_environment_vfprintf @@ f:getenv @@ vfwprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_environment_vprintf @@ f:getenv @@ vwprintf(data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_environment_w32_vsnprintf @@ f:getenv @@ _vsnwprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_file_fprintf @@ f:fopen##f:fgetws @@ fwprintf(stdout, data);
+CWE134_Uncontrolled_Format_String__wchar_t_file_printf @@ f:fopen##f:fgetws @@ wprintf(data);
+CWE134_Uncontrolled_Format_String__wchar_t_file_snprintf @@ f:fopen##f:fgetws @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__wchar_t_file_vfprintf @@ f:fopen##f:fgetws @@ vfwprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_file_vprintf @@ f:fopen##f:fgetws @@ vwprintf(data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_file_w32_vsnprintf @@ f:fopen##f:fgetws @@ _vsnwprintf(dest, 100-1, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_fprintf @@ f:recv @@ fwprintf(stdout, data);
+
+#s06
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_printf @@ f:recv @@ wprintf(data);
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_snprintf @@ f:recv @@ SNPRINTF(dest, 100-1, data);
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_vfprintf @@ f:recv @@ vfwprintf(stdout, data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_vprintf @@ f:recv @@ vwprintf(data, args);
+CWE134_Uncontrolled_Format_String__wchar_t_listen_socket_w32_vsnprintf @@ f:recv @@ _vsnwprintf(dest, 100-1, data, args);
+
+#s01
+CWE190_Integer_Overflow__char_fscanf_add @@ t:char##f:fscanf @@ char result = data + 1;
+CWE190_Integer_Overflow__char_fscanf_multiply @@ t:char##f:fscanf @@ char result = data * 2;
+CWE190_Integer_Overflow__char_fscanf_square @@ t:char##f:fscanf @@ char result = data * data;
+CWE190_Integer_Overflow__char_max_add @@ t:char##CONST @@ char result = data + 1;
+CWE190_Integer_Overflow__char_max_multiply @@ t:char##CONST @@ char result = data * 2;
+CWE190_Integer_Overflow__char_max_square @@ t:char##CONST @@ char result = data * data;
+CWE190_Integer_Overflow__char_rand_add @@ t:char##f:rand @@ char result = data + 1;
+CWE190_Integer_Overflow__char_rand_multiply @@ t:char##f:rand @@ char result = data * 2;
+CWE190_Integer_Overflow__char_rand_square @@ t:char##f:rand @@ char result = data * data;
+CWE190_Integer_Overflow__int64_t_fscanf_add @@ t:int64_t##f:fscanf @@ int64_t result = data + 1;
+CWE190_Integer_Overflow__int64_t_fscanf_multiply @@ t:int64_t##f:fscanf @@ int64_t result = data * 2;
+
+#s02
+CWE190_Integer_Overflow__int_connect_socket_add @@ t:int##f:recv##f:atoi @@ int result = data + 1;
+CWE190_Integer_Overflow__int_connect_socket_multiply @@ t:int##f:recv##f:atoi @@ int result = data * 2;
+CWE190_Integer_Overflow__int_connect_socket_square @@ t:int##f:recv##f:atoi @@ int result = data * data;
+CWE190_Integer_Overflow__int_fgets_add @@ t:int##f:fgets##f:atoi @@ int result = data + 1;
+CWE190_Integer_Overflow__int64_t_fscanf_square @@ t:int64_t##f:scanf @@ int64_t result = data * data;
+CWE190_Integer_Overflow__int64_t_max_add @@ t:int64_t##CONST @@ int64_t result = data + 1;
+CWE190_Integer_Overflow__int64_t_max_multiply @@ t:int64_t##CONST @@ int64_t result = data * 2;
+CWE190_Integer_Overflow__int64_t_max_square @@ t:int64_t##CONST @@ int64_t result = data * data;
+CWE190_Integer_Overflow__int64_t_rand_add @@ t:int64_t##f:rand @@ int64_t result = data + 1;
+CWE190_Integer_Overflow__int64_t_rand_multiply @@ t:int64_t##f:rand @@ int64_t result = data * 2;
+CWE190_Integer_Overflow__int64_t_rand_square @@ t:int64_t##f:rand @@ int64_t result = data * data;
+
+#s03
+CWE190_Integer_Overflow__int_fgets_multiply @@ t:int##f:fgets##f:atoi @@ int result = data * 2;
+CWE190_Integer_Overflow__int_fgets_square @@ t:int##f:fgets##f:atoi @@ int result = data * data;
+CWE190_Integer_Overflow__int_fscanf_add @@ t:int##f:fscanf @@ int result = data + 1;
+CWE190_Integer_Overflow__int_fscanf_multiply @@ t:int##f:scanf @@ int result = data * 2;
+CWE190_Integer_Overflow__int_fscanf_square @@ t:int##f:fscanf @@ int result = data * data;
+CWE190_Integer_Overflow__int_listen_socket_add @@ t:int##f:recv##f:atoi @@ int result = data + 1;
+CWE190_Integer_Overflow__int_listen_socket_multiply @@ t:int##f:recv##f:atoi @@ int result = data * 2;
+CWE190_Integer_Overflow__int_listen_socket_square @@ t:int##f:recv##f:atoi @@ int result = data * data;
+CWE190_Integer_Overflow__int_max_add @@ t:int##CONST @@ int result = data + 1;
+CWE190_Integer_Overflow__int_max_multiply @@ t:int##CONST @@ int result = data * 2;
+CWE190_Integer_Overflow__int_max_square @@ t:int##CONST @@ int result = data * data;
+
+#s04
+CWE190_Integer_Overflow__int_rand_add @@ t:int##f:rand @@ int result = data + 1;
+CWE190_Integer_Overflow__int_rand_multiply @@ t:int##f:rand @@ int result = data * 2;
+CWE190_Integer_Overflow__int_rand_square @@ t:int##f:rand @@ int result = data * data;
+CWE190_Integer_Overflow__short_fscanf_add @@ t:short##f:fscanf @@ short result = data + 1;
+CWE190_Integer_Overflow__short_fscanf_multiply @@ t:short##f:fscanf @@ short result = data * 2;
+CWE190_Integer_Overflow__short_fscanf_square @@ t:short##f:fscanf @@ short result = data * data;
+CWE190_Integer_Overflow__short_max_add @@ t:short##CONST @@ short result = data + 1;
+CWE190_Integer_Overflow__short_max_multiply @@ t:short##CONST @@ short result = data * 2;
+CWE190_Integer_Overflow__short_max_square @@ t:short##CONST @@ short result = data * data;
+CWE190_Integer_Overflow__short_rand_add @@ t:short##f:rand @@ short result = data + 1;
+CWE190_Integer_Overflow__short_rand_multiply @@ t:short##f:rand @@ short result = data * 2;
+CWE190_Integer_Overflow__short_rand_square @@ t:short##f:rand @@ short result = data * data;
+CWE190_Integer_Overflow__unsigned_int_fscanf_add @@ t:unsigned int##f:fscanf @@ unsigned int result = data + 1;
+CWE190_Integer_Overflow__unsigned_int_fscanf_multiply @@ t:unsigned intf:fscanf @@ unsigned int result = data * 2;
+CWE190_Integer_Overflow__unsigned_int_fscanf_square @@ t:unsigned intf:fscanf @@ unsigned int result = data * data;
+CWE190_Integer_Overflow__unsigned_int_max_add @@ t:unsigned int##CONST @@ unsigned int result = data + 1;
+CWE190_Integer_Overflow__unsigned_int_max_multiply @@ t:unsigned int##CONST @@ unsigned int result = data * 2;
+CWE190_Integer_Overflow__unsigned_int_max_square @@ t:unsigned int##CONST @@ unsigned int result = data * data;
+CWE190_Integer_Overflow__unsigned_int_rand_add @@ t:unsigned int##f:rand @@ unsigned int result = data + 1;
+CWE190_Integer_Overflow__unsigned_int_rand_multiply @@ t:unsigned int##f:rand @@ unsigned int result = data * 2;
+CWE190_Integer_Overflow__unsigned_int_rand_square @@ t:unsigned int##f:rand @@ unsigned int result = data * data;
+
+#s06
+CWE190_Integer_Overflow__char_fscanf_postinc @@ t:char##f:fscanf @@ data++;
+CWE190_Integer_Overflow__char_max_postinc @@ t:char##CONST @@ data++;
+CWE190_Integer_Overflow__char_rand_postinc @@ t:char##f:rand @@ data++;
+CWE190_Integer_Overflow__int_connect_socket_postinc @@ f:recv##f:atoi##t:int @@ data++;
+CWE190_Integer_Overflow__int_fgets_postinc @@ f:fgets##f:atoi##t:int @@ data++;
+CWE190_Integer_Overflow__int_fscanf_postinc @@ f:fscanf##t:int @@ data++;
+CWE190_Integer_Overflow__int_listen_socket_postinc @@ f:recv##f:atoi##t:int @@ data++;
+CWE190_Integer_Overflow__int_max_postinc @@ t:int##CONST @@ data++;
+CWE190_Integer_Overflow__int_rand_postinc @@ t:int##f:rand @@ data++;
+CWE190_Integer_Overflow__int64_t_fscanf_postinc @@ t:int64_t##f:fscanf @@ data++;
+CWE190_Integer_Overflow__int64_t_max_postinc @@ t:int64_t##CONST @@ data++;
+CWE190_Integer_Overflow__int64_t_rand_postinc @@ t:int64_t##f:rand @@ data++;
+CWE190_Integer_Overflow__short_fscanf_postinc @@ t:short##f:fscanf @@ data++;
+CWE190_Integer_Overflow__short_max_postinc @@ t:short##CONST @@ data++;
+CWE190_Integer_Overflow__short_rand_postinc @@ t:short##f:rand @@ data++;
+CWE190_Integer_Overflow__unsigned_int_fscanf_postinc @@ t:unsigned int##f:fscanf @@ data++;
+CWE190_Integer_Overflow__unsigned_int_max_postinc @@ t:unsigned int##CONST @@ data++;
+CWE190_Integer_Overflow__unsigned_int_rand_postinc @@ t:unsigned int##f:rand @@ data++;
+CWE190_Integer_Overflow__char_fscanf_preinc @@ t:char##f:fscanf @@ ++data;
+CWE190_Integer_Overflow__char_max_preinc @@ t:char##CONST @@ ++data;
+CWE190_Integer_Overflow__char_rand_preinc @@ t:char##f:rand @@ ++data;
+CWE190_Integer_Overflow__int_connect_socket_preinc @@ t:int##f:recv##f:atoi @@ ++data;
+CWE190_Integer_Overflow__int_fgets_preinc @@ t:int##f:fgets##f:atoi @@ ++data;
+CWE190_Integer_Overflow__int_fscanf_preinc @@ t:int##f:fscanf @@ ++data;
+CWE190_Integer_Overflow__int_listen_socket_preinc @@ t:int##f:recv##f:atoi @@ ++data;
+CWE190_Integer_Overflow__int_max_preinc @@ t:int##CONST @@ ++data;
+CWE190_Integer_Overflow__int_rand_preinc @@ t:int##f:rand @@ ++data;
+CWE190_Integer_Overflow__int64_t_fscanf_preinc @@ t:int64_t##f:fscanf @@ ++data;
+CWE190_Integer_Overflow__int64_t_max_preinc @@ t:int64_t##CONST @@ ++data;
+CWE190_Integer_Overflow__int64_t_rand_preinc @@ t:int64_t##f:rand @@ ++data;
+CWE190_Integer_Overflow__short_fscanf_preinc @@ t:short##f:fscanf @@ ++data;
+CWE190_Integer_Overflow__short_max_preinc @@ t:short##CONST @@ ++data;
+CWE190_Integer_Overflow__short_rand_preinc @@ t:short##f:rand @@ ++data;
+CWE190_Integer_Overflow__unsigned_int_fscanf_preinc @@ t:unsigned int##f:fscanf @@ ++data;
+CWE190_Integer_Overflow__unsigned_int_max_preinc @@ t:unsigned int##CONST @@ ++data;
+CWE190_Integer_Overflow__unsigned_int_rand_preinc @@ t:unsigned int##f:rand @@ ++data;
