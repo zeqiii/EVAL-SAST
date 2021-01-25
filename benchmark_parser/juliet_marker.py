@@ -49,6 +49,85 @@ def __func_is_good(funcname):
         return True
     return False
 
+# {"signature1":{"source":["CONST","t:int",...], "sink":["keyword1", "keyword2", ...]}, "signature2":{...}, ...}
+def parse_keywords(keywords_file):
+    lines = []
+    keywords = {}
+    with open(keywords_file) as fp:
+        lines = fp.readlines()
+    for i in range(0, len(lines)):
+        line = lines[i].strip()
+        if line.startswith('#'):
+            continue
+        parts = line.split("@@")
+        if len(parts) != 3:
+            print("error in line %d" %(i))
+            return None
+        signature = parts[0].strip()
+        source = parts[1].strip()
+        sink_of_counterexample = parts[2].strip()
+        if signature not in keywords.keys():
+            keywords[signature] = {}
+            keywords[signature]["sink"] = []
+        keywords[signature]["source"] = source.split("##")
+        keywords[signature]["sink"].append(sink_of_counterexample)
+    return keywords
+
+# 用一种简单暴力的方式标注目标程序中的反例所在位置
+# keywords = {signature: [keyword1, keyword2, ...]} 反例可能有不同的表现
+def mark_counterexamples(in_dir, keywords):
+    for parent, dirs, files in os.walk(in_dir):
+        for f in files:
+            # 除去testcasesupport文件
+            if f in Global.JULIET_TESTCASESUPPORT:
+                continue
+
+            signature = getSignature(f)
+            if signature not in keywords.keys(): # 没有反例/不设反例/不关注该类目标程序的反例
+                continue
+
+            #if os.path.splitext(f)
+
+            ff = os.path.join(parent, f)
+            altered = False
+            content = []
+
+            with open(ff, "r") as fp:
+                content = fp.readlines()
+
+            keyword = keywords[signature]["sink"]
+            for i in range(0, len(content)):
+                for one in keyword:
+                    if content[i].find(one) >= 0 and content[i].find("##bug##") < 0 \
+                            and content[i].find("##counterexample##")< 0:
+                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
+                        altered = True
+                        break
+            if altered:
+                with open(ff, "w") as fp:
+                    new_content = ""
+                    for line in content:
+                        new_content = new_content + line
+                    fp.write(new_content)
+
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', '-i', help="path of the test suite")
+    # 记录关键字的文件，每行中，@@左边为目标程序种类，@@右边为该类目标程序中反例的关键词
+    parser.add_argument('--keywords', '-k', help="path of file that stores the keywords of counterexamples")
+    args = parser.parse_args()
+    if not args.keywords or not args.input:
+        print("no input or keywords!")
+        exit(1)
+    # 解析关键词
+    keywords = parse_keywords(args.keywords)
+    mark_counterexamples(args.input, keywords)
+
+
+"""
 # 自动生成反例关键词标注
 def gen_keywords(in_dir):
 
@@ -87,74 +166,4 @@ def gen_keywords(in_dir):
                                 keywords[signature].append(keyword)
                         is_comment = False
     return keywords
-
-
-
-
-# 用一种简单暴力的方式标注目标程序中的反例所在位置
-# keywords = {signature: [keyword1, keyword2, ...]} 反例可能有不同的表现
-def mark_counterexamples(in_dir, keywords):
-    for parent, dirs, files in os.walk(in_dir):
-        for f in files:
-            # 除去testcasesupport文件
-            if f in Global.JULIET_TESTCASESUPPORT:
-                continue
-
-            signature = getSignature(f)
-            if signature not in keywords.keys(): # 没有反例/不设反例/不关注该类目标程序的反例
-                continue
-
-            #if os.path.splitext(f)
-
-            ff = os.path.join(parent, f)
-            altered = False
-            content = []
-
-            with open(ff, "r") as fp:
-                content = fp.readlines()
-
-            keyword = keywords[signature]
-            for i in range(0, len(content)):
-                for one in keyword:
-                    if content[i].find(one) >= 0 and content[i].find("##bug##") < 0 \
-                            and content[i].find("##counterexample##")< 0:
-                        content[i] = content[i].rstrip() + " /* ##counterexample## */\n"
-                        altered = True
-                        break
-            if altered:
-                with open(ff, "w") as fp:
-                    new_content = ""
-                    for line in content:
-                        new_content = new_content + line
-                    fp.write(new_content)
-
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--input', '-i', help="path of the test suite")
-    # 记录关键字的文件，每行中，@@左边为目标程序种类，@@右边为该类目标程序中反例的关键词
-    parser.add_argument('--keywords', '-k', help="path of file that stores the keywords of counterexamples")
-    args = parser.parse_args()
-    if not args.keywords or not args.input:
-        print("no input or keywords!")
-        exit(1)
-    keywords = {}
-    keywords = gen_keywords(args.input)
-    print(keywords)
-    """
-    with open(args.keywords) as fp:
-        content = fp.readlines()
-        for one in content:
-            one = one.strip()
-            if not one or one.startswith("#"):
-                continue
-            key = one.split("@@")[0].strip()
-            value = one.split("@@")[1].strip()
-            if key not in keywords.keys():
-                keywords[key] = []
-            keywords[key].append(value)
-
-    print(keywords)
-    mark_counterexamples(args.input, keywords)
-    """
+"""
