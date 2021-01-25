@@ -629,3 +629,106 @@ CWE369_Divide_by_Zero__float_zero @@ t:float##f:CONST @@ int result = (int)(100.
 CWE369_Divide_by_Zero__int_connect_socket_divide @@ t:int##f:recv##f:atoi @@ printIntLine(100 / data);
 CWE369_Divide_by_Zero__int_connect_socket_modulo @@ t:int##f:recv##f:atoi @@ printIntLine(100 % data);
 CWE369_Divide_by_Zero__int_fgets_divide @@ t:int##f:fgets##f:atoi @@ printIntLine(100 / data);
+CWE369_Divide_by_Zero__int_fgets_modulo @@ t:int##f:fgets##f:atoi @@ printIntLine(100 % data);
+CWE369_Divide_by_Zero__int_fscanf_divide @@ t:int##f:fscanf @@ printIntLine(100 / data);
+
+#s02
+CWE369_Divide_by_Zero__int_fscanf_modulo @@ t:int##f:fscanf @@ printIntLine(100 % data);
+CWE369_Divide_by_Zero__int_listen_socket_divide @@ t:int##f:recv##f:atoi @@ printIntLine(100 / data);
+CWE369_Divide_by_Zero__int_listen_socket_modulo @@ t:int##f:recv##f:atoi @@ printIntLine(100 % data);
+CWE369_Divide_by_Zero__int_rand_divide @@ t:int##f:rand @@ printIntLine(100 / data);
+CWE369_Divide_by_Zero__int_rand_modulo @@ t:int##f:rand @@ printIntLine(100 % data);
+CWE369_Divide_by_Zero__int_zero_divide @@ t:int##CONST @@ printIntLine(100 / data);
+CWE369_Divide_by_Zero__int_zero_modulo @@ t:int##CONST @@ printIntLine(100 % data);
+
+
+#s01
+CWE415_Double_Free__malloc_free_char @@ f:free @@ free(data);
+CWE415_Double_Free__malloc_free_int @@ f:free @@ free(data);
+CWE415_Double_Free__malloc_free_int64_t @@ f:free @@ free(data);
+CWE415_Double_Free__malloc_free_long @@ f:free @@ free(data);
+CWE415_Double_Free__malloc_free_struct @@ f:free @@ free(data);
+CWE415_Double_Free__malloc_free_wchar_t @@ f:free @@ free(data);
+CWE415_Double_Free__new_delete_array_char @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_array_class @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_array_int @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_array_int64_t @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_array_long @@ f:delete @@ delete [] data;
+
+#s02
+CWE415_Double_Free__new_delete_array_struct @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_array_wchar_t @@ f:delete @@ delete [] data;
+CWE415_Double_Free__new_delete_char @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_class @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_int @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_int64_t @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_long @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_struct @@ f:delete @@ delete data;
+CWE415_Double_Free__new_delete_wchar_t @@ f:delete @@ delete data;
+
+#s01
+CWE416_Use_After_Free__malloc_free_char @@ f:free @@ printLine(data);
+CWE416_Use_After_Free__malloc_free_int @@ f:free @@ printIntLine(data[0]);
+CWE416_Use_After_Free__malloc_free_long @@ f:free @@ printLongLine(data[0]);
+CWE416_Use_After_Free__malloc_free_struct @@ f:free @@ printStructLine(&data[0]);
+CWE416_Use_After_Free__malloc_free_wchar_t @@ f:free @@ printWLine(data);
+CWE416_Use_After_Free__new_delete_array_char @@ f:delete @@ printLine(data);
+CWE416_Use_After_Free__new_delete_array_class @@ f:delete @@ printIntLine(data[0].intOne);
+CWE416_Use_After_Free__new_delete_array_int @@ f:delete @@ printIntLine(data[0]);
+CWE416_Use_After_Free__new_delete_array_int64_t @@ f:delete @@ printLongLongLine(data[0]);
+CWE416_Use_After_Free__new_delete_array_long @@ f:delete @@ printLongLine(data[0]);
+CWE416_Use_After_Free__new_delete_array_struct @@ f:delete @@ printStructLine(&data[0]);
+CWE416_Use_After_Free__new_delete_array_wchar_t @@ f:delete @@ printWLine(data);
+CWE416_Use_After_Free__new_delete_char @@ f:delete @@ printHexCharLine(*data);
+CWE416_Use_After_Free__new_delete_class @@ f:delete @@ printIntLine(data->intOne);
+CWE416_Use_After_Free__new_delete_int @@ f:delete @@ printIntLine(*data);
+CWE416_Use_After_Free__new_delete_int64_t @@ f:delete @@ printLongLongLine(*data);
+CWE416_Use_After_Free__new_delete_long @@ f:delete @@ printLongLine(*data);
+CWE416_Use_After_Free__new_delete_struct @@ f:delete @@ printStructLine(data);
+CWE416_Use_After_Free__new_delete_wchar_t @@ f:delete @@ printWcharLine(*data);
+CWE416_Use_After_Free__return_freed_ptr @@ f:free @@ return reversedString;
+
+#s01
+CWE457_Use_of_Uninitialized_Variable__char_pointer @@ CONST @@ printLine(data);
+CWE457_Use_of_Uninitialized_Variable__double @@ CONST @@ printDoubleLine(data);
+CWE457_Use_of_Uninitialized_Variable__double_array_alloca_no_init @@ CONST##f:alloca##f:sizeof @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_array_alloca_partial_init @@ CONST##f:alloca @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_array_declare_no_init @@ CONST @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_array_declare_partial_init @@ CONST @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_array_malloc_no_init @@ CONST##f:malloc##f:sizeof @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_array_malloc_partial_init @@ CONST##f:malloc##f:sizeof @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__double_pointer @@ CONST##t:double* @@ printDoubleLine(*data);
+CWE457_Use_of_Uninitialized_Variable__int @@ CONST @@ printIntLine(data);
+CWE457_Use_of_Uninitialized_Variable__int_array_alloca_no_init @@ CONST##f:alloca##f:sizeof @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_array_alloca_partial_init @@ CONST##f:alloca##f:sizeof @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_array_declare_no_init @@ CONST @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_array_declare_partial_init @@ CONST @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_array_malloc_no_init @@ CONST##f:malloc##f:sizeof @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_array_malloc_partial_init @@ CONST##f:malloc##f:sizeof @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__int_pointer @@ CONST##t:int* @@ printIntLine(*data);
+CWE457_Use_of_Uninitialized_Variable__int64_t @@ CONST @@ printLongLongLine(data);
+CWE457_Use_of_Uninitialized_Variable__long @@ CONST @@ printLongLine(data);
+CWE457_Use_of_Uninitialized_Variable__new_double_array_no_init @@ CONST##f:new @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__new_double_array_partial_init @@ CONST##f:new @@ printDoubleLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__new_int_array_no_init @@ CONST##f:new @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__new_int_array_partial_init @@ CONST##f:new @@ printIntLine(data[i]);
+CWE457_Use_of_Uninitialized_Variable__new_struct_array_no_init @@ f:new##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__new_struct_array_partial_init @@ f:new##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct @@ CONST @@ printIntLine(data.intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_alloca_no_init @@ CONST##f:alloca##f:sizeof##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_alloca_partial_init @@ CONST##f:alloca##f:sizeof##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_declare_no_init @@ CONST##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_declare_partial_init @@ CONST##t:STRUCT @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_malloc_no_init @@ CONST##t:STRUCT##f:malloc##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_array_malloc_partial_init @@ CONST##t:STRUCT##f:malloc##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__struct_pointer @@ CONST##t:STRUCT* @@ printIntLine(data->intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass @@ CONST##t:CLASS @@ printIntLine(data.intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_alloca_no_init @@ CONST##t:CLASS##f:alloca##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_alloca_partial_init @@ CONST##t:CLASS##f:alloca##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_declare_no_init @@ CONST##t:CLASS @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_declare_partial_init @@ CONST##t:CLASS @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_malloc_no_init @@ CONST##t:CLASS##f:malloc##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_malloc_partial_init @@ CONST##t:CLASS##f:malloc##f:sizeof @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_new_no_init @@ CONST##t:CLASS##f:new @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__twointsclass_array_new_partial_init @@ CONST##t:CLASS##f:new @@ printIntLine(data[i].intOne);
+CWE457_Use_of_Uninitialized_Variable__wchar_t_pointer @@ CONST @@ printWLine(data);
