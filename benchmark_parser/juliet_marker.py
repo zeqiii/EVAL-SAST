@@ -57,7 +57,7 @@ def parse_keywords(keywords_file):
         lines = fp.readlines()
     for i in range(0, len(lines)):
         line = lines[i].strip()
-        if line.startswith('#'):
+        if line.startswith('#') or not line:
             continue
         parts = line.split("@@")
         if len(parts) != 3:
@@ -124,6 +124,8 @@ if __name__ == "__main__":
         exit(1)
     # 解析关键词
     keywords = parse_keywords(args.keywords)
+    if keywords == None:
+        print("error occurs")
     mark_counterexamples(args.input, keywords)
 
 

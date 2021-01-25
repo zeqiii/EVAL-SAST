@@ -24,7 +24,7 @@ CWE121_Stack_Based_Buffer_Overflow__CWE129_fscanf @@ f:fscanf @@ buffer[data] = 
 CWE121_Stack_Based_Buffer_Overflow__CWE129_large @@ CONST @@ buffer[data] = 1;
 CWE121_Stack_Based_Buffer_Overflow__CWE129_listen_socket @@ f:recv @@ buffer[data] = 1;
 CWE121_Stack_Based_Buffer_Overflow__CWE129_rand @@ f:rand @@ buffer[data] = 1;
-CWE121_Stack_Based_Buffer_Overflow__CWE131_loop f:alloca##MACRO @@ data[i] = source[i];
+CWE121_Stack_Based_Buffer_Overflow__CWE131_loop @@ f:alloca##MACRO @@ data[i] = source[i];
 CWE121_Stack_Based_Buffer_Overflow__CWE131_memcpy @@ f:alloca##MACRO @@ memcpy(data, source, 10*sizeof(int));
 CWE121_Stack_Based_Buffer_Overflow__CWE131_memmove @@ f:alloca##MACRO @@ memmove(data, source, 10*sizeof(int));
 CWE121_Stack_Based_Buffer_Overflow__CWE135 @@ CONST##f:strlen##t:wchar_t @@ (void)wcscpy(dest, data);
@@ -387,7 +387,7 @@ CWE126_Buffer_Overread__new_wchar_t_memcpy @@ CONST##f:wcslen##t:wchar_t##f:size
 #s03
 CWE126_Buffer_Overread__new_wchar_t_memmove @@ CONST##f:wcslen##t:wchar_t##f:sizeof @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
 CWE126_Buffer_Overread__wchar_t_alloca_loop @@ CONST##f:alloca##t:wchar_t##f:wcslen @@ dest[i] = data[i];
-CWE126_Buffer_Overread__wchar_t_alloca_memcpy @@ CONST##f:alloca##t:wchar_t##f:wcslen @@ CONST##f:wcslen##t:wchar_t##f:sizeof @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
+CWE126_Buffer_Overread__wchar_t_alloca_memcpy @@ CONST##f:alloca##t:wchar_t##f:wcslen @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
 CWE126_Buffer_Overread__wchar_t_alloca_memmove @@ CONST##f:alloca##f:wcslen##t:wchar_t##f:sizeof @@ memmove(dest, data, wcslen(dest)*sizeof(wchar_t));
 CWE126_Buffer_Overread__wchar_t_declare_loop @@ CONST##t:wchar_t##f:wcslen @@ dest[i] = data[i];
 CWE126_Buffer_Overread__wchar_t_declare_memcpy @@ CONST##t:wchar_t##f:wcslen##f:sizeof @@ memcpy(dest, data, wcslen(dest)*sizeof(wchar_t));
@@ -407,7 +407,7 @@ CWE127_Buffer_Underread__char_declare_ncpy @@ CONST##f:strlen @@ strncpy(dest, d
 CWE127_Buffer_Underread__CWE839_connect_socket @@ f:recv##f:atoi @@ printIntLine(buffer[data]);
 CWE127_Buffer_Underread__CWE839_fgets @@ f:fgets##f:atoi @@ printIntLine(buffer[data]);
 CWE127_Buffer_Underread__CWE839_fscanf @@ f:fscanf @@ printIntLine(buffer[data]);
-CWE127_Buffer_Underread__CWE839_listen_socket @@ f:recv##f:atoi printIntLine(buffer[data]);
+CWE127_Buffer_Underread__CWE839_listen_socket @@ f:recv##f:atoi @@ printIntLine(buffer[data]);
 
 #s02
 CWE127_Buffer_Underread__CWE839_negative @@ CONST @@ printIntLine(buffer[data]);
