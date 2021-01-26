@@ -201,7 +201,7 @@ if __name__ == "__main__":
     db.connect()
     if args.action[0] == "parse" or args.action[0] == "refresh":
         parser = BenchParser()
-        #cwe_list = ["CWE78","CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE191","CWE369","CWE401","CWE415","CWE416","CWE457","CWE467","CWE476","CWE680","CWE690"]
+        #cwe_list = ["CWE121","CWE122","CWE123","CWE124","CWE126","CWE127","CWE134","CWE190","CWE369","CWE415","CWE416","CWE457","CWE476"]
         # 用测试集的名称作为输出文件夹的名称
         testcases = []
         if args.action[0] == "parse":
