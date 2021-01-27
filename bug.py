@@ -42,6 +42,7 @@ class Bug():
         self.testcase_id = ""
         self.counterexample = 0
         self.bug_type = ""       # deprecated, string format of bug info
+        self.bug_newtype = {"cwe":"", "source":[], "sink":[]}    # 我们定义的漏洞类型，将cwe、source、sink组成三元组
         self.severity = ""       # severity: info, low, medium, high, critical
         self.description = ""
         self.cwe_type = []       # example: [CWE-193, CWE-122]
@@ -68,6 +69,15 @@ class Bug():
         bug.testcase_id = self.testcase_id
         bug.counterexample = self.counterexample
         bug.bug_type = self.bug_type
+        # f:FUNC_NAME, t:VAR_TYPE, CONST, MACRO, CALCULATION
+        # 分别代表，函数名、变量类型、常量、宏、计算
+        # VAR_TYPE可为 STRUCT, CLASS, XXX*  分别代表结构体、类、XXX类型指针
+        bug.bug_newtype = {"cwe":"", "source":[], "sink":[]}
+        bug.bug_newtype["cwe"] = self.bug_newtype["cwe"]
+        for one in self.bug_newtype["source"]:
+            bug.bug_newtype["source"].append(one)
+        for one in self.bug_newtype["sink"]:
+            bug.bug_newtype["sink"].append(one)
         bug.severity = self.severity
         bug.description = self.description
         bug.cwe_type = []
@@ -134,6 +144,12 @@ class Testcase():
                     cwe_type_str = cwe_type_str + "%s|"%(cwe)
                 cwe_type_str = cwe_type_str[:-1]
                 bug_node.setAttribute('cwe', cwe_type_str)
+            # 漏洞newtype三元组
+            newtype_node = dom.createElement('newtype')
+            newtype_node.setAttribute('cwe', bug.bug_newtype["cwe"])
+            newtype_node.setAttribute('source', '$$'.join(bug.bug_newtype["source"]))
+            newtype_node.setAttribute('sink', '$$'.join(bug.bug_newtype["sink"]))
+            bug_node.appendChild(newtype_node)
             # bug的子标签<description>
             desc_node = dom.createElement('description')
             desc_text_node = dom.createTextNode(bug.description)
@@ -222,6 +238,11 @@ def parse_manifest(manifest):
             for child in bug_node:
                 if child.tag == "description":
                     bug.description = child.text
+                elif child.tag == "newtype":
+                    # bug newtype
+                    bug.bug_newtype['cwe'] = child.attrib['cwe']
+                    bug.bug_newtype['source'] = child.attrib['source'].split('$$')
+                    bug.bug_newtype['sink'] = child.attrib['sink'].split('$$')
                 elif child.tag == "trace":
                     for child2 in child:
                         if child2.tag == "source":
