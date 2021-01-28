@@ -200,7 +200,6 @@ if __name__ == "__main__":
 
     # 初始化keywords
     if args.keywords:
-        global keywords
         keywords = juliet_marker.parse_keywords(args.keywords)
 
     _input = args.input
