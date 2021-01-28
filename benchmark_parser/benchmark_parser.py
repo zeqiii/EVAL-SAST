@@ -2,11 +2,15 @@
 import os, sys, argparse, json
 import juliet_parser as Juliet_parser
 import xml.dom.minidom as minidom
+import juliet_marker
 from xml.etree import ElementTree as ET
 sys.path.append("..")
 from bug import *
 from glo import *
 from dao import *
+
+# {signature:([source_feature1, source_feature2, ...], sink)}
+keywords = {}
 
 def is_number(s):
     try:
@@ -166,8 +170,17 @@ class BenchParser():
                                                         part = key2.split('_')[-2]
                                                 feature.name = feature.name + "_" + part
                                     bug.features.append(feature)
+                                    # 解析bug_newtype
+                                    signature = juliet_marker.getSignature(bug.testcase_id)
+                                    if signature in keywords.keys():
+                                        bug.bug_newtype["source"] = keywords[signature]["source"]
+                                        bug.bug_newtype["sink"] = keywords[signature]["sink"]
+                                        bug.bug_newtype["cwe"] = cwe_type
                                     bugs.append(bug)
                                 line_num = line_num + 1
+        elif testsuite_name.startswith("sard"):
+            pass # TBD
+
         return bugs
 
 
@@ -181,8 +194,15 @@ if __name__ == "__main__":
     parser.add_argument('--name', '-n', help="name of the test suite")
     parser.add_argument('--cwe', '-c', help="cwe list, split with ',' e.g. -c \"CWE121,CWE122\"")
     parser.add_argument('--type', '-t', help="type of testsuite, 0 synthetic, 1 real-world")
+    parser.add_argument('--keywords', '-k', help="针对juliet测试集，填入keywords文件路径，文件中包含目标程序的signature、source和counterexample_sink")
 
     args = parser.parse_args()
+
+    # 初始化keywords
+    if args.keywords:
+        global keywords
+        keywords = juliet_marker.parse_keywords(args.keywords)
+
     _input = args.input
     _type = 0
     _cwe = []
