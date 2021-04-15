@@ -34,14 +34,15 @@ def download_url(testsuite_name):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("tool", metavar="TOOL", type=str, nargs=1, help='choose tools: codechecker|scan-build|flawfinder|cppcheck|rats|splint|uno')
-    parser.add_argument('--input', '-i', help='Testsuite path. --input and --testsuite are mutually exclusive')
+    parser.add_argument('--input', '-i', help='Local testsuite path. --input and --testsuite are mutually exclusive')
     parser.add_argument('--output', '-o', help='Output path, tool\'s output')
     parser.add_argument('--task', '-t', help='Specify a task id')
-    parser.add_argument('--testsuite', '-n', help="Specify a testsuite name. --input and --testsuite are mutually exclusive")
+    parser.add_argument('--testsuite', '-n', help="Specify a testsuite name, download from Ceph. --input and --testsuite are mutually exclusive")
 
     args = parser.parse_args()
 
     if args.input and args.testsuite:
+        print("--input and --testsuite are mutually exclusive")
         exit(1)
     if not args.input and not args.testsuite:
         print("Specify --input or --testsuite")
